@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fmtMoney, formatPublicDateTime, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../../sitePreviewShared';
+import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 function RentalDetailPreviewContent() {
@@ -27,7 +27,7 @@ function RentalDetailPreviewContent() {
     (async () => {
       try {
         setLoading(true);
-        const boot = await api('/api/public/booking/bootstrap');
+        const boot = await fetchBookingBootstrap();
         setBootstrap(boot);
         const firstLocationId = boot?.locations?.[0]?.id || '';
         const payload = await api('/api/public/booking/rental-search', {
@@ -83,6 +83,11 @@ function RentalDetailPreviewContent() {
     'Hosted payment confidence',
     'Live class availability',
     'Pickup details before checkout'
+  ];
+  const nextSteps = [
+    'Review final pricing and due-now amount',
+    'Complete one trusted hosted checkout',
+    'Finish agreement and pickup readiness digitally'
   ];
 
   return (
@@ -186,6 +191,17 @@ function RentalDetailPreviewContent() {
                 <p className="ui-muted" style={{ margin: 0 }}>
                   Help guests understand what they will pay now, how pickup works, and why this class fits an airport-first journey before they ever touch forms.
                 </p>
+              </div>
+              <div className={styles.reassurancePanel}>
+                <div className="label">What happens after reserve</div>
+                <div className={styles.reassuranceChecklist}>
+                  {nextSteps.map((step) => (
+                    <div key={step} className={styles.reassuranceItem}>
+                      <span className={styles.reassuranceDot} />
+                      <span>{step}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : null}

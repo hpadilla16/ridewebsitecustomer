@@ -199,6 +199,7 @@ Local brand assets currently used:
 ### Shared site helpers and premium styling
 
 - `src/site/sitePreviewShared.js`
+- `src/site/siteConfig.js`
 - `src/site/sitePreviewPremium.module.css`
 
 ### Main storefront pages
@@ -303,6 +304,17 @@ Remote:
 - host onboarding still depends on backend support in the main Ride Fleet platform
 - some public text may still need final copy polish before launch
 - deployment setup for `beta.ride-carsharing.com` is still pending
+
+## Current Storefront Standards
+
+The storefront now also includes:
+
+- centralized site metadata config
+- richer root metadata for SEO/social sharing
+- reduced-motion handling
+- skip-link and stronger navigation semantics
+- structured data on the homepage
+- more explicit trust cues across search and detail pages
 
 ## Near-Term Next Steps
 

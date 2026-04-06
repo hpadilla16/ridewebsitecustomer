@@ -87,6 +87,17 @@ This is the right place for:
 
 This keeps branding separate from code and easy to replace later.
 
+### 6. `src/site/siteConfig.js` keeps public metadata centralized
+
+Use `src/site/siteConfig.js` for:
+
+- public site name
+- canonical/public URL
+- Open Graph image
+- metadata defaults
+
+This prevents SEO and social metadata from being scattered through route files.
+
 ## Current route map
 
 ### Public routes

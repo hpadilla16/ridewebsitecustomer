@@ -1,3 +1,5 @@
+import { api } from '../lib/client';
+
 export function fmtMoney(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value || 0));
 }
@@ -85,4 +87,8 @@ export function withSiteBase(basePath, path = '') {
   if (!path || path === '/') return basePath || '/';
   const normalizedPath = String(path).startsWith('/') ? path : `/${path}`;
   return basePath ? `${basePath}${normalizedPath}` : normalizedPath;
+}
+
+export function fetchBookingBootstrap() {
+  return api('/api/public/booking/bootstrap', { cacheTtlMs: 60000 });
 }

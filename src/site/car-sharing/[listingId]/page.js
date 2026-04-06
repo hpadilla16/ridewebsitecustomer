@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fmtMoney, formatPublicDateTime, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../../sitePreviewShared';
+import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 function CarSharingDetailPreviewContent() {
@@ -26,7 +27,7 @@ function CarSharingDetailPreviewContent() {
     (async () => {
       try {
         setLoading(true);
-        const boot = await api('/api/public/booking/bootstrap');
+        const boot = await fetchBookingBootstrap();
         setBootstrap(boot);
         const firstLocationId = boot?.locations?.[0]?.id || '';
         const payload = await api('/api/public/booking/car-sharing-search', {
@@ -84,6 +85,11 @@ function CarSharingDetailPreviewContent() {
     'Curated listing detail',
     'Trusted hosted payment handoff'
   ];
+  const nextSteps = [
+    'Confirm listing fit and trip timing',
+    'Review hosted checkout and due-now amount',
+    'Complete documents and pickup tasks in one connected flow'
+  ];
 
   return (
     <div className="stack" style={{ gap: 24 }}>
@@ -127,10 +133,15 @@ function CarSharingDetailPreviewContent() {
             <div className="stack" style={{ gap: 16 }}>
               {gallery[0] ? (
                 <div className={styles.galleryFrame}>
-                  <img
+                  <Image
                     src={gallery[0]}
                     alt={listing?.title || listingVehicleLabel(listing)}
                     className={styles.galleryImage}
+                    width={1200}
+                    height={675}
+                    sizes="(max-width: 960px) 100vw, 720px"
+                    priority
+                    unoptimized
                   />
                 </div>
               ) : null}
@@ -193,6 +204,17 @@ function CarSharingDetailPreviewContent() {
                 <p className="ui-muted" style={{ margin: 0 }}>
                   The detail page should feel curated and local while still guiding the guest into the same reliable payment, agreement, and pickup flow used elsewhere in Ride Fleet.
                 </p>
+              </div>
+              <div className={styles.reassurancePanel}>
+                <div className="label">What happens after reserve</div>
+                <div className={styles.reassuranceChecklist}>
+                  {nextSteps.map((step) => (
+                    <div key={step} className={styles.reassuranceItem}>
+                      <span className={styles.reassuranceDot} />
+                      <span>{step}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : null}

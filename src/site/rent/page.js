@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fmtMoney, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../sitePreviewShared';
+import styles from '../sitePreviewPremium.module.css';
+import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../sitePreviewShared';
 
 function RentPreviewPageContent() {
   const searchParams = useSearchParams();
@@ -24,7 +25,7 @@ function RentPreviewPageContent() {
   useEffect(() => {
     (async () => {
       try {
-        const payload = await api('/api/public/booking/bootstrap');
+        const payload = await fetchBookingBootstrap();
         setBootstrap(payload);
       } catch (err) {
         setError(String(err?.message || 'Unable to load rental search'));
@@ -139,12 +140,17 @@ function RentPreviewPageContent() {
           </Link>
         </div>
         {error ? <div className="label" style={{ color: '#b91c1c', marginTop: 12 }}>{error}</div> : null}
+        <div className={styles.reassuranceBand} style={{ marginTop: 18 }}>
+          <span className={styles.reassurancePill}>Live availability from Ride Fleet</span>
+          <span className={styles.reassurancePill}>Hosted payment handoff at checkout</span>
+          <span className={styles.reassurancePill}>Airport pickup expectations surfaced earlier</span>
+        </div>
       </section>
 
       <section className="stack" style={{ gap: 16 }}>
         {(results?.results || []).length ? (
           (results.results || []).map((result, index) => (
-            <article key={`${result?.vehicleType?.id || index}`} className="glass card" style={{ padding: 24 }}>
+            <article key={`${result?.vehicleType?.id || index}`} className={`glass card ${styles.searchResultCard}`} style={{ padding: 24 }}>
               <div className="row-between" style={{ alignItems: 'flex-start', gap: 16 }}>
                 <div className="stack" style={{ gap: 6 }}>
                   <span className="eyebrow">Available rental option</span>
@@ -170,6 +176,11 @@ function RentPreviewPageContent() {
                   <span className="label">Due now</span>
                   <strong>{fmtMoney(result?.quote?.depositAmountDue)}</strong>
                 </div>
+              </div>
+              <div className={styles.trustCueRow}>
+                <span className={styles.trustCue}>Due now shown before checkout</span>
+                <span className={styles.trustCue}>Hosted payment experience</span>
+                <span className={styles.trustCue}>Pickup context included</span>
               </div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 18 }}>
                 <Link

@@ -1,10 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../sitePreviewShared';
+import styles from '../sitePreviewPremium.module.css';
+import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../sitePreviewShared';
 
 function CarSharingPreviewPageContent() {
   const searchParams = useSearchParams();
@@ -23,7 +25,7 @@ function CarSharingPreviewPageContent() {
   useEffect(() => {
     (async () => {
       try {
-        const payload = await api('/api/public/booking/bootstrap');
+        const payload = await fetchBookingBootstrap();
         setBootstrap(payload);
       } catch (err) {
         setError(String(err?.message || 'Unable to load car sharing search'));
@@ -121,6 +123,11 @@ function CarSharingPreviewPageContent() {
           </Link>
         </div>
         {error ? <div className="label" style={{ color: '#b91c1c', marginTop: 12 }}>{error}</div> : null}
+        <div className={styles.reassuranceBand} style={{ marginTop: 18 }}>
+          <span className={styles.reassurancePill}>Editorial listing presentation</span>
+          <span className={styles.reassurancePill}>Trusted hosted checkout handoff</span>
+          <span className={styles.reassurancePill}>Car sharing with one operational backbone</span>
+        </div>
       </section>
 
       <section className="stack" style={{ gap: 16 }}>
@@ -129,13 +136,18 @@ function CarSharingPreviewPageContent() {
             const gallery = normalizeImageList(listing?.imageUrls?.length ? listing.imageUrls : listing?.primaryImageUrl ? [listing.primaryImageUrl] : []);
             const locationLabel = publicLocationLabel(listing?.location || bootstrap?.locations?.find((row) => String(row.id) === String(form.locationId)));
             return (
-              <article key={`${listing?.id || index}`} className="glass card" style={{ padding: 24 }}>
-                <div style={{ display: 'grid', gap: 18, gridTemplateColumns: gallery[0] ? '220px 1fr' : '1fr' }}>
+              <article key={`${listing?.id || index}`} className={`glass card ${styles.searchResultCard}`} style={{ padding: 24 }}>
+                <div className={styles.searchResultGrid} style={{ gridTemplateColumns: gallery[0] ? '220px 1fr' : '1fr' }}>
                   {gallery[0] ? (
-                    <img
+                    <Image
                       src={gallery[0]}
                       alt={listingVehicleLabel(listing)}
-                      style={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: 20, border: '1px solid rgba(110,73,255,.16)' }}
+                      width={640}
+                      height={480}
+                      sizes="(max-width: 960px) 100vw, 220px"
+                      className={styles.resultCardImage}
+                      loading="lazy"
+                      unoptimized
                     />
                   ) : null}
                   <div className="stack" style={{ gap: 10 }}>
@@ -160,6 +172,11 @@ function CarSharingPreviewPageContent() {
                         <span className="label">Location</span>
                         <strong>{locationLabel}</strong>
                       </div>
+                    </div>
+                    <div className={styles.trustCueRow}>
+                      <span className={styles.trustCue}>Instant clarity on trip total</span>
+                      <span className={styles.trustCue}>Marketplace warmth, premium trust</span>
+                      <span className={styles.trustCue}>Hosted payment continuity</span>
                     </div>
                     <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                       <Link href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`} className="ios-action-btn" style={{ textDecoration: 'none' }}>
