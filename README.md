@@ -69,4 +69,5 @@ Most important docs:
 - [docs/ARCHITECTURE.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\ARCHITECTURE.md)
 - [docs/PROJECT_MEMORY.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\PROJECT_MEMORY.md)
 - [docs/ENVIRONMENT.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\ENVIRONMENT.md)
+- [docs/WORKFLOW.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\WORKFLOW.md)
 - [docs/DEPLOYMENT.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\DEPLOYMENT.md)

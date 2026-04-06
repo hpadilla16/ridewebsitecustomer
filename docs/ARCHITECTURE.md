@@ -164,6 +164,34 @@ That belongs in the main Ride Fleet application.
 
 These are improvements, not blockers.
 
+## Advanced storefront standards
+
+As this project matures, keep these standards in place:
+
+### Accessibility
+
+- route shell should include a skip link
+- navigation should expose active state semantically
+- focus states must remain visible
+- motion should respect `prefers-reduced-motion`
+
+### Metadata and SEO
+
+- root layout should own canonical metadata
+- Open Graph and Twitter metadata should use the real site URL
+- homepage should expose structured data for search engines and link previews
+
+### Performance
+
+- keep large decorative sections isolated and lazy-rendered where appropriate
+- prefer static brand assets under `public/brand`
+- avoid importing internal ops CSS or runtime dependencies into this repo
+
+### Repo discipline
+
+- keep public-site docs current when architecture changes
+- preserve the split between the website repo and the main Ride Fleet project
+
 ## Recommended development rules
 
 ### Rule 1. Keep routes small

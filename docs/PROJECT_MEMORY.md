@@ -325,3 +325,11 @@ Whenever continuing work in this repo:
 - keep visual quality high and launch-ready
 - preserve Ride Fleet as the backend source of truth
 
+## Repo Switching Reminder
+
+The two active workspaces should stay mentally separate:
+
+- `main project` = Ride Fleet operations software
+- `website repo` = Ride Car Sharing public storefront
+
+When switching sessions, confirm which repo is active before editing or committing.

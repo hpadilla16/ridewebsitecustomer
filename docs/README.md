@@ -9,7 +9,8 @@ Use these files in this order when resuming work.
 1. [ARCHITECTURE.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\ARCHITECTURE.md)
 2. [PROJECT_MEMORY.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\PROJECT_MEMORY.md)
 3. [ENVIRONMENT.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\ENVIRONMENT.md)
-4. [DEPLOYMENT.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\DEPLOYMENT.md)
+4. [WORKFLOW.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\WORKFLOW.md)
+5. [DEPLOYMENT.md](c:\Users\silve\.openclaw\workspace\RideFleetManagement-working-clean\ride-carsharing-website\docs\DEPLOYMENT.md)
 
 ## What each file is for
 
@@ -39,6 +40,14 @@ Explains:
 - API base expectations
 - local/beta/prod runtime assumptions
 
+### `WORKFLOW.md`
+
+Explains:
+
+- how to switch cleanly between the main project and the website repo
+- the stable local preview workflow
+- how to resume or stop a session cleanly
+
 ### `DEPLOYMENT.md`
 
 Explains:
@@ -61,4 +70,3 @@ It should not drift into:
 - planner/ops tools
 - internal tenant workflows
 - mobile wrapper concerns
-

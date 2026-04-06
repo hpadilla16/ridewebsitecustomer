@@ -7,6 +7,7 @@ import { api } from '../lib/client';
 import Link from 'next/link';
 import { addDays, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from './sitePreviewShared';
 import styles from './sitePreviewPremium.module.css';
+import { absoluteSiteUrl, siteConfig } from './siteConfig';
 
 const heroStats = [
   { value: '24/7', label: 'Guest-first booking access' },
@@ -293,6 +294,24 @@ export default function SitePreviewHomePage() {
   const highlightedLocations = locations.slice(0, 3);
   const highlightedVehicleTypes = vehicleTypes.slice(0, 4);
   const highlightedListings = featuredListings.slice(0, 3);
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+      logo: absoluteSiteUrl('/brand/ride-logo-white-horizontal.png'),
+      image: absoluteSiteUrl('/brand/ride-banner-facebook-cover.jpg'),
+      description: siteConfig.description
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteConfig.name,
+      url: siteConfig.url,
+      description: siteConfig.description
+    }
+  ];
 
   const openRental = () => {
     if (!rentalSearch.pickupLocationId || !rentalSearch.returnLocationId) {
@@ -314,7 +333,12 @@ export default function SitePreviewHomePage() {
 
   return (
     <div className="stack" style={{ gap: 24 }}>
-      <section className={styles.heroShell}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
+      <section className={styles.heroShell} aria-labelledby="home-hero-title">
         <div className={styles.heroGrid}>
           <div className="stack" style={{ gap: 18 }}>
             <div className={styles.heroLogoLockup}>
@@ -328,7 +352,7 @@ export default function SitePreviewHomePage() {
               />
             </div>
             <span className="eyebrow">Ride Car Sharing</span>
-            <h1 className={styles.heroTitle}>
+            <h1 id="home-hero-title" className={styles.heroTitle}>
               Affordable rentals, car sharing, and a smoother guest journey on top of Ride Fleet.
             </h1>
             <p className={styles.heroLead}>
@@ -415,12 +439,12 @@ export default function SitePreviewHomePage() {
         </div>
       </section>
 
-      <section className={styles.editorialSplit}>
+      <section className={styles.editorialSplit} aria-labelledby="prestige-positioning-title">
         <article className={`glass card-lg ${styles.editorialFeatureCard}`}>
           <div className={styles.editorialFeatureGlow} />
           <div className={styles.editorialFeatureCopy}>
             <span className="eyebrow">Prestige Positioning</span>
-            <h2 style={{ margin: 0 }}>Turn the storefront into part of the premium arrival experience.</h2>
+            <h2 id="prestige-positioning-title" style={{ margin: 0 }}>Turn the storefront into part of the premium arrival experience.</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
               Guests should feel the difference before they even compare rates. The visual system needs to signal airport readiness, trust, and calmer premium mobility from the first fold.
             </p>
@@ -452,11 +476,11 @@ export default function SitePreviewHomePage() {
         </article>
       </section>
 
-      <section className={styles.trustBand}>
+      <section className={styles.trustBand} aria-labelledby="trust-layer-title">
         <div className={`glass card-lg ${styles.trustPanel}`}>
           <div className={styles.editorialHeader}>
             <span className="eyebrow">Trust Layer</span>
-            <h2 style={{ margin: 0 }}>Make the website feel confident before the guest even searches</h2>
+            <h2 id="trust-layer-title" style={{ margin: 0 }}>Make the website feel confident before the guest even searches</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
               The best public booking sites make trust feel built in. This one should do it with airport clarity, hosted payments, and a cleaner digital handoff.
             </p>

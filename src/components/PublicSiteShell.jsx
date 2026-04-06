@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './PublicSiteShell.module.css';
 import { resolveSiteBasePath, withSiteBase } from '../site/sitePreviewShared';
+import { siteConfig } from '../site/siteConfig';
 
 const navItems = [
   { path: '', label: 'Home' },
@@ -18,6 +19,7 @@ const navItems = [
 export function PublicSiteShell({ children, basePath: forcedBasePath }) {
   const pathname = usePathname();
   const basePath = forcedBasePath || resolveSiteBasePath(pathname);
+  const year = new Date().getFullYear();
   const navHrefFor = (path) => withSiteBase(basePath, path);
   const isActive = (path) => {
     const href = navHrefFor(path);
@@ -26,12 +28,15 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
   };
   return (
     <div className={styles.page}>
+      <a href="#main-content" className={styles.skipLink}>
+        Skip to content
+      </a>
       <div className={styles.shell}>
-        <div className={styles.topline}>
+        <div className={styles.topline} aria-label="Service coverage and booking assurances">
           <span className={styles.toplineBadge}>Puerto Rico, Miami, Orlando, Fort Lauderdale, Los Angeles, Ecuador</span>
           <span className={styles.toplineBadge}>Hosted payments, airport-friendly pickup, and Ride Fleet-powered operations.</span>
         </div>
-        <header className={styles.header}>
+        <header className={styles.header} role="banner">
           <div className={styles.headerRow}>
             <Link href={withSiteBase(basePath)} className={styles.brand}>
               <span className={styles.brandMark}>
@@ -54,12 +59,13 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             </Link>
           </div>
           <div className={styles.navRow}>
-            <nav className={styles.nav}>
+            <nav className={styles.nav} aria-label="Primary">
               {navItems.map((item) => (
                 <Link
                   key={item.path || 'home'}
                   href={navHrefFor(item.path)}
                   className={`${styles.navLink} ${isActive(item.path) ? styles.navLinkActive : ''}`}
+                  aria-current={isActive(item.path) ? 'page' : undefined}
                 >
                   {item.label}
                 </Link>
@@ -67,6 +73,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               <Link
                 href={withSiteBase(basePath, '/become-a-host')}
                 className={`${styles.navLink} ${isActive('/become-a-host') ? styles.navLinkActive : ''}`}
+                aria-current={isActive('/become-a-host') ? 'page' : undefined}
               >
                 Become a Host
               </Link>
@@ -78,9 +85,11 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
           </div>
         </header>
 
-        {children}
+        <main id="main-content" className={styles.mainContent}>
+          {children}
+        </main>
 
-        <footer className={`${styles.card} ${styles.footer}`}>
+        <footer className={`${styles.card} ${styles.footer}`} aria-label="Site footer">
           <div className={styles.footerBrand}>
             <Image
               src="/brand/ride-logo-white-horizontal.png"
@@ -94,6 +103,11 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             <p className={styles.footerLead}>
               A more premium storefront powered by real Ride Fleet operations, hosted payments, and a cleaner path from search to pickup.
             </p>
+            <div className={styles.footerTrustRow}>
+              <span className={styles.footerTrustBadge}>Hosted payments</span>
+              <span className={styles.footerTrustBadge}>Airport-first pickup</span>
+              <span className={styles.footerTrustBadge}>Ride Fleet-backed operations</span>
+            </div>
           </div>
           <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
@@ -122,7 +136,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <span>Ride Car Sharing beta storefront direction</span>
+            <span>{siteConfig.name} © {year}</span>
             <span>Powered by Ride Fleet reservations, hosted payments, and guest portal continuity.</span>
           </div>
         </footer>

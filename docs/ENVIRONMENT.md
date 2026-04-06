@@ -37,6 +37,27 @@ Examples:
 NEXT_PUBLIC_API_BASE=https://ridefleetmanager.com
 ```
 
+## Recommended Public URL Variable
+
+### `NEXT_PUBLIC_SITE_URL`
+
+This is used for metadata and absolute canonical/Open Graph URLs.
+
+Examples:
+
+- Local preview:
+  - `http://127.0.0.1:3001`
+- Beta:
+  - `https://beta.ride-carsharing.com`
+- Production:
+  - `https://ride-carsharing.com`
+
+Example:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://beta.ride-carsharing.com
+```
+
 ## How The Website Uses `NEXT_PUBLIC_API_BASE`
 
 The client logic is in:
@@ -171,4 +192,3 @@ Check:
 - main Ride Fleet backend public APIs
 - API payload shapes
 - tenant/bootstrap configuration in the backend
-
