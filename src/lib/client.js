@@ -2,11 +2,17 @@ function normalizeBaseUrl(value) {
   return String(value || '').trim().replace(/\/$/, '');
 }
 
+const LOCAL_API_FALLBACK = 'http://localhost:4000';
+
 function resolveApiBase() {
   const configured = normalizeBaseUrl(process.env.NEXT_PUBLIC_API_BASE);
   if (typeof window !== 'undefined') {
     const origin = normalizeBaseUrl(window.location.origin);
-    if (!configured) return origin;
+    const currentHost = String(window.location.hostname || '').trim().toLowerCase();
+    const currentIsLocal = ['localhost', '127.0.0.1'].includes(currentHost);
+    if (!configured) {
+      return currentIsLocal ? LOCAL_API_FALLBACK : origin;
+    }
     const configuredUrl = (() => {
       try {
         return new URL(configured);
@@ -15,8 +21,6 @@ function resolveApiBase() {
       }
     })();
     const configuredHost = String(configuredUrl?.hostname || '').toLowerCase();
-    const currentHost = String(window.location.hostname || '').trim().toLowerCase();
-    const currentIsLocal = ['localhost', '127.0.0.1'].includes(currentHost);
     const configuredIsLocal = ['localhost', '127.0.0.1'].includes(configuredHost);
     if (configuredHost && configuredIsLocal && !currentIsLocal) {
       return origin;
@@ -26,7 +30,7 @@ function resolveApiBase() {
     }
     return configured;
   }
-  return configured || 'http://localhost:4000';
+  return configured || LOCAL_API_FALLBACK;
 }
 
 export const API_BASE = resolveApiBase();
@@ -62,12 +66,17 @@ async function parseApiResponse(res, path) {
     try {
       const text = await res.text();
       if (text) {
+        const contentType = String(res.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('text/html') || /^\s*<!doctype html/i.test(text)) {
+          msg = `${path} failed (${res.status}): expected Ride Fleet API JSON but received HTML. Check NEXT_PUBLIC_API_BASE or local backend availability.`;
+        } else {
         try {
           const j = JSON.parse(text);
           if (j?.error) msg = j.error;
           else msg = `${msg}: ${text.slice(0, 300)}`;
         } catch {
           msg = `${msg}: ${text.slice(0, 300)}`;
+        }
         }
       }
     } catch {}
@@ -116,7 +125,9 @@ export async function api(path, opts = {}, token) {
   const headers = { 'Content-Type': 'application/json', ...(fetchOpts.headers || {}) };
   const authToken = token || readStoredToken();
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
-  const url = `${API_BASE}${path}`;
+  const isBrowser = typeof window !== 'undefined';
+  const isPublicApiPath = String(path || '').startsWith('/api/public/');
+  const url = isBrowser && isPublicApiPath ? path : `${API_BASE}${path}`;
   const useGetCache = typeof window !== 'undefined' && method === 'GET' && !bypassCache && cacheTtlMs !== 0;
 
   if (!useGetCache) {

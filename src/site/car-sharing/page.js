@@ -6,7 +6,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
-import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../sitePreviewShared';
+import { addDays, backendLocationIdsForPublicOption, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, listingVehicleLabel, normalizeImageList, normalizePublicLocationSelectionId, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../sitePreviewShared';
 
 function CarSharingPreviewPageContent() {
   const searchParams = useSearchParams();
@@ -33,23 +33,33 @@ function CarSharingPreviewPageContent() {
     })();
   }, []);
 
+  const publicLocationOptions = useMemo(
+    () => buildPublicLocationOptions(bootstrap?.locations || []),
+    [bootstrap]
+  );
+
   useEffect(() => {
-    const firstLocationId = bootstrap?.locations?.[0]?.id || '';
+    const firstLocationId = publicLocationOptions[0]?.id || '';
     if (!firstLocationId) return;
     setForm((current) => ({
       ...current,
-      locationId: current.locationId || firstLocationId
+      locationId: normalizePublicLocationSelectionId(publicLocationOptions, current.locationId) || firstLocationId
     }));
-  }, [bootstrap]);
+  }, [publicLocationOptions]);
 
   const runSearch = async () => {
     try {
       setSearching(true);
       setError('');
+      const locationIds = backendLocationIdsForPublicOption(publicLocationOptions, form.locationId);
+      if (!locationIds.length) {
+        throw new Error('Pickup location not found');
+      }
       const payload = await api('/api/public/booking/car-sharing-search', {
         method: 'POST',
         body: JSON.stringify({
-          locationId: form.locationId,
+          locationId: locationIds[0],
+          locationIds,
           pickupAt: form.pickupAt,
           returnAt: form.returnAt
         })
@@ -94,8 +104,8 @@ function CarSharingPreviewPageContent() {
             <label className="label">Location</label>
             <select value={form.locationId} onChange={(e) => setForm((current) => ({ ...current, locationId: e.target.value }))}>
               <option value="">Select location</option>
-              {(bootstrap?.locations || []).map((location) => (
-                <option key={location.id} value={location.id}>{publicLocationLabel(location)}</option>
+              {publicLocationOptions.map((location) => (
+                <option key={location.id} value={location.id}>{location.label}</option>
               ))}
             </select>
           </div>
@@ -119,7 +129,7 @@ function CarSharingPreviewPageContent() {
             pickupAt: form.pickupAt,
             returnAt: form.returnAt
           })}`} className="ios-btn secondary" style={{ textDecoration: 'none' }}>
-            Open checkout
+            Open reservation flow
           </Link>
         </div>
         {error ? <div className="label" style={{ color: '#b91c1c', marginTop: 12 }}>{error}</div> : null}
@@ -173,13 +183,22 @@ function CarSharingPreviewPageContent() {
                         <strong>{locationLabel}</strong>
                       </div>
                     </div>
+                    <div className={styles.resultMetaRow}>
+                      <span className={styles.resultMetaChip}>Marketplace feel</span>
+                      <span className={styles.resultMetaChip}>Hosted payment handoff</span>
+                      <span className={styles.resultMetaChip}>Local pickup context upfront</span>
+                    </div>
                     <div className={styles.trustCueRow}>
                       <span className={styles.trustCue}>Instant clarity on trip total</span>
                       <span className={styles.trustCue}>Marketplace warmth, premium trust</span>
                       <span className={styles.trustCue}>Hosted payment continuity</span>
                     </div>
-                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                      <Link href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`} className="ios-action-btn" style={{ textDecoration: 'none' }}>
+                    <div className={styles.resultActionRow}>
+                      <Link
+                        href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`}
+                        className={styles.resultPrimaryAction}
+                        style={{ textDecoration: 'none' }}
+                      >
                         View listing
                       </Link>
                       <Link
@@ -190,10 +209,10 @@ function CarSharingPreviewPageContent() {
                           returnAt: form.returnAt,
                           listingId: listing?.id || ''
                         })}`}
-                        className="button-subtle"
+                        className={styles.resultSecondaryAction}
                         style={{ textDecoration: 'none' }}
                       >
-                        Unified checkout
+                        Reserve now
                       </Link>
                     </div>
                   </div>

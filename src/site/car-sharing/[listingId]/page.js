@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../../sitePreviewShared';
+import { addDays, backendLocationIdsForPublicOption, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, listingVehicleLabel, normalizeImageList, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, withSiteBase } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 function CarSharingDetailPreviewContent() {
@@ -29,11 +29,17 @@ function CarSharingDetailPreviewContent() {
         setLoading(true);
         const boot = await fetchBookingBootstrap();
         setBootstrap(boot);
-        const firstLocationId = boot?.locations?.[0]?.id || '';
+        const publicLocationOptions = buildPublicLocationOptions(boot?.locations || []);
+        const firstLocationId = publicLocationOptions[0]?.id || '';
+        const locationIds = backendLocationIdsForPublicOption(publicLocationOptions, locationId || firstLocationId);
+        if (!locationIds.length) {
+          throw new Error('Pickup location not found');
+        }
         const payload = await api('/api/public/booking/car-sharing-search', {
           method: 'POST',
           body: JSON.stringify({
-            locationId: locationId || firstLocationId,
+            locationId: locationIds[0],
+            locationIds,
             pickupAt,
             returnAt
           })
@@ -99,12 +105,12 @@ function CarSharingDetailPreviewContent() {
             <span className="eyebrow">Car Sharing Detail</span>
             <h1 className={styles.detailTitle}>{listing?.title || listingVehicleLabel(listing)}</h1>
             <p className={styles.detailLead}>
-              A warmer, more editorial listing page that explains the vehicle, pickup story, and pricing before handing the guest into one trusted checkout flow.
+              A warmer, more editorial listing page that explains the vehicle, pickup story, and pricing before guiding the guest into a clear reservation flow.
             </p>
             <div className={styles.detailRibbon}>
               <span className={styles.detailRibbonChip}>Marketplace feel</span>
               <span className={styles.detailRibbonChip}>Host-style listing detail</span>
-              <span className={styles.detailRibbonChip}>Shared checkout engine</span>
+              <span className={styles.detailRibbonChip}>Trusted reservation handoff</span>
             </div>
             <div className={styles.highlightStrip}>
               {listingHighlights.map((item) => (
@@ -153,7 +159,7 @@ function CarSharingDetailPreviewContent() {
                 <div className="label">Listing story</div>
                 <h3 style={{ margin: '8px 0 10px' }}>More editorial, more local, more host-led</h3>
                 <p className="ui-muted" style={{ margin: 0 }}>
-                  Car sharing should feel more personal and more curated than daily rentals while still ending in the same trusted booking flow.
+                  Car sharing should feel more personal and more curated than daily rentals while still ending in the same trusted reservation flow.
                 </p>
               </div>
               <div className="metric-grid">
@@ -179,7 +185,7 @@ function CarSharingDetailPreviewContent() {
               <div className="surface-note">
                 <strong>Why this listing page matters</strong>
                 <div className="ui-muted">
-                  Car sharing needs a warmer, more editorial product page than daily rentals, but it still has to hand the guest into the same trusted booking flow.
+                  Car sharing needs a warmer, more editorial product page than daily rentals, but it still has to hand the guest into a reservation flow that feels just as trustworthy.
                 </div>
               </div>
               <div className={styles.highlightStrip}>
@@ -228,7 +234,7 @@ function CarSharingDetailPreviewContent() {
           <span className="eyebrow">Next Step</span>
           <div className="surface-note">
             <strong>Marketplace handoff</strong>
-            <div className="ui-muted">After guests review the listing, they still land in the same Ride Fleet checkout engine used by rentals.</div>
+            <div className="ui-muted">After guests review the listing, they move into the same trusted reservation flow used by rentals.</div>
           </div>
           <div className="surface-note">
             <strong>Website goal</strong>
@@ -238,8 +244,8 @@ function CarSharingDetailPreviewContent() {
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="ios-action-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>
               Reserve this listing
             </Link>
-            <Link href={`/checkout?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              Open checkout
+            <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
+              Open reservation flow
             </Link>
             <Link href={`${withSiteBase(basePath, '/car-sharing')}?${backQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
               Back to car sharing results

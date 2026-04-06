@@ -77,6 +77,18 @@ That is good because:
 - changing API base behavior is easier
 - public pages do not each reinvent fetch logic
 
+Public API calls from the browser should prefer the website's same-origin proxy route:
+
+- `src/app/api/public/[...path]/route.js`
+
+That keeps the storefront resilient in:
+
+- local preview
+- beta deployment
+- production deployment
+
+and avoids depending on browser CORS behavior for public API traffic.
+
 ### 5. `public/brand` keeps branding explicit
 
 This is the right place for:

@@ -1,18 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { api } from '../lib/client';
 import Link from 'next/link';
-import { addDays, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from './sitePreviewShared';
+import { addDays, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, normalizePublicLocationSelectionId, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from './sitePreviewShared';
 import styles from './sitePreviewPremium.module.css';
 import { absoluteSiteUrl, siteConfig } from './siteConfig';
 
 const heroStats = [
   { value: '24/7', label: 'Guest-first booking access' },
   { value: '2 lanes', label: 'Rentals plus car sharing' },
-  { value: '1 flow', label: 'Unified payment and portal handoff' }
+  { value: '1 flow', label: 'Trusted payment and portal handoff' }
 ];
 
 const heroFeatureCards = [
@@ -275,20 +275,22 @@ export default function SitePreviewHomePage() {
   }, []);
 
   useEffect(() => {
-    const firstLocationId = bootstrap?.locations?.[0]?.id || '';
+    const publicLocationOptions = buildPublicLocationOptions(bootstrap?.locations || []);
+    const firstLocationId = publicLocationOptions[0]?.id || '';
     if (!firstLocationId) return;
     setRentalSearch((current) => ({
       ...current,
-      pickupLocationId: current.pickupLocationId || firstLocationId,
-      returnLocationId: current.returnLocationId || firstLocationId
+      pickupLocationId: normalizePublicLocationSelectionId(publicLocationOptions, current.pickupLocationId) || firstLocationId,
+      returnLocationId: normalizePublicLocationSelectionId(publicLocationOptions, current.returnLocationId) || firstLocationId
     }));
     setCarSharingSearch((current) => ({
       ...current,
-      locationId: current.locationId || firstLocationId
+      locationId: normalizePublicLocationSelectionId(publicLocationOptions, current.locationId) || firstLocationId
     }));
   }, [bootstrap]);
 
   const locations = Array.isArray(bootstrap?.locations) ? bootstrap.locations : [];
+  const publicLocationOptions = useMemo(() => buildPublicLocationOptions(locations), [locations]);
   const vehicleTypes = Array.isArray(bootstrap?.vehicleTypes) ? bootstrap.vehicleTypes : [];
   const featuredListings = Array.isArray(bootstrap?.featuredCarSharingListings) ? bootstrap.featuredCarSharingListings : [];
   const highlightedLocations = locations.slice(0, 3);
@@ -558,12 +560,12 @@ export default function SitePreviewHomePage() {
           <label className="label">Pickup location</label>
           <select value={rentalSearch.pickupLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupLocationId: e.target.value }))}>
             <option value="">Select location</option>
-            {locations.map((location) => <option key={location.id} value={location.id}>{publicLocationLabel(location)}</option>)}
+            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
           <label className="label">Return location</label>
           <select value={rentalSearch.returnLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, returnLocationId: e.target.value }))}>
             <option value="">Select location</option>
-            {locations.map((location) => <option key={location.id} value={location.id}>{publicLocationLabel(location)}</option>)}
+            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
           <div className="grid2">
             <div className="stack">
@@ -591,7 +593,7 @@ export default function SitePreviewHomePage() {
           <label className="label">Location</label>
           <select value={carSharingSearch.locationId} onChange={(e) => setCarSharingSearch((current) => ({ ...current, locationId: e.target.value }))}>
             <option value="">Select location</option>
-            {locations.map((location) => <option key={location.id} value={location.id}>{publicLocationLabel(location)}</option>)}
+            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
           <div className="grid2">
             <div className="stack">
@@ -778,9 +780,9 @@ export default function SitePreviewHomePage() {
               The current site already promises a smooth reservation flow. The new one should finally deliver it with real availability, stronger product pages, and one cleaner checkout path.
             </p>
           </div>
-          <Link href={withSiteBase(basePath, '/checkout')} className="button-subtle" style={{ textDecoration: 'none' }}>
-            See unified checkout
-          </Link>
+            <Link href={withSiteBase(basePath, '/checkout')} className="button-subtle" style={{ textDecoration: 'none' }}>
+              See checkout flow
+            </Link>
         </div>
         <div className="metric-grid">
           {marketingMoments.map((item, index) => (
@@ -796,10 +798,10 @@ export default function SitePreviewHomePage() {
       <section className={`glass card-lg ${styles.checkoutSection}`}>
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
           <div className="stack" style={{ gap: 8, maxWidth: 780 }}>
-            <span className="eyebrow">Unified Checkout</span>
-            <h2 style={{ margin: 0 }}>One premium checkout path, two distinct guest journeys</h2>
+            <span className="eyebrow">Guided Reservation Flow</span>
+            <h2 style={{ margin: 0 }}>One premium reservation flow, two distinct guest journeys</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Rentals and car sharing should feel distinct on the storefront while still handing into one trusted operational checkout engine underneath.
+              Rentals and car sharing should feel distinct on the storefront while still handing into one trusted operational reservation flow underneath.
             </p>
           </div>
           <Link
@@ -811,18 +813,18 @@ export default function SitePreviewHomePage() {
             })}`}
             className={`ios-action-btn ${styles.glowButton}`}
             style={{ textDecoration: 'none' }}
-          >
-            Preview unified checkout
-          </Link>
+            >
+              Preview reservation flow
+            </Link>
         </div>
         <div className={styles.checkoutGrid}>
           <div className={styles.checkoutCard}>
             <span className="label">Rental lane</span>
-            <strong>Search {'->'} detail {'->'} checkout</strong>
+            <strong>Search {'->'} detail {'->'} reserve</strong>
           </div>
           <div className={styles.checkoutCard}>
             <span className="label">Car sharing lane</span>
-            <strong>Catalog {'->'} listing {'->'} checkout</strong>
+            <strong>Catalog {'->'} listing {'->'} reserve</strong>
           </div>
           <div className={styles.checkoutCard}>
             <span className="label">Shared ops core</span>

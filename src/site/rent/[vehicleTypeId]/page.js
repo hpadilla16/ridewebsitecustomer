@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
-import { addDays, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../../sitePreviewShared';
+import { addDays, backendLocationIdsForPublicOption, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, publicLocationLabel, rentalResultImageList, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 function RentalDetailPreviewContent() {
@@ -29,12 +30,20 @@ function RentalDetailPreviewContent() {
         setLoading(true);
         const boot = await fetchBookingBootstrap();
         setBootstrap(boot);
-        const firstLocationId = boot?.locations?.[0]?.id || '';
+        const publicLocationOptions = buildPublicLocationOptions(boot?.locations || []);
+        const firstLocationId = publicLocationOptions[0]?.id || '';
+        const pickupLocationIds = backendLocationIdsForPublicOption(publicLocationOptions, pickupLocationId || firstLocationId);
+        const returnLocationIds = backendLocationIdsForPublicOption(publicLocationOptions, returnLocationId || pickupLocationId || firstLocationId);
+        if (!pickupLocationIds.length) {
+          throw new Error('Pickup location not found');
+        }
         const payload = await api('/api/public/booking/rental-search', {
           method: 'POST',
           body: JSON.stringify({
-            pickupLocationId: pickupLocationId || firstLocationId,
-            returnLocationId: returnLocationId || pickupLocationId || firstLocationId,
+            pickupLocationId: pickupLocationIds[0],
+            pickupLocationIds,
+            returnLocationId: returnLocationIds[0] || pickupLocationIds[0],
+            returnLocationIds,
             pickupAt,
             returnAt
           })
@@ -56,6 +65,7 @@ function RentalDetailPreviewContent() {
   }, [pickupAt, pickupLocationId, returnAt, returnLocationId, vehicleTypeId]);
 
   const location = result?.location || bootstrap?.locations?.find((entry) => String(entry.id) === String(pickupLocationId)) || null;
+  const gallery = rentalResultImageList(result);
   const checkoutQuery = buildUnifiedCheckoutQuery({
     pickupLocationId: result?.location?.id || pickupLocationId,
     returnLocationId: returnLocationId || result?.location?.id || pickupLocationId,
@@ -130,6 +140,20 @@ function RentalDetailPreviewContent() {
           {!loading && error ? <div className="label" style={{ color: '#b91c1c' }}>{error}</div> : null}
           {!loading && result ? (
             <div className="stack" style={{ gap: 16 }}>
+              {gallery[0] ? (
+                <div className={styles.galleryFrame}>
+                  <Image
+                    src={gallery[0]}
+                    alt={vehicleTypeLabel(result.vehicleType)}
+                    className={styles.galleryImage}
+                    width={1200}
+                    height={675}
+                    sizes="(max-width: 960px) 100vw, 720px"
+                    priority
+                    unoptimized
+                  />
+                </div>
+              ) : null}
               <div className="surface-note">
                 <strong>Pickup hub</strong>
                 <div className="ui-muted">{publicLocationLabel(location)}</div>
@@ -225,8 +249,8 @@ function RentalDetailPreviewContent() {
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="ios-action-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>
               Reserve this class
             </Link>
-            <Link href={`/checkout?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              Open checkout
+            <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
+              Open reservation flow
             </Link>
             <Link href={`${withSiteBase(basePath, '/rent')}?${backQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
               Back to rental results

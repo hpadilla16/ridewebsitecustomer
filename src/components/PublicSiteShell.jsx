@@ -115,7 +115,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               <div className={styles.footerLinks}>
                 <Link href={withSiteBase(basePath, '/rent')}>Daily Rentals</Link>
                 <Link href={withSiteBase(basePath, '/car-sharing')}>Car Sharing</Link>
-                <Link href={withSiteBase(basePath, '/checkout')}>Unified Checkout</Link>
+                <Link href={withSiteBase(basePath, '/checkout')}>Checkout</Link>
               </div>
             </div>
             <div className={styles.footerColumn}>
