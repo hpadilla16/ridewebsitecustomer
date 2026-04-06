@@ -46,6 +46,7 @@ export default function ConfirmationPage() {
   const paymentAction = useMemo(() => actionFor(confirmation, 'payment'), [confirmation]);
   const customerInfoAction = useMemo(() => actionFor(confirmation, 'customerInfo'), [confirmation]);
   const signatureAction = useMemo(() => actionFor(confirmation, 'signature'), [confirmation]);
+  const confirmationEmail = confirmation?.confirmationEmail || null;
   const dueNow = confirmationAmount(confirmation, [
     'pricingBreakdown.dueNow',
     'pricingBreakdown.depositDue',
@@ -76,7 +77,9 @@ export default function ConfirmationPage() {
           <div className={styles.detailRibbon}>
             <span className={styles.detailRibbonChip}>{bookingType}</span>
             <span className={styles.detailRibbonChip}>Reference {reference}</span>
-            <span className={styles.detailRibbonChip}>Email sent to {confirmation?.customer?.email || '-'}</span>
+            <span className={styles.detailRibbonChip}>
+              {confirmationEmail?.emailSent ? `Email sent to ${confirmation?.customer?.email || '-'}` : `Email status: ${confirmationEmail?.warning ? 'warning' : 'pending'}`}
+            </span>
             <span className={styles.detailRibbonChip}>{dueNow > 0 ? `Due now ${fmtMoney(dueNow)}` : 'No payment due right now'}</span>
           </div>
         ) : null}
@@ -125,9 +128,15 @@ export default function ConfirmationPage() {
             </div>
             <div className={styles.storyCard}>
               <div className="label">Guest communication</div>
-              <h3 style={{ margin: '8px 0 10px' }}>Confirmation email should already be on the way</h3>
+              <h3 style={{ margin: '8px 0 10px' }}>
+                {confirmationEmail?.emailSent ? 'Confirmation email has been sent' : 'Confirmation email status'}
+              </h3>
               <p className="ui-muted" style={{ margin: 0 }}>
-                Ride Fleet should already be sending the guest their reservation confirmation and the next trip links at <strong>{confirmation?.customer?.email || '-'}</strong>.
+                {confirmationEmail?.emailSent
+                  ? <>Ride Fleet sent the guest their reservation confirmation and next trip links to <strong>{confirmation?.customer?.email || '-'}</strong>.</>
+                  : confirmationEmail?.warning
+                    ? <>{confirmationEmail.warning}</>
+                    : <>Ride Fleet is still processing the reservation confirmation email for <strong>{confirmation?.customer?.email || '-'}</strong>.</>}
               </p>
             </div>
             <div className={styles.reassurancePanel}>
