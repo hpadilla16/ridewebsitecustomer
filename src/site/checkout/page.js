@@ -57,6 +57,16 @@ function StepCard({ label, active, done }) {
   );
 }
 
+function ReserveFlowStep({ step, title, body }) {
+  return (
+    <div className="surface-note" style={{ display: 'grid', gap: 6 }}>
+      <span className="label">Step {step}</span>
+      <strong>{title}</strong>
+      <div className="ui-muted">{body}</div>
+    </div>
+  );
+}
+
 function CheckoutInner() {
   const router = useRouter();
   const pathname = usePathname();
@@ -137,6 +147,11 @@ function CheckoutInner() {
   const insuranceTotal = Number(selectedInsurancePlan?.total || 0);
   const baseTotal = Number(searchMode === 'RENTAL' ? selectedResult?.quote?.estimatedTripTotal || 0 : selectedResult?.quote?.total || 0);
   const estimatedTotal = baseTotal + addOnsTotal + insuranceTotal;
+  const estimatedDueNow = Number(
+    searchMode === 'RENTAL'
+      ? selectedResult?.quote?.dueNow ?? selectedResult?.quote?.depositDueNow ?? selectedResult?.quote?.amountDueNow ?? 0
+      : selectedResult?.quote?.dueNow ?? selectedResult?.quote?.amountDueNow ?? selectedResult?.quote?.depositDueNow ?? 0
+  );
   const gallery = searchMode === 'RENTAL'
     ? rentalResultImageList(selectedResult)
     : normalizeImageList(selectedResult?.imageUrls?.length ? selectedResult.imageUrls : selectedResult?.primaryImageUrl ? [selectedResult.primaryImageUrl] : []);
@@ -322,7 +337,29 @@ function CheckoutInner() {
                     {insuranceTotal ? <div className="row-between" style={{ marginBottom: 0 }}><span>Insurance</span><strong>{fmtMoney(insuranceTotal)}</strong></div> : null}
                     <div className="row-between" style={{ marginBottom: 0 }}><span>Estimated total</span><strong>{fmtMoney(estimatedTotal)}</strong></div>
                   </div>
-                  <div className="surface-note">When you confirm, the reservation is created in Ride Fleet, the guest receives the confirmation email, and the next step can continue to payment.</div>
+                  <div className={styles.storyCard}>
+                    <div className="label">What happens after you reserve</div>
+                    <h3 style={{ margin: '8px 0 10px' }}>The guest moves into the next step without needing operations access.</h3>
+                    <div className="stack" style={{ gap: 10 }}>
+                      <ReserveFlowStep
+                        step="1"
+                        title="Reservation is created"
+                        body="The booking is written into Ride Fleet immediately with the trip details, selected services, and guest information."
+                      />
+                      <ReserveFlowStep
+                        step="2"
+                        title={estimatedDueNow > 0 ? 'Guest continues to payment' : 'Guest sees the confirmation screen'}
+                        body={estimatedDueNow > 0
+                          ? `If payment is due now, the guest is guided into the hosted payment handoff for ${fmtMoney(estimatedDueNow)}.`
+                          : 'If no payment is due right now, the guest lands on a clear confirmation screen with the next digital actions.'}
+                      />
+                      <ReserveFlowStep
+                        step="3"
+                        title="Email and next links are sent"
+                        body="The confirmation email includes links for payment, customer info, and signature so the trip can keep moving digitally."
+                      />
+                    </div>
+                  </div>
                 </div>
               ) : null}
 
@@ -359,12 +396,13 @@ function CheckoutInner() {
             {addOnsTotal ? <div className={styles.checkoutSummaryRow}><span>Add-ons</span><strong>{fmtMoney(addOnsTotal)}</strong></div> : null}
             {insuranceTotal ? <div className={styles.checkoutSummaryRow}><span>Protection</span><strong>{fmtMoney(insuranceTotal)}</strong></div> : null}
             <div className={styles.checkoutSummaryRow}><span>Estimated total</span><strong>{fmtMoney(estimatedTotal)}</strong></div>
+            <div className={styles.checkoutSummaryRow}><span>Estimated due now</span><strong>{fmtMoney(estimatedDueNow)}</strong></div>
           </div>
           <div className={styles.reassurancePanel}>
             <div className="label">After reserve</div>
             <div className={styles.reassuranceChecklist}>
               <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>The reservation is created in Ride Fleet</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>The guest is sent into hosted payment if money is due now</span></div>
+              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>{estimatedDueNow > 0 ? `The guest is sent into hosted payment for ${fmtMoney(estimatedDueNow)}` : 'If nothing is due now, the guest stays in a clear confirmation flow'}</span></div>
               <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Confirmation email and next links continue the trip flow</span></div>
             </div>
           </div>

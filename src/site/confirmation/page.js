@@ -37,6 +37,17 @@ function actionFor(payload, key) {
   return action;
 }
 
+function buildActionCard(action, fallbackTitle, fallbackBody, variant = 'secondary') {
+  if (!action?.link) return null;
+  return {
+    key: fallbackTitle.toLowerCase().replace(/\s+/g, '-'),
+    title: action.label || fallbackTitle,
+    body: fallbackBody,
+    href: action.link,
+    variant
+  };
+}
+
 export default function ConfirmationPage() {
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
@@ -69,26 +80,23 @@ export default function ConfirmationPage() {
   const customerInfoAction = actionFor(confirmation, 'customerInfo');
   const signatureAction = actionFor(confirmation, 'signature');
   const confirmationEmail = confirmation?.confirmationEmail || null;
-  const actionCards = [
-    paymentAction?.link ? {
-      key: 'payment',
-      title: 'Pay now',
-      body: 'Move into the hosted payment step and finish the due-now portion of the trip.',
-      href: paymentAction.link
-    } : null,
-    customerInfoAction?.link ? {
-      key: 'customer',
-      title: 'Complete customer info',
-      body: 'Finish personal details, license, and trip information before pickup.',
-      href: customerInfoAction.link
-    } : null,
-    signatureAction?.link ? {
-      key: 'signature',
-      title: 'Open agreement signature',
-      body: 'Continue the digital agreement and signature handoff.',
-      href: signatureAction.link
-    } : null
-  ].filter(Boolean);
+  const paymentCard = buildActionCard(paymentAction, 'Pay now', 'Move into the hosted payment step and finish the due-now portion of the trip.', 'payment');
+  const customerCard = buildActionCard(customerInfoAction, 'Complete customer info', 'Finish personal details, license, and trip information before pickup.', 'customer');
+  const signatureCard = buildActionCard(signatureAction, 'Open agreement signature', 'Continue the digital agreement and signature handoff.', 'signature');
+  const primaryAction = dueNow > 0
+    ? paymentCard || customerCard || signatureCard || null
+    : customerCard || signatureCard || paymentCard || null;
+  const actionCards = [paymentCard, customerCard, signatureCard].filter(Boolean);
+  const secondaryActions = primaryAction
+    ? actionCards.filter((action) => action.key !== primaryAction.key)
+    : actionCards;
+  const primaryActionBody = primaryAction?.variant === 'payment'
+    ? `Continue into the hosted payment step${dueNow > 0 ? ` for ${fmtMoney(dueNow)}` : ''}.`
+    : primaryAction?.variant === 'customer'
+      ? 'Finish customer information so pre-check-in and payment links stay complete.'
+      : primaryAction?.variant === 'signature'
+        ? 'Move the guest into the digital agreement and signature step.'
+        : 'Continue the reservation flow.';
 
   if (!mounted) {
     return (
@@ -172,7 +180,7 @@ export default function ConfirmationPage() {
             </div>
             <div className={styles.checkoutSummaryRow}>
               <span>Next move</span>
-              <strong>{paymentAction?.link && dueNow > 0 ? 'Send guest to payment' : 'Review next steps below'}</strong>
+              <strong>{primaryAction ? primaryAction.title : 'Review next steps below'}</strong>
             </div>
           </div>
 
@@ -217,7 +225,7 @@ export default function ConfirmationPage() {
             <div className="label">Recommended sequence</div>
             <div className={styles.reassuranceChecklist}>
               <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Review customer info and reservation details</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Send the guest into payment if there is an amount due now</span></div>
+              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>{dueNow > 0 ? 'Send the guest into payment before anything else' : 'Move into customer info or signature if no payment is due right now'}</span></div>
               <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Finish signature and pre-check-in links from the confirmation actions</span></div>
             </div>
           </div>
@@ -225,27 +233,41 @@ export default function ConfirmationPage() {
 
         <div className={`glass card-lg ${styles.asidePanel}`}>
           <div className={styles.detailAsideHero}>
-            <span className="label">Next Actions</span>
-            <strong>Guide the guest into the next digital step without sending them back into operations tools.</strong>
+            <span className="label">Primary Guest Handoff</span>
+            <strong>{primaryAction ? primaryAction.title : 'Next actions are ready below.'}</strong>
           </div>
+          {primaryAction ? (
+            <div className={styles.checkoutSummaryPanel}>
+              <div className="label">Recommended next step</div>
+              <div style={{ display: 'grid', gap: 8 }}>
+                <strong>{primaryAction.title}</strong>
+                <div className="ui-muted">{primaryActionBody}</div>
+                <div className="ui-muted">
+                  {primaryAction.variant === 'payment'
+                    ? 'The guest stays in a hosted payment experience and then returns with the trip already in motion.'
+                    : 'The guest continues the reservation digitally without needing help from an ops dashboard.'}
+                </div>
+              </div>
+            </div>
+          ) : null}
 
-          {actionCards.length ? actionCards.map((action) => (
+          {secondaryActions.length ? secondaryActions.map((action) => (
             <a key={action.key} href={action.href} target="_blank" rel="noreferrer" className={styles.confirmationActionCard} style={{ textDecoration: 'none' }}>
               <strong>{action.title}</strong>
               <div className="ui-muted" style={{ marginTop: 6 }}>{action.body}</div>
             </a>
-          )) : (
+          )) : !primaryAction ? (
             <div className="surface-note">
               <strong>No public next step links were returned</strong>
               <div className="ui-muted" style={{ marginTop: 6 }}>
                 This booking completed, but the API did not return public actions for payment or follow-up.
               </div>
             </div>
-          )}
+          ) : null}
 
-          {paymentAction?.link ? (
-            <a href={paymentAction.link} target="_blank" rel="noreferrer" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none' }}>
-              Pay now
+          {primaryAction?.link ? (
+            <a href={primaryAction.link} target="_blank" rel="noreferrer" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none' }}>
+              {primaryAction.title}
             </a>
           ) : null}
 
