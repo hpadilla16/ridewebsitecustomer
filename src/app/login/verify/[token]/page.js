@@ -1,4 +1,2 @@
-import VerifyPage from '@/site/login/verify/page';
-export default function Page({ params }) {
-  return <VerifyPage params={params} />;
-}
+'use client';
+export { default } from '../../../../site/login/verify/page';

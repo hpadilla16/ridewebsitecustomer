@@ -16,6 +16,7 @@ import {
   listingVehicleLabel,
   normalizeImageList,
   normalizePublicLocationSelectionId,
+  publicCarSharingTenantSlug,
   publicLocationLabel,
   rentalResultImageList,
   resolveSiteBasePath,
@@ -74,6 +75,11 @@ function CheckoutInner() {
   const searchParams = useSearchParams();
 
   const searchMode = String(searchParams.get('searchMode') || '').toUpperCase() === 'CAR_SHARING' ? 'CAR_SHARING' : 'RENTAL';
+  const requestedTenantSlug = String(searchParams.get('tenantSlug') || '').trim().toLowerCase();
+  const defaultCarSharingTenantSlug = publicCarSharingTenantSlug();
+  const scopedTenantSlug = searchMode === 'CAR_SHARING'
+    ? (requestedTenantSlug || defaultCarSharingTenantSlug)
+    : requestedTenantSlug;
   const vehicleTypeId = String(searchParams.get('vehicleTypeId') || '');
   const listingId = String(searchParams.get('listingId') || '');
   const pickupAt = String(searchParams.get('pickupAt') || '');
@@ -96,7 +102,7 @@ function CheckoutInner() {
     (async () => {
       try {
         setLoading(true);
-        const boot = await fetchBookingBootstrap();
+        const boot = await fetchBookingBootstrap({ tenantSlug: scopedTenantSlug });
         const locationOptions = buildPublicLocationOptions(boot?.locations || []);
         const pickupPublicId = normalizePublicLocationSelectionId(locationOptions, pickupSelectionId) || locationOptions[0]?.id || '';
         const returnPublicId = normalizePublicLocationSelectionId(locationOptions, returnSelectionId) || pickupPublicId;
@@ -106,7 +112,7 @@ function CheckoutInner() {
         const payload = await api(searchMode === 'CAR_SHARING' ? '/api/public/booking/car-sharing-search' : '/api/public/booking/rental-search', {
           method: 'POST',
           body: JSON.stringify({
-            tenantSlug: boot?.selectedTenant?.slug || '',
+            tenantSlug: boot?.selectedTenant?.slug || scopedTenantSlug || '',
             pickupLocationId: pickupLocationIds[0],
             pickupLocationIds,
             returnLocationId: (returnLocationIds[0] || pickupLocationIds[0]),
@@ -137,7 +143,7 @@ function CheckoutInner() {
       }
     })();
     return () => { ignore = true; };
-  }, [listingId, pickupAt, pickupSelectionId, returnAt, returnSelectionId, searchMode, vehicleTypeId]);
+  }, [listingId, pickupAt, pickupSelectionId, returnAt, returnSelectionId, scopedTenantSlug, searchMode, vehicleTypeId]);
 
   const locationOptions = useMemo(() => buildPublicLocationOptions(bootstrap?.locations || []), [bootstrap]);
   const returnOption = useMemo(() => findPublicLocationOption(locationOptions, returnSelectionId || pickupSelectionId), [locationOptions, pickupSelectionId, returnSelectionId]);
@@ -180,7 +186,7 @@ function CheckoutInner() {
       const payload = await api('/api/public/booking/checkout', {
         method: 'POST',
         body: JSON.stringify({
-          tenantSlug: bootstrap?.selectedTenant?.slug || '',
+          tenantSlug: bootstrap?.selectedTenant?.slug || scopedTenantSlug || '',
           searchType: searchMode,
           pickupAt,
           returnAt,

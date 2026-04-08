@@ -1,2 +1,1 @@
-import IssuePage from '@/site/account/issue/page';
-export default IssuePage;
+export { default } from '../../../site/account/issue/page';

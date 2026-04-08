@@ -35,6 +35,7 @@ Examples:
 
 ```env
 NEXT_PUBLIC_API_BASE=https://ridefleetmanager.com
+NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG=
 ```
 
 ## Recommended Public URL Variable
@@ -57,6 +58,34 @@ Example:
 ```env
 NEXT_PUBLIC_SITE_URL=https://beta.ride-carsharing.com
 ```
+
+## Optional Tenant Scope For Car Sharing
+
+### `NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG`
+
+Use this when you want the `car-sharing` side of the website to point to a dedicated tenant only.
+
+This is the recommended setup if:
+
+- car sharing inventory should stay separate from daily rental inventory
+- featured car sharing listings should come from a dedicated tenant
+- you want to reduce the risk of operational crossover or accidental double booking between rental and car sharing supply
+
+Example:
+
+```env
+NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG=ride-car-sharing
+```
+
+Current behavior:
+
+- `/car-sharing`
+- `/car-sharing/[listingId]`
+- `checkout` when `searchMode=CAR_SHARING`
+
+will use this tenant slug when present.
+
+This keeps the car sharing lane isolated while allowing the rental lane to continue using its own inventory model.
 
 ## How The Website Uses `NEXT_PUBLIC_API_BASE`
 

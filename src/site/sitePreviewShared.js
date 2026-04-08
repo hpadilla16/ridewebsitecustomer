@@ -1,5 +1,9 @@
 import { api } from '../lib/client';
 
+export function publicCarSharingTenantSlug() {
+  return String(process.env.NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG || '').trim().toLowerCase();
+}
+
 export function fmtMoney(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value || 0));
 }
@@ -142,6 +146,8 @@ export function withSiteBase(basePath, path = '') {
   return basePath ? `${basePath}${normalizedPath}` : normalizedPath;
 }
 
-export function fetchBookingBootstrap() {
-  return api('/api/public/booking/bootstrap', { cacheTtlMs: 60000 });
+export function fetchBookingBootstrap(options = {}) {
+  const tenantSlug = String(options?.tenantSlug || '').trim();
+  const query = tenantSlug ? `?${searchParamsToString({ tenantSlug })}` : '';
+  return api(`/api/public/booking/bootstrap${query}`, { cacheTtlMs: 60000 });
 }

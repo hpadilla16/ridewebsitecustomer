@@ -159,7 +159,8 @@ function appendDeliveryArea(text, area) {
 
 function BecomeAHostPageInner() {
   const searchParams = useSearchParams();
-  const initialTenantSlug = String(searchParams.get('tenantSlug') || '').trim().toLowerCase();
+  const envTenantSlug = String(process.env.NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG || '').trim().toLowerCase();
+  const initialTenantSlug = String(searchParams.get('tenantSlug') || '').trim().toLowerCase() || envTenantSlug;
   const [bootstrap, setBootstrap] = useState({ tenants: [], tenant: null, vehicleTypes: [], locations: [] });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -311,24 +312,22 @@ function BecomeAHostPageInner() {
             ) : null}
 
             <form onSubmit={submit} className="stack">
-              <div className="form-grid-2">
-                <label>
-                  <span className="label">Tenant</span>
-                  <select value={form.tenantSlug} onChange={(e) => setForm((current) => ({ ...current, tenantSlug: e.target.value }))} required>
-                    <option value="">Select tenant</option>
-                    {availableTenants.map((tenant) => (
-                      <option key={tenant.id} value={tenant.slug}>{tenant.name}</option>
-                    ))}
-                  </select>
-                </label>
-                <div className="surface-note" style={{ alignSelf: 'end' }}>
-                  {loading
-                    ? 'Loading host onboarding setup...'
-                    : selectedTenant
-                      ? `${selectedTenant.name} is ready for host onboarding.`
-                      : 'Choose the tenant where this host should publish.'}
+              {!envTenantSlug && (
+                <div className="form-grid-2">
+                  <label>
+                    <span className="label">Tenant</span>
+                    <select value={form.tenantSlug} onChange={(e) => setForm((current) => ({ ...current, tenantSlug: e.target.value }))} required>
+                      <option value="">Select tenant</option>
+                      {availableTenants.map((tenant) => (
+                        <option key={tenant.id} value={tenant.slug}>{tenant.name}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="surface-note" style={{ alignSelf: 'end' }}>
+                    {loading ? 'Loading host onboarding setup...' : selectedTenant ? `${selectedTenant.name} is ready for host onboarding.` : 'Choose the tenant where this host should publish.'}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="form-grid-2">
                 <label>

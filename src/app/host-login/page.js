@@ -1,2 +1,1 @@
-import HostLoginPage from '@/site/host-login/page';
-export default HostLoginPage;
+export { default } from '../../site/host-login/page';

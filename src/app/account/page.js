@@ -1,2 +1,1 @@
-import AccountPage from '@/site/account/page';
-export default AccountPage;
+export { default } from '../../site/account/page';
