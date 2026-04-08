@@ -131,10 +131,8 @@ export default function HostLoginPage() {
                 </p>
 
                 <div className="inline-actions" style={{ marginTop: 4 }}>
-                  <a
-                    href="https://ridefleetmanager.com/host"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/host-status"
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -152,16 +150,17 @@ export default function HostLoginPage() {
                       cursor: 'pointer'
                     }}
                   >
-                    Open Host App
-                    <span aria-hidden="true" style={{ fontSize: '1rem' }}>↗</span>
-                  </a>
-                  <Link
-                    href="/rent"
+                    View Submission Status
+                  </Link>
+                  <a
+                    href="https://ridefleetmanager.com/host"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="button-subtle"
                     style={{ textDecoration: 'none' }}
                   >
-                    Browse rentals
-                  </Link>
+                    Open Host App ↗
+                  </a>
                 </div>
 
                 <div

@@ -137,6 +137,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
                 <Link href={withSiteBase(basePath, '/contact')}>Contact</Link>
                 <Link href={withSiteBase(basePath, '/become-a-host')}>Become a Host</Link>
                 <Link href={withSiteBase(basePath, '/host-login')}>Host Login</Link>
+                <Link href={withSiteBase(basePath, '/host-status')}>Submission Status</Link>
               </div>
             </div>
             <div className={styles.footerColumn}>

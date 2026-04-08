@@ -326,6 +326,12 @@ function CarSharingDetailPreviewContent() {
                     </span>
                   ) : null}
                 </div>
+                {(listing?.vehicle?.mileage || listing?.vehicle?.color || listing?.vehicle?.vin) && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                    {listing?.vehicle?.mileage && <span className={styles.resultMetaChip}>{Number(listing.vehicle.mileage).toLocaleString()} mi</span>}
+                    {listing?.vehicle?.color && <span className={styles.resultMetaChip}>{listing.vehicle.color}</span>}
+                  </div>
+                )}
               </div>
 
               {/* What's included */}
@@ -479,31 +485,21 @@ function CarSharingDetailPreviewContent() {
               <Link
                 href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 54,
-                  borderRadius: 16,
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #6e49ff, #7c3aed 55%, #0fb0d8)',
-                  color: '#fff',
-                  fontWeight: 900,
-                  fontSize: '1.05rem',
-                  textDecoration: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  height: 54, borderRadius: 16, border: 'none', textDecoration: 'none',
+                  background: 'linear-gradient(135deg, #7c3aed, #6e49ff 55%, #0fb0d8)',
+                  color: '#fff', fontWeight: 900, fontSize: '1.05rem',
                   boxShadow: '0 14px 32px rgba(110,73,255,0.32)',
                   letterSpacing: '0.01em',
-                  transition: 'opacity 0.2s ease'
                 }}
               >
                 Book This Car
               </Link>
-              <Link
-                href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`}
-                className={styles.resultSecondaryAction}
-                style={{ textDecoration: 'none', textAlign: 'center' }}
-              >
-                Open reservation flow
-              </Link>
+              {(listing?.deliveryAvailable || listing?.allowDelivery) && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.05)', fontSize: '0.84rem', fontWeight: 700, color: '#15803d' }}>
+                  <span>🚗</span><span>Delivery available for this listing</span>
+                </div>
+              )}
             </div>
 
             {/* Trust line */}

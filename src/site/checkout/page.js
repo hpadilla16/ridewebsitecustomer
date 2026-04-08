@@ -47,23 +47,36 @@ function computeSelectedServices(result, selectedServices, searchMode) {
     });
 }
 
-function StepCard({ label, active, done }) {
+function CheckoutStepBar({ step, searchMode }) {
+  const labels = searchMode === 'RENTAL'
+    ? ['Your info', 'Coverage', 'Review']
+    : ['Your info', 'Add-ons', 'Review'];
   return (
-    <div className={styles.checkoutStepCard}>
-      <span className={`status-chip ${done ? 'good' : active ? '' : 'neutral'}`} style={{ width: 'fit-content' }}>
-        {done ? 'Done' : active ? 'Current' : 'Next'}
-      </span>
-      <strong>{label}</strong>
-    </div>
-  );
-}
-
-function ReserveFlowStep({ step, title, body }) {
-  return (
-    <div className="surface-note" style={{ display: 'grid', gap: 6 }}>
-      <span className="label">Step {step}</span>
-      <strong>{title}</strong>
-      <div className="ui-muted">{body}</div>
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 28 }}>
+      {labels.map((label, i) => (
+        <div key={label} style={{ display: 'contents' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: step > i + 1 ? '#7c3aed' : step === i + 1 ? '#7c3aed' : 'rgba(110,73,255,.1)',
+              color: step >= i + 1 ? '#fff' : '#a090c8',
+              fontWeight: 800, fontSize: step > i + 1 ? 15 : 13,
+              border: step === i + 1 ? '2.5px solid #7c3aed' : '1.5px solid rgba(110,73,255,.18)',
+              boxShadow: step === i + 1 ? '0 4px 14px rgba(110,73,255,.3)' : 'none',
+              transition: 'all 0.22s',
+            }}>
+              {step > i + 1 ? '✓' : i + 1}
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: step >= i + 1 ? '#6e49ff' : '#a090c8' }}>
+              {label}
+            </span>
+          </div>
+          {i < labels.length - 1 && (
+            <div style={{ flex: 1, height: 2.5, borderRadius: 2, margin: '0 8px 18px', background: step > i + 1 ? '#7c3aed' : 'rgba(110,73,255,.12)', transition: 'background 0.3s' }} />
+          )}
+        </div>
+      ))}
     </div>
   );
 }
@@ -165,16 +178,12 @@ function CheckoutInner() {
   const guestInfoComplete = Boolean(customer.firstName.trim() && customer.lastName.trim() && customer.email.trim() && customer.phone.trim());
   const insuranceComplete = searchMode !== 'RENTAL' || !!selectedInsurancePlan || (insuranceSelection.declinedCoverage && insuranceSelection.usingOwnInsurance && insuranceSelection.liabilityAccepted);
   const totalSteps = 3;
-  const checkoutSignals = searchMode === 'RENTAL'
-    ? ['Guest info collected up front', 'Insurance or own coverage confirmed', 'Hosted payment handoff after reservation']
-    : ['Guest info collected up front', 'Trip add-ons reviewed before reserve', 'Hosted payment handoff after reservation'];
-  const currentStepTitle = step === 1
-    ? 'Basic guest information'
-    : step === 2
-      ? (searchMode === 'RENTAL' ? 'Protection and add-ons' : 'Trip add-ons')
-      : 'Review and confirmation';
 
   const backHref = searchMode === 'CAR_SHARING' ? withSiteBase(basePath, `/car-sharing/${listingId}`) : withSiteBase(basePath, `/rent/${vehicleTypeId}`);
+
+  const vehicleName = selectedResult
+    ? (searchMode === 'CAR_SHARING' ? (selectedResult?.title || listingVehicleLabel(selectedResult)) : vehicleTypeLabel(selectedResult?.vehicleType))
+    : '';
 
   async function handleSubmit() {
     if (!guestInfoComplete) return setError('Please complete the guest details first.');
@@ -214,206 +223,321 @@ function CheckoutInner() {
     }
   }
 
-  return (
-    <div className="stack" style={{ gap: 24 }}>
-      <section className={`glass card-lg ${styles.checkoutHero}`}>
-        <span className="eyebrow">Guided Checkout</span>
-        <h1 style={{ marginTop: 8, marginBottom: 8 }}>{searchMode === 'RENTAL' ? 'Reserve this class' : 'Reserve this listing'}</h1>
-        <p className={styles.checkoutHeroLead}>Collect basic guest information, confirm protection and services, then review the trip total before continuing into payment.</p>
-        <div className={styles.detailRibbon}>
-          <span className={styles.detailRibbonChip}>{searchMode === 'RENTAL' ? 'Rental reservation' : 'Car sharing reservation'}</span>
-          <span className={styles.detailRibbonChip}>Hosted payment follows confirmation</span>
-          <span className={styles.detailRibbonChip}>Email and next steps sent after reserve</span>
+  function BookingSummaryAside() {
+    return (
+      <div className={`glass card ${styles.asidePanel}`} style={{ gap: 0, padding: 0, overflow: 'hidden' }}>
+        {gallery[0] && (
+          <div className={styles.galleryFrame} style={{ margin: 0, borderRadius: '20px 20px 0 0' }}>
+            <Image src={gallery[0]} alt={vehicleName} className={styles.galleryImage} width={1200} height={675} sizes="360px" priority unoptimized />
+          </div>
+        )}
+        <div style={{ padding: '18px 20px', display: 'grid', gap: 14 }}>
+          <div>
+            <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '1.02rem' }}>{vehicleName}</div>
+            {selectedResult?.instantBook && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 6, padding: '4px 10px', borderRadius: 999, background: 'linear-gradient(135deg,#16a34a,#15803d)', color: '#fff', fontSize: '0.76rem', fontWeight: 800 }}>
+                ⚡ Instant Book
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'grid', gap: 8, padding: '12px 14px', borderRadius: 14, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
+              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Pickup</span>
+              <span>{formatPublicDateTime(pickupAt)}</span>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(110,73,255,.1)' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
+              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Return</span>
+              <span>{formatPublicDateTime(returnAt)}</span>
+            </div>
+          </div>
+          {publicLocationLabel(selectedLocation) !== 'Location' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.87rem', color: '#53607b', fontWeight: 600 }}>
+              <span>📍</span><span>{publicLocationLabel(selectedLocation)}</span>
+            </div>
+          )}
+          <div style={{ borderTop: '1px solid rgba(110,73,255,.1)', paddingTop: 14, display: 'grid', gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
+              <span>Base trip</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
+            </div>
+            {addOnsTotal > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
+                <span>Add-ons</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
+              </div>
+            )}
+            {insuranceTotal > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
+                <span>Coverage</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
+              </div>
+            )}
+            <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontWeight: 800, color: '#1e2847' }}>Total</span>
+              <span style={{ fontWeight: 900, fontSize: '1.15rem', color: '#1e2847' }}>{fmtMoney(estimatedTotal)}</span>
+            </div>
+            {estimatedDueNow > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.87rem', color: '#53607b' }}>
+                <span>Due now</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
+              </div>
+            )}
+          </div>
+          <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
+            🛡 Trip protection included · No hidden fees
+          </div>
         </div>
-      </section>
+      </div>
+    );
+  }
 
-      <section className={styles.checkoutStepRail}>
-        <StepCard label="Guest details" active={step === 1} done={step > 1} />
-        <StepCard label={searchMode === 'RENTAL' ? 'Insurance and services' : 'Trip add-ons'} active={step === 2} done={step > 2} />
-        <StepCard label="Review and reserve" active={step === 3} done={false} />
-      </section>
+  return (
+    <div style={{ maxWidth: 960, margin: '0 auto', padding: '28px 18px 60px', display: 'grid', gap: 20 }}>
+      <div>
+        <Link href={backHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.88rem', fontWeight: 700, color: '#4a38be', textDecoration: 'none' }}>
+          ← Back to listing
+        </Link>
+      </div>
 
-      <section className={styles.detailGrid}>
-        <div className={`glass card ${styles.contentPanel}`}>
-          {loading ? <div className="ui-muted">Preparing checkout...</div> : null}
-          {!loading && error ? <div className="label" style={{ color: '#b91c1c' }}>{error}</div> : null}
-          {!loading && selectedResult ? (
-            <div className="stack" style={{ gap: 18 }}>
-              <section className={styles.checkoutStageIntro}>
-                <div className={styles.checkoutStageCopy}>
-                  <span className="label">Step {step} of {totalSteps}</span>
-                  <h2 className={styles.checkoutStageTitle}>{currentStepTitle}</h2>
-                  <p className="ui-muted" style={{ margin: 0 }}>
-                    {step === 1
-                      ? 'Start with the guest details that keep the reservation, payment, and follow-up links connected.'
-                      : step === 2
-                        ? 'Confirm the protection story and any extra services before the guest reaches payment.'
-                        : 'Review the trip summary so the final handoff feels clear, calm, and trustworthy.'}
-                  </p>
-                </div>
-                <div className={styles.checkoutSignalStack}>
-                  {checkoutSignals.map((signal) => (
-                    <span key={signal} className={styles.checkoutSignalBadge}>{signal}</span>
-                  ))}
-                </div>
-              </section>
-              {step === 1 ? (
+      <CheckoutStepBar step={step} searchMode={searchMode} />
+
+      {error && !loading && (
+        <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(220,38,38,.07)', border: '1px solid rgba(220,38,38,.2)', color: '#991b1b', fontWeight: 600, fontSize: '0.93rem' }}>
+          {error}
+        </div>
+      )}
+
+      <div className={styles.detailGrid}>
+        <div className={`glass card ${styles.contentPanel}`} style={{ gap: 24 }}>
+          {loading && (
+            <div style={{ color: '#6b7a9a', fontWeight: 600 }}>Preparing your booking...</div>
+          )}
+          {!loading && selectedResult && (
+            <div style={{ display: 'grid', gap: 24 }}>
+              {step === 1 && (
                 <>
-                  <div className="section-title" style={{ fontSize: 18 }}>Basic information</div>
-                  <div className="form-grid-2">
-                    <div><div className="label">First Name</div><input value={customer.firstName} onChange={(e) => setCustomer((current) => ({ ...current, firstName: e.target.value }))} /></div>
-                    <div><div className="label">Last Name</div><input value={customer.lastName} onChange={(e) => setCustomer((current) => ({ ...current, lastName: e.target.value }))} /></div>
+                  <div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Your information</h2>
+                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>We need a few details to complete your reservation.</p>
                   </div>
                   <div className="form-grid-2">
-                    <div><div className="label">Email</div><input type="email" value={customer.email} onChange={(e) => setCustomer((current) => ({ ...current, email: e.target.value }))} /></div>
-                    <div><div className="label">Phone</div><input value={customer.phone} onChange={(e) => setCustomer((current) => ({ ...current, phone: e.target.value }))} /></div>
+                    <div><div className="label">First name</div><input value={customer.firstName} onChange={(e) => setCustomer((c) => ({ ...c, firstName: e.target.value }))} placeholder="Jane" /></div>
+                    <div><div className="label">Last name</div><input value={customer.lastName} onChange={(e) => setCustomer((c) => ({ ...c, lastName: e.target.value }))} placeholder="Smith" /></div>
+                  </div>
+                  <div className="form-grid-2">
+                    <div><div className="label">Email address</div><input type="email" value={customer.email} onChange={(e) => setCustomer((c) => ({ ...c, email: e.target.value }))} placeholder="jane@example.com" /></div>
+                    <div><div className="label">Phone number</div><input value={customer.phone} onChange={(e) => setCustomer((c) => ({ ...c, phone: e.target.value }))} placeholder="+1 787 555 0100" /></div>
                   </div>
                   <div className="form-grid-3">
-                    <div><div className="label">Date of Birth</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((current) => ({ ...current, dateOfBirth: e.target.value }))} /></div>
-                    <div><div className="label">License Number</div><input value={customer.licenseNumber} onChange={(e) => setCustomer((current) => ({ ...current, licenseNumber: e.target.value }))} /></div>
-                    <div><div className="label">License State</div><input value={customer.licenseState} onChange={(e) => setCustomer((current) => ({ ...current, licenseState: e.target.value }))} /></div>
+                    <div><div className="label">Date of birth</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((c) => ({ ...c, dateOfBirth: e.target.value }))} /></div>
+                    <div><div className="label">License number</div><input value={customer.licenseNumber} onChange={(e) => setCustomer((c) => ({ ...c, licenseNumber: e.target.value }))} /></div>
+                    <div><div className="label">License state</div><input value={customer.licenseState} onChange={(e) => setCustomer((c) => ({ ...c, licenseState: e.target.value }))} placeholder="PR" /></div>
+                  </div>
+                  <div style={{ padding: '12px 16px', borderRadius: 14, background: 'rgba(110,73,255,.05)', border: '1px solid rgba(110,73,255,.1)', fontSize: '0.84rem', color: '#53607b', lineHeight: 1.6 }}>
+                    🔒 Your information is encrypted and used only to manage your reservation.
                   </div>
                 </>
-              ) : null}
+              )}
 
-              {step === 2 ? (
+              {step === 2 && (
                 <>
-                  {searchMode === 'RENTAL' ? (
-                    <div className="stack" style={{ gap: 12 }}>
-                      <div className="section-title" style={{ fontSize: 18 }}>Insurance</div>
-                      {(selectedResult?.insurancePlans || []).map((plan) => (
-                        <label key={plan.code} className={`${styles.checkoutChoiceCard} surface-note`}>
-                          <div className={styles.checkoutChoiceHeader}>
-                            <strong>{plan.name}</strong>
-                            <input
-                              type="radio"
-                              name="insurance"
-                              className={styles.checkoutRadio}
-                              checked={String(insuranceSelection.selectedPlanCode || '').toUpperCase() === String(plan.code || '').toUpperCase()}
-                              onChange={() => setInsuranceSelection((current) => ({ ...current, selectedPlanCode: plan.code, declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false }))}
-                            />
-                          </div>
-                          <div className="ui-muted">{plan.description || 'Protection plan'}</div>
-                          <strong>{fmtMoney(plan.total)}</strong>
-                        </label>
-                      ))}
-                      <div className={`${styles.checkoutChoiceCard} surface-note`}>
-                        <strong>Use your own insurance</strong>
-                        <div className={styles.checkoutCheckStack}>
-                          <label className={styles.checkoutCheckRow}><input type="checkbox" className={styles.checkoutCheckbox} checked={insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((current) => ({ ...current, selectedPlanCode: '', declinedCoverage: e.target.checked }))} /><span>Decline company coverage</span></label>
-                          <label className={styles.checkoutCheckRow}><input type="checkbox" className={styles.checkoutCheckbox} checked={insuranceSelection.usingOwnInsurance} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((current) => ({ ...current, usingOwnInsurance: e.target.checked }))} /><span>Guest will use their own insurance</span></label>
-                          <label className={styles.checkoutCheckRow}><input type="checkbox" className={styles.checkoutCheckbox} checked={insuranceSelection.liabilityAccepted} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((current) => ({ ...current, liabilityAccepted: e.target.checked }))} /><span>Guest accepts responsibility and liability</span></label>
+                  {searchMode === 'RENTAL' && (
+                    <div style={{ display: 'grid', gap: 12 }}>
+                      <div>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Trip coverage</h2>
+                        <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Choose a protection plan or confirm you have your own coverage.</p>
+                      </div>
+                      {(selectedResult?.insurancePlans || []).map((plan) => {
+                        const isSelected = String(insuranceSelection.selectedPlanCode || '').toUpperCase() === String(plan.code || '').toUpperCase();
+                        return (
+                          <label key={plan.code} style={{ display: 'grid', gap: 10, padding: '16px 18px', borderRadius: 16, border: `2px solid ${isSelected ? '#6e49ff' : 'rgba(110,73,255,.15)'}`, background: isSelected ? 'rgba(110,73,255,.05)' : 'rgba(255,255,255,.8)', cursor: 'pointer', transition: 'all 0.18s' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <input type="radio" name="insurance" checked={isSelected} onChange={() => setInsuranceSelection((c) => ({ ...c, selectedPlanCode: plan.code, declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false }))} style={{ accentColor: '#6e49ff', width: 18, height: 18 }} />
+                                <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>{plan.name}</strong>
+                              </div>
+                              <span style={{ fontWeight: 800, color: '#1e2847' }}>{fmtMoney(plan.total)}</span>
+                            </div>
+                            {plan.description && (
+                              <div style={{ fontSize: '0.85rem', color: '#6b7a9a', paddingLeft: 28 }}>{plan.description}</div>
+                            )}
+                          </label>
+                        );
+                      })}
+                      <div style={{ padding: '16px 18px', borderRadius: 16, border: '1.5px solid rgba(110,73,255,.15)', background: 'rgba(255,255,255,.8)', display: 'grid', gap: 12 }}>
+                        <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>Use my own insurance</strong>
+                        <div style={{ display: 'grid', gap: 8 }}>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
+                            <input type="checkbox" checked={insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, selectedPlanCode: '', declinedCoverage: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
+                            <span>Decline company coverage</span>
+                          </label>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
+                            <input type="checkbox" checked={insuranceSelection.usingOwnInsurance} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, usingOwnInsurance: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
+                            <span>I will use my own insurance</span>
+                          </label>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
+                            <input type="checkbox" checked={insuranceSelection.liabilityAccepted} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, liabilityAccepted: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
+                            <span>I accept responsibility and liability</span>
+                          </label>
                         </div>
-                        <div><div className="label">Policy Number</div><input value={insuranceSelection.ownPolicyNumber} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((current) => ({ ...current, ownPolicyNumber: e.target.value }))} /></div>
+                        <div>
+                          <div className="label">Policy number</div>
+                          <input value={insuranceSelection.ownPolicyNumber} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, ownPolicyNumber: e.target.value }))} />
+                        </div>
                       </div>
                     </div>
-                  ) : null}
+                  )}
 
-                  <div className="stack" style={{ gap: 12 }}>
-                    <div className="section-title" style={{ fontSize: 18 }}>{searchMode === 'RENTAL' ? 'Additional services' : 'Trip add-ons'}</div>
-                    {selectedResult?.additionalServices?.length ? selectedResult.additionalServices.map((service) => {
-                      const state = selectedServices[service.serviceId] || { selected: !!service.mandatory, quantity: Math.max(1, Number(service.quantity || 1) || 1) };
-                      return (
-                        <div key={service.serviceId} className={`${styles.checkoutChoiceCard} surface-note`}>
-                          <div className={styles.checkoutChoiceHeader}>
-                            <div><strong>{service.name}</strong><div className="ui-muted">{service.description || 'Optional service'}</div></div>
-                            <label className={styles.checkoutCheckRow}><input type="checkbox" className={styles.checkoutCheckbox} checked={!!state.selected || !!service.mandatory} disabled={!!service.mandatory} onChange={(e) => setSelectedServices((current) => ({ ...current, [service.serviceId]: { selected: e.target.checked, quantity: Math.max(1, Number(current[service.serviceId]?.quantity ?? service.quantity ?? 1) || 1) } }))} /><span>{service.mandatory ? 'Included' : 'Add'}</span></label>
-                          </div>
-                          <div className="form-grid-3">
-                            <div><div className="label">Quantity</div><input type="number" min="1" value={state.quantity} disabled={!state.selected && !service.mandatory} onChange={(e) => setSelectedServices((current) => ({ ...current, [service.serviceId]: { selected: current[service.serviceId]?.selected ?? !!service.mandatory, quantity: Math.max(1, Number(e.target.value || 1) || 1) } }))} /></div>
-                            <div><div className="label">Rate</div><input value={fmtMoney(service.rate)} disabled /></div>
-                            <div><div className="label">Billing</div><input value={service.pricingMode === 'PER_DAY' ? 'Per day' : 'Flat'} disabled /></div>
-                          </div>
+                  <div style={{ display: 'grid', gap: 12 }}>
+                    <div>
+                      <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{searchMode === 'RENTAL' ? 'Add-ons' : 'Trip add-ons'}</h2>
+                      <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Customize your trip with optional extras.</p>
+                    </div>
+                    {selectedResult?.additionalServices?.length
+                      ? selectedResult.additionalServices.map((service) => {
+                          const state = selectedServices[service.serviceId] || { selected: !!service.mandatory, quantity: Math.max(1, Number(service.quantity || 1) || 1) };
+                          return (
+                            <div key={service.serviceId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '16px 18px', borderRadius: 16, border: `1.5px solid ${state.selected || service.mandatory ? 'rgba(110,73,255,.25)' : 'rgba(110,73,255,.12)'}`, background: state.selected || service.mandatory ? 'rgba(110,73,255,.04)' : 'rgba(255,255,255,.8)', gap: 12 }}>
+                              <div style={{ flex: 1 }}>
+                                <strong style={{ color: '#1e2847', fontSize: '0.95rem' }}>{service.name}</strong>
+                                {service.description && (
+                                  <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 3 }}>{service.description}</div>
+                                )}
+                                <div style={{ fontSize: '0.83rem', color: '#6b7a9a', marginTop: 4 }}>{fmtMoney(service.rate)} {service.pricingMode === 'PER_DAY' ? '/ day' : 'flat'}</div>
+                                {(state.selected || service.mandatory) && (
+                                  <div style={{ marginTop: 10 }}>
+                                    <div className="label">Quantity</div>
+                                    <input type="number" min="1" value={state.quantity} disabled={!state.selected && !service.mandatory} onChange={(e) => setSelectedServices((c) => ({ ...c, [service.serviceId]: { selected: c[service.serviceId]?.selected ?? !!service.mandatory, quantity: Math.max(1, Number(e.target.value || 1) || 1) } }))} style={{ width: 80, padding: '8px 12px', borderRadius: 10, border: '1.5px solid rgba(110,73,255,.18)', background: '#fff', color: '#1e2847', fontSize: '0.95rem' }} />
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                {service.mandatory
+                                  ? <span style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(22,163,74,.1)', color: '#15803d', fontSize: '0.78rem', fontWeight: 800 }}>Included</span>
+                                  : (
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: '0.88rem', fontWeight: 700, color: state.selected ? '#6e49ff' : '#6b7a9a' }}>
+                                      <input type="checkbox" checked={!!state.selected} onChange={(e) => setSelectedServices((c) => ({ ...c, [service.serviceId]: { selected: e.target.checked, quantity: Math.max(1, Number(c[service.serviceId]?.quantity ?? service.quantity ?? 1) || 1) } }))} style={{ accentColor: '#6e49ff', width: 18, height: 18 }} />
+                                      Add
+                                    </label>
+                                  )
+                                }
+                              </div>
+                            </div>
+                          );
+                        })
+                      : (
+                        <div style={{ padding: '20px', borderRadius: 16, background: 'rgba(110,73,255,.04)', border: '1px solid rgba(110,73,255,.1)', color: '#6b7a9a', fontSize: '0.9rem', textAlign: 'center' }}>
+                          No add-ons available for this trip.
                         </div>
-                      );
-                    }) : <div className="surface-note">No online add-ons are configured for this option yet.</div>}
+                      )
+                    }
                   </div>
                 </>
-              ) : null}
+              )}
 
-              {step === 3 ? (
-                <div className="stack" style={{ gap: 14 }}>
-                  <div className="section-title" style={{ fontSize: 18 }}>Review your reservation</div>
-                  <div className="surface-note"><strong>Guest</strong><div className="ui-muted">{[`${customer.firstName} ${customer.lastName}`.trim(), customer.email, customer.phone].filter(Boolean).join(' | ')}</div></div>
-                  <div className="surface-note"><strong>Trip</strong><div className="ui-muted">{formatPublicDateTime(pickupAt)} {'->'} {formatPublicDateTime(returnAt)} | {publicLocationLabel(selectedLocation)}</div></div>
-                  <div className="surface-note" style={{ display: 'grid', gap: 8 }}>
-                    <strong>Summary</strong>
-                    <div className="row-between" style={{ marginBottom: 0 }}><span>Base trip</span><strong>{fmtMoney(baseTotal)}</strong></div>
-                    {addOnsTotal ? <div className="row-between" style={{ marginBottom: 0 }}><span>Add-ons</span><strong>{fmtMoney(addOnsTotal)}</strong></div> : null}
-                    {insuranceTotal ? <div className="row-between" style={{ marginBottom: 0 }}><span>Insurance</span><strong>{fmtMoney(insuranceTotal)}</strong></div> : null}
-                    <div className="row-between" style={{ marginBottom: 0 }}><span>Estimated total</span><strong>{fmtMoney(estimatedTotal)}</strong></div>
+              {step === 3 && (
+                <>
+                  <div>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Review your booking</h2>
+                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Check everything looks right before confirming.</p>
                   </div>
-                  <div className={styles.storyCard}>
-                    <div className="label">What happens after you reserve</div>
-                    <h3 style={{ margin: '8px 0 10px' }}>The guest moves into the next step without needing operations access.</h3>
-                    <div className="stack" style={{ gap: 10 }}>
-                      <ReserveFlowStep
-                        step="1"
-                        title="Reservation is created"
-                        body="The booking is written into Ride Fleet immediately with the trip details, selected services, and guest information."
-                      />
-                      <ReserveFlowStep
-                        step="2"
-                        title={estimatedDueNow > 0 ? 'Guest continues to payment' : 'Guest sees the confirmation screen'}
-                        body={estimatedDueNow > 0
-                          ? `If payment is due now, the guest is guided into the hosted payment handoff for ${fmtMoney(estimatedDueNow)}.`
-                          : 'If no payment is due right now, the guest lands on a clear confirmation screen with the next digital actions.'}
-                      />
-                      <ReserveFlowStep
-                        step="3"
-                        title="Email and next links are sent"
-                        body="The confirmation email includes links for payment, customer info, and signature so the trip can keep moving digitally."
-                      />
+
+                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 800, color: '#1e2847' }}>Driver</span>
+                      <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6e49ff', fontWeight: 700, fontSize: '0.88rem' }} onClick={() => setStep(1)}>Edit</button>
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{`${customer.firstName} ${customer.lastName}`.trim()}</div>
+                    <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{customer.email}</div>
+                    <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{customer.phone}</div>
+                  </div>
+
+                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
+                    <div style={{ fontWeight: 800, color: '#1e2847' }}>Trip</div>
+                    <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{formatPublicDateTime(pickupAt)} → {formatPublicDateTime(returnAt)}</div>
+                    <div style={{ fontSize: '0.88rem', color: '#53607b', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span>📍</span><span>{publicLocationLabel(selectedLocation)}</span>
                     </div>
                   </div>
-                </div>
-              ) : null}
+
+                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 10 }}>
+                    <div style={{ fontWeight: 800, color: '#1e2847' }}>Price breakdown</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                      <span>Base trip</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
+                    </div>
+                    {addOnsTotal > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Add-ons</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
+                      </div>
+                    )}
+                    {insuranceTotal > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Coverage</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
+                      </div>
+                    )}
+                    <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>Total</span>
+                      <span style={{ fontWeight: 900, fontSize: '1.2rem', color: '#1e2847' }}>{fmtMoney(estimatedTotal)}</span>
+                    </div>
+                    {estimatedDueNow > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Due now</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.1)', background: 'rgba(110,73,255,.03)', display: 'grid', gap: 10 }}>
+                    <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '0.95rem' }}>What happens next</div>
+                    {[
+                      'Your reservation is confirmed immediately',
+                      estimatedDueNow > 0 ? `You'll be directed to payment for ${fmtMoney(estimatedDueNow)}` : 'No payment is due right now',
+                      "You'll receive a confirmation email with trip details and next steps"
+                    ].map((item, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: '0.88rem', color: '#53607b' }}>
+                        <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg,#ffc258,#6e49ff 55%,#0fb0d8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.72rem', fontWeight: 800, flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <div className={styles.checkoutActionRow}>
-                <Link href={backHref} className={styles.checkoutGhostButton} style={{ textDecoration: 'none' }}>Back to details</Link>
-                {step > 1 ? <button type="button" className={styles.checkoutGhostButton} onClick={() => setStep((current) => Math.max(1, current - 1))}>Back</button> : null}
-                {step < 3 ? <button type="button" className={styles.checkoutPrimaryButton} onClick={() => {
-                  if (step === 1 && !guestInfoComplete) return setError('Please complete the guest details first.');
-                  if (step === 2 && !insuranceComplete) return setError('Please finish the protection step before continuing.');
-                  setError('');
-                  setStep((current) => Math.min(3, current + 1));
-                }}>Continue</button> : <button type="button" className={styles.checkoutPrimaryButton} onClick={handleSubmit} disabled={submitting}>{submitting ? 'Creating reservation...' : 'Reserve and continue to payment'}</button>}
+                {step > 1 && (
+                  <button type="button" className={styles.checkoutGhostButton} onClick={() => setStep((s) => s - 1)}>← Back</button>
+                )}
+                {step < totalSteps
+                  ? (
+                    <button
+                      type="button"
+                      className={styles.checkoutPrimaryButton}
+                      style={{ background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', border: 'none', boxShadow: '0 10px 24px rgba(110,73,255,.3)' }}
+                      onClick={() => {
+                        if (step === 1 && !guestInfoComplete) return setError('Please complete your details first.');
+                        if (step === 2 && !insuranceComplete) return setError('Please choose a coverage option.');
+                        setError('');
+                        setStep((s) => s + 1);
+                      }}
+                    >
+                      Continue →
+                    </button>
+                  )
+                  : (
+                    <button
+                      type="button"
+                      className={styles.checkoutPrimaryButton}
+                      style={{ background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', border: 'none', boxShadow: '0 10px 24px rgba(110,73,255,.3)', minWidth: 220 }}
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                    >
+                      {submitting ? 'Confirming...' : 'Complete booking'}
+                    </button>
+                  )
+                }
               </div>
             </div>
-          ) : null}
+          )}
         </div>
 
-        <div className={`glass card ${styles.asidePanel}`}>
-          <div className={styles.detailAsideHero}>
-            <span className="label">Selected option</span>
-            <strong>{searchMode === 'CAR_SHARING' ? (selectedResult?.title || listingVehicleLabel(selectedResult)) : vehicleTypeLabel(selectedResult?.vehicleType)}</strong>
-          </div>
-          {gallery[0] ? (
-            <div className={styles.galleryFrame}>
-              <Image src={gallery[0]} alt={searchMode === 'CAR_SHARING' ? (selectedResult?.title || listingVehicleLabel(selectedResult)) : vehicleTypeLabel(selectedResult?.vehicleType)} className={styles.galleryImage} width={1200} height={675} sizes="(max-width: 960px) 100vw, 360px" priority unoptimized />
-            </div>
-          ) : null}
-          <div className="surface-note"><strong>Pickup</strong><div className="ui-muted">{formatPublicDateTime(pickupAt)}</div></div>
-          <div className="surface-note"><strong>Return</strong><div className="ui-muted">{formatPublicDateTime(returnAt)}</div></div>
-          <div className="surface-note"><strong>Location</strong><div className="ui-muted">{publicLocationLabel(selectedLocation)}</div></div>
-          <div className={styles.checkoutSummaryPanel}>
-            <div className="label">Estimated trip summary</div>
-            <div className={styles.checkoutSummaryRow}><span>Base trip</span><strong>{fmtMoney(baseTotal)}</strong></div>
-            {addOnsTotal ? <div className={styles.checkoutSummaryRow}><span>Add-ons</span><strong>{fmtMoney(addOnsTotal)}</strong></div> : null}
-            {insuranceTotal ? <div className={styles.checkoutSummaryRow}><span>Protection</span><strong>{fmtMoney(insuranceTotal)}</strong></div> : null}
-            <div className={styles.checkoutSummaryRow}><span>Estimated total</span><strong>{fmtMoney(estimatedTotal)}</strong></div>
-            <div className={styles.checkoutSummaryRow}><span>Estimated due now</span><strong>{fmtMoney(estimatedDueNow)}</strong></div>
-          </div>
-          <div className={styles.reassurancePanel}>
-            <div className="label">After reserve</div>
-            <div className={styles.reassuranceChecklist}>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>The reservation is created in Ride Fleet</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>{estimatedDueNow > 0 ? `The guest is sent into hosted payment for ${fmtMoney(estimatedDueNow)}` : 'If nothing is due now, the guest stays in a clear confirmation flow'}</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Confirmation email and next links continue the trip flow</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
+        <BookingSummaryAside />
+      </div>
     </div>
   );
 }

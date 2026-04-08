@@ -30,6 +30,23 @@ const FILTERS = [
   { id: 'delivery', label: 'Delivery Available' }
 ];
 
+const primaryBtn = {
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  height: 44, borderRadius: 14, border: 'none', textDecoration: 'none',
+  background: 'linear-gradient(135deg, #7c3aed, #6e49ff 55%, #0fb0d8)',
+  color: '#fff', fontWeight: 800, fontSize: '0.9rem',
+  boxShadow: '0 8px 20px rgba(110,73,255,.26)',
+  flex: 1,
+};
+
+const ghostBtn = {
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  height: 44, minWidth: 96, borderRadius: 14, textDecoration: 'none',
+  border: '1.5px solid rgba(110,73,255,.18)',
+  background: 'rgba(255,255,255,.9)',
+  color: '#4a38be', fontWeight: 800, fontSize: '0.88rem',
+};
+
 function StarRating({ count }) {
   if (!count) {
     return (
@@ -86,12 +103,12 @@ function ProtectedBadge() {
       display: 'inline-flex',
       alignItems: 'center',
       gap: 5,
-      padding: '4px 10px',
+      padding: '3px 8px',
       borderRadius: 999,
       border: '1px solid rgba(110,73,255,0.14)',
       background: 'rgba(110,73,255,0.06)',
       color: '#4a38be',
-      fontSize: '0.74rem',
+      fontSize: 11,
       fontWeight: 700
     }}>
       <span>🛡</span> Protected by Ride Fleet
@@ -329,17 +346,20 @@ function CarSharingPreviewPageContent() {
             {f.label}
           </button>
         ))}
-        {rawListings.length > 0 && (
-          <span style={{ marginLeft: 'auto', fontSize: '0.88rem', color: '#6b7a9a', fontWeight: 700, lineHeight: '40px' }}>
-            {visibleListings.length} {visibleListings.length === 1 ? 'car' : 'cars'} available
-          </span>
-        )}
       </div>
 
-      {/* ── Result cards ── */}
-      <section className="stack" style={{ gap: 18 }}>
-        {visibleListings.length ? (
-          visibleListings.map((listing, index) => {
+      {/* ── Results count + grid ── */}
+      {rawListings.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+          <span style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.95rem' }}>
+            {visibleListings.length} {visibleListings.length === 1 ? 'car' : 'cars'} available
+          </span>
+        </div>
+      )}
+
+      {visibleListings.length ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
+          {visibleListings.map((listing, index) => {
             const gallery = normalizeImageList(
               listing?.imageUrls?.length ? listing.imageUrls
               : listing?.primaryImageUrl ? [listing.primaryImageUrl]
@@ -356,143 +376,136 @@ function CarSharingPreviewPageContent() {
             return (
               <article
                 key={`${listing?.id || index}`}
-                className={`glass card ${styles.searchResultCard} ${styles.sharingResultCard}`}
-                style={{ padding: 0, overflow: 'hidden', borderRadius: 22 }}
+                className="glass card"
+                style={{ overflow: 'hidden', borderRadius: 20, padding: 0, transition: 'transform 0.2s, box-shadow 0.2s' }}
               >
-                <div style={{ display: 'grid', gridTemplateColumns: gallery[0] ? '280px 1fr' : '1fr', gap: 0, alignItems: 'stretch' }}>
-
-                  {/* Vehicle image */}
+                {/* Photo section */}
+                <div style={{ position: 'relative', aspectRatio: '3/2', background: 'linear-gradient(180deg,#f0f2fc,#e8ecfa)', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
                   {gallery[0] ? (
-                    <div style={{ position: 'relative', minHeight: 220, background: 'linear-gradient(180deg,#f0f2fc,#e8ecfa)' }}>
-                      <Image
-                        src={gallery[0]}
-                        alt={vehicleLabel}
-                        fill
-                        sizes="(max-width: 960px) 100vw, 280px"
-                        className={styles.galleryImage}
-                        style={{ objectFit: 'cover' }}
-                        loading="lazy"
-                        unoptimized
-                      />
-                      {listing?.instantBook ? (
-                        <div style={{ position: 'absolute', top: 12, left: 12 }}>
-                          <InstantBookBadge />
-                        </div>
-                      ) : null}
+                    <Image
+                      src={gallery[0]}
+                      alt={vehicleLabel}
+                      fill
+                      sizes="(max-width: 960px) 100vw, 400px"
+                      style={{ objectFit: 'cover' }}
+                      loading="lazy"
+                      unoptimized
+                    />
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: '3rem' }}>
+                      🚗
+                    </div>
+                  )}
+                  {listing?.instantBook ? (
+                    <div style={{ position: 'absolute', top: 12, left: 12 }}>
+                      <InstantBookBadge />
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Info section */}
+                <div style={{ padding: '16px 18px', display: 'grid', gap: 10 }}>
+
+                  {/* Row 1: vehicle label + price */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+                    <h3 style={{ margin: 0, fontWeight: 800, fontSize: '1rem', color: '#1e2847', lineHeight: 1.2 }}>
+                      {vehicleLabel}
+                    </h3>
+                    <div style={{ flexShrink: 0, textAlign: 'right' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#1e2847' }}>
+                        {fmtMoney(dailyRate)}
+                      </span>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#6b7a9a' }}> /day</span>
+                    </div>
+                  </div>
+
+                  {/* Row 2: star rating + host name */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />
+                    {hostName ? (
+                      <span style={{ fontSize: '0.82rem', color: '#6b7a9a', fontWeight: 600 }}>· {hostName}</span>
+                    ) : null}
+                  </div>
+
+                  {/* Row 3: location + protected badge */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.84rem', color: '#53607b', fontWeight: 600 }}>
+                      <span style={{ fontSize: '0.9rem' }}>📍</span> {locationLabel}
+                    </span>
+                    <ProtectedBadge />
+                  </div>
+
+                  {/* Row 4: short description */}
+                  {listing?.shortDescription ? (
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#53607b', lineHeight: 1.65, WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', display: '-webkit-box' }}>
+                      {listing.shortDescription}
+                    </p>
+                  ) : null}
+
+                  {/* Row 5: trip total */}
+                  {tripTotal && tripTotal !== dailyRate ? (
+                    <div style={{ fontSize: '0.82rem', color: '#6b7a9a', fontWeight: 600 }}>
+                      Est. {fmtMoney(tripTotal)} total
                     </div>
                   ) : null}
 
-                  {/* Card body */}
-                  <div className="stack" style={{ gap: 14, padding: '22px 24px' }}>
-
-                    {/* Header row */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                      <div className="stack" style={{ gap: 4 }}>
-                        <h3 style={{ margin: 0, fontSize: '1.18rem', fontWeight: 800, color: '#1e2847', lineHeight: 1.2 }}>
-                          {vehicleLabel}
-                        </h3>
-                        {hostName ? (
-                          <span style={{ fontSize: '0.84rem', color: '#6b7a9a', fontWeight: 600 }}>
-                            Hosted by {hostName}
-                          </span>
-                        ) : null}
-                        <div style={{ marginTop: 4 }}>
-                          <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />
-                        </div>
-                      </div>
-
-                      {/* Pricing block */}
-                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontSize: '1.52rem', fontWeight: 900, color: '#1e2847', letterSpacing: '-0.02em', lineHeight: 1 }}>
-                          {fmtMoney(dailyRate)}
-                          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#6b7a9a' }}> /day</span>
-                        </div>
-                        {tripTotal && tripTotal !== dailyRate ? (
-                          <div style={{ marginTop: 4, fontSize: '0.82rem', color: '#6b7a9a', fontWeight: 600 }}>
-                            Est. {fmtMoney(tripTotal)} total
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    {/* Location + badges row */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: '0.84rem', color: '#53607b', fontWeight: 600 }}>
-                        <span style={{ fontSize: '0.9rem' }}>📍</span> {locationLabel}
-                      </span>
-                      {!listing?.instantBook ? null : (
-                        <span style={{ color: '#94a3b8', fontSize: '0.7rem' }}>·</span>
-                      )}
-                      <ProtectedBadge />
-                    </div>
-
-                    {/* Short description if available */}
-                    {listing?.shortDescription ? (
-                      <p style={{ margin: 0, fontSize: '0.9rem', color: '#53607b', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        {listing.shortDescription}
-                      </p>
-                    ) : null}
-
-                    {/* CTA row */}
-                    <div className={styles.resultActionRow} style={{ marginTop: 'auto', paddingTop: 6 }}>
-                      <Link
-                        href={`${withSiteBase(basePath, '/checkout')}?${buildUnifiedCheckoutQuery({
-                          searchMode: 'CAR_SHARING',
-                          tenantSlug: bootstrap?.selectedTenant?.slug || carSharingTenantSlug || '',
-                          locationId: form.locationId,
-                          pickupAt: form.pickupAt,
-                          returnAt: form.returnAt,
-                          listingId: listing?.id || ''
-                        })}`}
-                        className={styles.resultPrimaryAction}
-                        style={{ textDecoration: 'none', flex: '0 0 auto' }}
-                      >
-                        Book Now
-                      </Link>
-                      <Link
-                        href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`}
-                        className={styles.resultSecondaryAction}
-                        style={{ textDecoration: 'none', flex: '0 0 auto' }}
-                      >
-                        View Details
-                      </Link>
-                    </div>
+                  {/* Row 6: buttons */}
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <Link
+                      href={`${withSiteBase(basePath, '/checkout')}?${buildUnifiedCheckoutQuery({
+                        searchMode: 'CAR_SHARING',
+                        tenantSlug: bootstrap?.selectedTenant?.slug || carSharingTenantSlug || '',
+                        locationId: form.locationId,
+                        pickupAt: form.pickupAt,
+                        returnAt: form.returnAt,
+                        listingId: listing?.id || ''
+                      })}`}
+                      style={primaryBtn}
+                    >
+                      Book Now
+                    </Link>
+                    <Link
+                      href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`}
+                      style={ghostBtn}
+                    >
+                      Details
+                    </Link>
                   </div>
                 </div>
               </article>
             );
-          })
-        ) : (
-          /* Empty state */
-          <section className="glass card" style={{ padding: 48, textAlign: 'center' }}>
-            <div style={{ fontSize: '2.4rem', marginBottom: 14 }}>🚗</div>
-            <h3 style={{ margin: '0 0 10px', color: '#26314d', fontSize: '1.2rem' }}>No cars found for these dates</h3>
-            <p className="ui-muted" style={{ margin: '0 0 22px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7 }}>
-              No listings found for these dates. Try adjusting your dates or browse all available cars.
-            </p>
-            <button
-              type="button"
-              onClick={() => { setResults(null); setActiveFilter('all'); }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                height: 46,
-                padding: '0 24px',
-                borderRadius: 14,
-                border: 'none',
-                background: 'linear-gradient(135deg, #6e49ff, #0fb0d8)',
-                color: '#fff',
-                fontWeight: 800,
-                fontSize: '0.95rem',
-                cursor: 'pointer',
-                boxShadow: '0 10px 24px rgba(110,73,255,0.26)'
-              }}
-            >
-              Browse All Cars
-            </button>
-          </section>
-        )}
-      </section>
+          })}
+        </div>
+      ) : (
+        /* Empty state */
+        <section className="glass card" style={{ padding: 48, textAlign: 'center' }}>
+          <div style={{ fontSize: '2.4rem', marginBottom: 14 }}>🚗</div>
+          <h3 style={{ margin: '0 0 10px', color: '#26314d', fontSize: '1.2rem' }}>No cars found for these dates</h3>
+          <p className="ui-muted" style={{ margin: '0 0 22px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7 }}>
+            No listings found for these dates. Try adjusting your dates or browse all available cars.
+          </p>
+          <button
+            type="button"
+            onClick={() => { setResults(null); setActiveFilter('all'); }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              height: 46,
+              padding: '0 24px',
+              borderRadius: 14,
+              border: 'none',
+              background: 'linear-gradient(135deg, #6e49ff, #0fb0d8)',
+              color: '#fff',
+              fontWeight: 800,
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              boxShadow: '0 10px 24px rgba(110,73,255,0.26)'
+            }}
+          >
+            Browse All Cars
+          </button>
+        </section>
+      )}
 
       {/* ── Why Ride Car Sharing trust section ── */}
       <section className={`glass card ${styles.prestigeBand}`} style={{ marginTop: 32 }}>

@@ -100,182 +100,112 @@ export default function ConfirmationPage() {
 
   if (!mounted) {
     return (
-      <div className="stack" style={{ gap: 24 }}>
-        <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">Confirmation</span>
-          <h1 style={{ marginTop: 8, marginBottom: 8 }}>Loading confirmation...</h1>
-          <p className={styles.detailLead} style={{ maxWidth: 820 }}>
-            Finishing the reservation summary and loading the next guest actions.
-          </p>
-        </section>
-      </div>
+      <main style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', padding: 40 }}>
+        <div style={{ color: '#6b7a9a', fontWeight: 600 }}>Loading your confirmation...</div>
+      </main>
     );
   }
 
   if (!confirmation) {
     return (
-      <div className="stack" style={{ gap: 24 }}>
-        <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">Confirmation</span>
-          <h1 style={{ marginTop: 8, marginBottom: 8 }}>Reservation saved</h1>
-          <p className={styles.detailLead} style={{ maxWidth: 820 }}>
-            This browser session does not have the confirmation payload anymore, but the reservation may still exist in Ride Fleet.
-          </p>
-          <div className={styles.detailRibbon}>
-            <span className={styles.detailRibbonChip}>Email confirmation may still have been sent</span>
-            <span className={styles.detailRibbonChip}>Check the guest inbox for next-step links</span>
-          </div>
-        </section>
-
-        <section className="glass card-lg section-card">
-          <div className="surface-note">
-            <strong>No confirmation payload found</strong>
-            <div className="ui-muted" style={{ marginTop: 6 }}>
-              Go back to the storefront to start another booking flow, or use the guest email links that were already sent.
-            </div>
-          </div>
-          <div className={styles.resultActionRow}>
-            <Link href={withSiteBase(basePath, '/rent')} className={styles.resultPrimaryAction} style={{ textDecoration: 'none' }}>
-              Back to rentals
-            </Link>
-            <Link href={withSiteBase(basePath, '/car-sharing')} className={styles.resultSecondaryAction} style={{ textDecoration: 'none' }}>
-              Browse car sharing
-            </Link>
-          </div>
-        </section>
-      </div>
+      <main style={{ maxWidth: 560, margin: '0 auto', padding: '60px 20px', textAlign: 'center', display: 'grid', gap: 20 }}>
+        <div style={{ fontSize: '2.4rem' }}>🔍</div>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#1e2847' }}>Booking not found in this session</h1>
+        <p style={{ color: '#6b7a9a', lineHeight: 1.7 }}>
+          The confirmation is no longer in your browser session. Check your email for the booking confirmation and next steps.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href={withSiteBase(basePath, '/car-sharing')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 48, padding: '0 24px', borderRadius: 14, border: 'none', background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', fontWeight: 800, textDecoration: 'none', boxShadow: '0 10px 24px rgba(110,73,255,.28)' }}>Browse more cars</Link>
+          <Link href={withSiteBase(basePath, '/rent')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 48, padding: '0 20px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, textDecoration: 'none' }}>Rental fleet</Link>
+        </div>
+      </main>
     );
   }
 
   return (
-    <div className="stack" style={{ gap: 24 }}>
-      <section className={`glass card-lg ${styles.detailHero}`}>
-        <span className="eyebrow">Booking Confirmed</span>
-        <h1 style={{ marginTop: 8, marginBottom: 8 }}>{`${bookingType} ${reference} created`}</h1>
-        <p className={styles.detailLead} style={{ maxWidth: 820 }}>
-          The reservation is now live in Ride Fleet. Use the next action below to move the guest into payment, customer info, and digital signature without sending them back into internal tools.
-        </p>
-        <div className={styles.detailRibbon}>
-          <span className={styles.detailRibbonChip}>{bookingType}</span>
-          <span className={styles.detailRibbonChip}>Reference {reference}</span>
-          <span className={styles.detailRibbonChip}>
-            {confirmationEmail?.emailSent ? `Email sent to ${confirmation?.customer?.email || '-'}` : `Email status: ${confirmationEmail?.warning ? 'warning' : 'pending'}`}
-          </span>
-          <span className={styles.detailRibbonChip}>{dueNow > 0 ? `Due now ${fmtMoney(dueNow)}` : 'No payment due right now'}</span>
+    <main style={{ maxWidth: 720, margin: '0 auto', padding: 'clamp(28px,5vw,52px) clamp(16px,4vw,24px) 60px', display: 'grid', gap: 24 }}>
+
+      {/* Hero */}
+      <div style={{ textAlign: 'center', display: 'grid', gap: 16, padding: '40px 24px', borderRadius: 24, background: 'linear-gradient(145deg, #f5f0ff, #faf7ff 60%, #f0fbf8)', border: '1px solid rgba(135,82,254,.1)' }}>
+        <div style={{ width: 72, height: 72, borderRadius: '50%', margin: '0 auto', background: 'linear-gradient(135deg, rgba(22,163,74,.15), rgba(31,199,170,.12))', border: '2px solid rgba(22,163,74,.24)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🎉</div>
+        <div>
+          <h1 style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', margin: '0 0 10px' }}>You&apos;re all set!</h1>
+          <p style={{ color: '#5f567e', lineHeight: 1.7, margin: 0 }}>{guestName !== '-' ? `${guestName}, your ` : 'Your '}{bookingType.toLowerCase()} reservation is confirmed.</p>
         </div>
-      </section>
-
-      <section className={styles.detailGrid}>
-        <div className={`glass card-lg ${styles.contentPanel}`}>
-          <div className="section-title">Confirmation Summary</div>
-          <div className={styles.checkoutSummaryPanel}>
-            <div className="label">Payment status</div>
-            <div className={styles.checkoutSummaryRow}>
-              <span>Estimated total</span>
-              <strong>{fmtMoney(total)}</strong>
-            </div>
-            <div className={styles.checkoutSummaryRow}>
-              <span>Due now</span>
-              <strong>{fmtMoney(dueNow)}</strong>
-            </div>
-            <div className={styles.checkoutSummaryRow}>
-              <span>Next move</span>
-              <strong>{primaryAction ? primaryAction.title : 'Review next steps below'}</strong>
-            </div>
-          </div>
-
-          <div className="metric-grid">
-            <div className="metric-card">
-              <span className="label">Type</span>
-              <strong>{bookingType}</strong>
-            </div>
-            <div className="metric-card">
-              <span className="label">Reference</span>
-              <strong>{reference}</strong>
-            </div>
-            <div className="metric-card">
-              <span className="label">Guest</span>
-              <strong>{guestName}</strong>
-            </div>
-            <div className="metric-card">
-              <span className="label">Estimated total</span>
-              <strong>{fmtMoney(total)}</strong>
-            </div>
-            <div className="metric-card">
-              <span className="label">Due now</span>
-              <strong>{fmtMoney(dueNow)}</strong>
-            </div>
-          </div>
-
-          <div className={styles.storyCard}>
-            <div className="label">Guest communication</div>
-            <h3 style={{ margin: '8px 0 10px' }}>
-              {confirmationEmail?.emailSent ? 'Confirmation email has been sent' : 'Confirmation email status'}
-            </h3>
-            <p className="ui-muted" style={{ margin: 0 }}>
-              {confirmationEmail?.emailSent
-                ? <>Ride Fleet sent the guest their reservation confirmation and next-step links to <strong>{confirmation?.customer?.email || '-'}</strong>.</>
-                : confirmationEmail?.warning
-                  ? <>{confirmationEmail.warning}</>
-                  : <>Ride Fleet is still processing the reservation confirmation email for <strong>{confirmation?.customer?.email || '-'}</strong>.</>}
-            </p>
-          </div>
-
-          <div className={styles.reassurancePanel}>
-            <div className="label">Recommended sequence</div>
-            <div className={styles.reassuranceChecklist}>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Review customer info and reservation details</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>{dueNow > 0 ? 'Send the guest into payment before anything else' : 'Move into customer info or signature if no payment is due right now'}</span></div>
-              <div className={styles.reassuranceItem}><span className={styles.reassuranceDot} /><span>Finish signature and pre-check-in links from the confirmation actions</span></div>
-            </div>
-          </div>
+        {/* Reference badge */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 22px', borderRadius: 999, background: 'rgba(255,255,255,.9)', border: '1px solid rgba(135,82,254,.18)', margin: '0 auto', boxShadow: '0 4px 14px rgba(135,82,254,.1)' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.06em' }}>Booking ref</span>
+          <span style={{ fontWeight: 900, color: '#1a1230', fontSize: '1.1rem', letterSpacing: '.04em' }}>{reference}</span>
         </div>
+        {/* Email note */}
+        {confirmation?.customer?.email && (
+          <p style={{ fontSize: '0.88rem', color: '#6f668f', margin: 0 }}>
+            A confirmation email has been sent to <strong style={{ color: '#1a1230' }}>{confirmation.customer.email}</strong>
+          </p>
+        )}
+      </div>
 
-        <div className={`glass card-lg ${styles.asidePanel}`}>
-          <div className={styles.detailAsideHero}>
-            <span className="label">Primary Guest Handoff</span>
-            <strong>{primaryAction ? primaryAction.title : 'Next actions are ready below.'}</strong>
-          </div>
-          {primaryAction ? (
-            <div className={styles.checkoutSummaryPanel}>
-              <div className="label">Recommended next step</div>
-              <div style={{ display: 'grid', gap: 8 }}>
-                <strong>{primaryAction.title}</strong>
-                <div className="ui-muted">{primaryActionBody}</div>
-                <div className="ui-muted">
-                  {primaryAction.variant === 'payment'
-                    ? 'The guest stays in a hosted payment experience and then returns with the trip already in motion.'
-                    : 'The guest continues the reservation digitally without needing help from an ops dashboard.'}
-                </div>
+      {/* Amounts */}
+      {(total > 0 || dueNow > 0) && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          {total > 0 && (
+            <div style={{ padding: '18px 20px', borderRadius: 18, background: 'rgba(255,255,255,.92)', border: '1px solid rgba(135,82,254,.12)', boxShadow: '0 4px 14px rgba(135,82,254,.06)' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Trip total</div>
+              <div style={{ fontWeight: 900, fontSize: '1.4rem', color: '#1a1230' }}>{fmtMoney(total)}</div>
+            </div>
+          )}
+          {dueNow >= 0 && (
+            <div style={{ padding: '18px 20px', borderRadius: 18, background: dueNow > 0 ? 'rgba(110,73,255,.06)' : 'rgba(22,163,74,.06)', border: `1px solid ${dueNow > 0 ? 'rgba(110,73,255,.16)' : 'rgba(22,163,74,.18)'}`, boxShadow: '0 4px 14px rgba(135,82,254,.06)' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Due now</div>
+              <div style={{ fontWeight: 900, fontSize: '1.4rem', color: dueNow > 0 ? '#4c1d95' : '#15803d' }}>{dueNow > 0 ? fmtMoney(dueNow) : 'Nothing'}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Next steps */}
+      <div style={{ display: 'grid', gap: 12 }}>
+        <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Next steps</h2>
+        {/* Primary action */}
+        {primaryAction?.link && (
+          <a href={primaryAction.link} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '18px 20px', borderRadius: 16, background: 'linear-gradient(135deg, rgba(110,73,255,.08), rgba(31,199,170,.06))', border: '1.5px solid rgba(110,73,255,.2)', textDecoration: 'none', transition: 'all 0.18s' }}>
+            <div>
+              <div style={{ fontWeight: 800, color: '#1a1230', marginBottom: 4 }}>{primaryAction.title}</div>
+              <div style={{ fontSize: '0.85rem', color: '#6b7a9a' }}>{primaryActionBody}</div>
+            </div>
+            <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>→</span>
+          </a>
+        )}
+        {/* Secondary actions */}
+        {secondaryActions.map((action) => (
+          action?.link && (
+            <a key={action.key} href={action.link} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 18px', borderRadius: 14, background: 'rgba(255,255,255,.88)', border: '1px solid rgba(135,82,254,.12)', textDecoration: 'none' }}>
+              <div>
+                <div style={{ fontWeight: 700, color: '#1a1230', fontSize: '0.95rem' }}>{action.title}</div>
+                <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 2 }}>{action.body}</div>
               </div>
-            </div>
-          ) : null}
-
-          {secondaryActions.length ? secondaryActions.map((action) => (
-            <a key={action.key} href={action.href} target="_blank" rel="noreferrer" className={styles.confirmationActionCard} style={{ textDecoration: 'none' }}>
-              <strong>{action.title}</strong>
-              <div className="ui-muted" style={{ marginTop: 6 }}>{action.body}</div>
+              <span style={{ color: '#6e49ff', fontWeight: 700, flexShrink: 0 }}>→</span>
             </a>
-          )) : !primaryAction ? (
-            <div className="surface-note">
-              <strong>No public next step links were returned</strong>
-              <div className="ui-muted" style={{ marginTop: 6 }}>
-                This booking completed, but the API did not return public actions for payment or follow-up.
-              </div>
-            </div>
-          ) : null}
+          )
+        ))}
+        {/* Primary CTA button if no inline link was shown */}
+        {primaryAction?.link && (
+          <a href={primaryAction.link} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 52, borderRadius: 16, border: 'none', background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', fontWeight: 900, fontSize: '1.02rem', textDecoration: 'none', boxShadow: '0 14px 30px rgba(110,73,255,.32)', letterSpacing: '.01em' }}>
+            {primaryAction.title}
+          </a>
+        )}
+        {!primaryAction && actionCards.length === 0 && (
+          <div style={{ padding: '16px 18px', borderRadius: 14, background: 'rgba(255,255,255,.88)', border: '1px solid rgba(135,82,254,.1)', color: '#6b7a9a', fontSize: '0.9rem' }}>
+            Check your confirmation email for next steps.
+          </div>
+        )}
+      </div>
 
-          {primaryAction?.link ? (
-            <a href={primaryAction.link} target="_blank" rel="noreferrer" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none' }}>
-              {primaryAction.title}
-            </a>
-          ) : null}
+      {/* Back to browse */}
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', paddingTop: 8 }}>
+        <Link href={withSiteBase(basePath, '/car-sharing')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 46, padding: '0 22px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, textDecoration: 'none', fontSize: '0.93rem' }}>Browse more cars</Link>
+      </div>
 
-          <Link href={withSiteBase(basePath, '/rent')} className={styles.checkoutGhostButton} style={{ textDecoration: 'none', textAlign: 'center' }}>
-            Back to storefront
-          </Link>
-        </div>
-      </section>
-    </div>
+    </main>
   );
 }

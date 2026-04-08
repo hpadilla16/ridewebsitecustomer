@@ -21,6 +21,8 @@ async function proxyPublicRequest(request, context) {
   if (contentType) headers.set('content-type', contentType);
   const accept = request.headers.get('accept');
   if (accept) headers.set('accept', accept);
+  const authorization = request.headers.get('authorization');
+  if (authorization) headers.set('authorization', authorization);
 
   const method = request.method.toUpperCase();
   const hasBody = !['GET', 'HEAD'].includes(method);
