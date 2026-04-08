@@ -13,7 +13,8 @@ const navItems = [
   { path: '/car-sharing', label: 'Car Sharing' },
   { path: '/fleet', label: 'Fleet' },
   { path: '/faq', label: 'FAQ' },
-  { path: '/contact', label: 'Contact' }
+  { path: '/contact', label: 'Contact' },
+  { path: '/become-a-host', label: 'Become a Host' }
 ];
 
 export function PublicSiteShell({ children, basePath: forcedBasePath }) {
@@ -57,6 +58,22 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             <Link href={withSiteBase(basePath, '/rent')} className={styles.navButton}>
               Start Booking
             </Link>
+            <div className={styles.headerAuthLinks}>
+              <Link
+                href={withSiteBase(basePath, '/login')}
+                className={`${styles.navLink} ${isActive('/login') ? styles.navLinkActive : ''}`}
+                aria-current={isActive('/login') ? 'page' : undefined}
+              >
+                Sign In
+              </Link>
+              <Link
+                href={withSiteBase(basePath, '/host-login')}
+                className={`${styles.navLink} ${isActive('/host-login') ? styles.navLinkActive : ''}`}
+                aria-current={isActive('/host-login') ? 'page' : undefined}
+              >
+                Host Login
+              </Link>
+            </div>
           </div>
           <div className={styles.navRow}>
             <nav className={styles.nav} aria-label="Primary">
@@ -70,13 +87,6 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                href={withSiteBase(basePath, '/become-a-host')}
-                className={`${styles.navLink} ${isActive('/become-a-host') ? styles.navLinkActive : ''}`}
-                aria-current={isActive('/become-a-host') ? 'page' : undefined}
-              >
-                Become a Host
-              </Link>
             </nav>
             <div className={styles.headerAside}>
               <span className={styles.headerAsideLabel}>Ride signature</span>
@@ -116,6 +126,8 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
                 <Link href={withSiteBase(basePath, '/rent')}>Daily Rentals</Link>
                 <Link href={withSiteBase(basePath, '/car-sharing')}>Car Sharing</Link>
                 <Link href={withSiteBase(basePath, '/checkout')}>Checkout</Link>
+                <Link href={withSiteBase(basePath, '/account')}>My Trips</Link>
+                <Link href={withSiteBase(basePath, '/login')}>Guest Sign In</Link>
               </div>
             </div>
             <div className={styles.footerColumn}>
@@ -124,6 +136,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
                 <Link href={withSiteBase(basePath, '/faq')}>FAQ</Link>
                 <Link href={withSiteBase(basePath, '/contact')}>Contact</Link>
                 <Link href={withSiteBase(basePath, '/become-a-host')}>Become a Host</Link>
+                <Link href={withSiteBase(basePath, '/host-login')}>Host Login</Link>
               </div>
             </div>
             <div className={styles.footerColumn}>
