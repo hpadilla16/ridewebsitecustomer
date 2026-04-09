@@ -22,7 +22,10 @@ export default function VerifyPage({ params }) {
 
     async function verify() {
       try {
-        const data = await api(`/api/public/booking/guest-signin/${encodeURIComponent(token)}`);
+        const data = await api('/api/public/booking/guest-signin/verify', {
+          method: 'POST',
+          body: JSON.stringify({ token }),
+        });
         if (cancelled) return;
 
         const customer = data?.customer;

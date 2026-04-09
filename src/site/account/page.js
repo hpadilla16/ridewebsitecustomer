@@ -93,7 +93,10 @@ export default function AccountPage() {
 
     async function load() {
       try {
-        const data = await api(`/api/public/booking/guest-signin/${encodeURIComponent(storedToken)}`);
+        const data = await api('/api/public/booking/guest-signin/verify', {
+          method: 'POST',
+          body: JSON.stringify({ token: storedToken }),
+        });
         if (cancelled) return;
         if (data?.customer) {
           setCustomer(data.customer);

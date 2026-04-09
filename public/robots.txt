@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /account/
+Disallow: /host-status/
+Disallow: /login/verify/
+
+Sitemap: https://beta.ride-carsharing.com/sitemap.xml

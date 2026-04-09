@@ -23,8 +23,8 @@ export default function HostLoginPage() {
       });
       const token = result?.token || result?.jwt || result?.accessToken || '';
       const user = result?.user || result?.host || result || null;
-      if (token) localStorage.setItem(TOKEN_KEY, token);
-      if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
+      try { if (token) localStorage.setItem(TOKEN_KEY, token); } catch { /* storage unavailable */ }
+      try { if (user) localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch { /* storage unavailable */ }
       const name =
         user?.name ||
         user?.fullName ||

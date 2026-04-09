@@ -6,6 +6,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
+import { validateGuestInfo } from '../../lib/validation';
 import {
   backendLocationIdsForPublicOption,
   buildPublicLocationOptions,
@@ -109,6 +110,7 @@ function CheckoutInner() {
   const [customer, setCustomer] = useState({ firstName: '', lastName: '', email: '', phone: '', dateOfBirth: '', licenseNumber: '', licenseState: '' });
   const [selectedServices, setSelectedServices] = useState({});
   const [insuranceSelection, setInsuranceSelection] = useState({ selectedPlanCode: '', declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false, ownPolicyNumber: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     let ignore = false;
@@ -176,6 +178,15 @@ function CheckoutInner() {
     : normalizeImageList(selectedResult?.imageUrls?.length ? selectedResult.imageUrls : selectedResult?.primaryImageUrl ? [selectedResult.primaryImageUrl] : []);
   const selectedLocation = selectedResult?.location || findPublicLocationOption(locationOptions, pickupSelectionId)?.locations?.[0] || null;
   const guestInfoComplete = Boolean(customer.firstName.trim() && customer.lastName.trim() && customer.email.trim() && customer.phone.trim());
+  function validateAndAdvance(nextStep) {
+    if (step === 1) {
+      const { success, errors } = validateGuestInfo(customer);
+      setFieldErrors(errors);
+      if (!success) { setError('Please fix the highlighted fields.'); return; }
+    }
+    setError('');
+    setStep(nextStep);
+  }
   const insuranceComplete = searchMode !== 'RENTAL' || !!selectedInsurancePlan || (insuranceSelection.declinedCoverage && insuranceSelection.usingOwnInsurance && insuranceSelection.liabilityAccepted);
   const totalSteps = 3;
 
@@ -186,7 +197,9 @@ function CheckoutInner() {
     : '';
 
   async function handleSubmit() {
-    if (!guestInfoComplete) return setError('Please complete the guest details first.');
+    const { success, errors } = validateGuestInfo(customer);
+    if (!success) { setFieldErrors(errors); setError('Please fix the highlighted fields.'); return; }
+    setFieldErrors({});
     if (!insuranceComplete) return setError('Please choose a protection option or confirm the guest is using their own insurance.');
     setSubmitting(true);
     setError('');
@@ -214,7 +227,7 @@ function CheckoutInner() {
           customer
         })
       });
-      if (typeof window !== 'undefined') sessionStorage.setItem(CONFIRMATION_KEY, JSON.stringify(payload));
+      try { if (typeof window !== 'undefined') sessionStorage.setItem(CONFIRMATION_KEY, JSON.stringify(payload)); } catch { /* storage quota or private browsing */ }
       router.push(withSiteBase(basePath, '/confirmation'));
     } catch (err) {
       setError(String(err?.message || 'Unable to create reservation'));
@@ -318,12 +331,12 @@ function CheckoutInner() {
                     <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>We need a few details to complete your reservation.</p>
                   </div>
                   <div className="form-grid-2">
-                    <div><div className="label">First name</div><input value={customer.firstName} onChange={(e) => setCustomer((c) => ({ ...c, firstName: e.target.value }))} placeholder="Jane" /></div>
-                    <div><div className="label">Last name</div><input value={customer.lastName} onChange={(e) => setCustomer((c) => ({ ...c, lastName: e.target.value }))} placeholder="Smith" /></div>
+                    <div><div className="label">First name</div><input value={customer.firstName} onChange={(e) => { setCustomer((c) => ({ ...c, firstName: e.target.value })); setFieldErrors((f) => ({ ...f, firstName: undefined })); }} placeholder="Jane" style={fieldErrors.firstName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.firstName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.firstName}</div>}</div>
+                    <div><div className="label">Last name</div><input value={customer.lastName} onChange={(e) => { setCustomer((c) => ({ ...c, lastName: e.target.value })); setFieldErrors((f) => ({ ...f, lastName: undefined })); }} placeholder="Smith" style={fieldErrors.lastName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.lastName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.lastName}</div>}</div>
                   </div>
                   <div className="form-grid-2">
-                    <div><div className="label">Email address</div><input type="email" value={customer.email} onChange={(e) => setCustomer((c) => ({ ...c, email: e.target.value }))} placeholder="jane@example.com" /></div>
-                    <div><div className="label">Phone number</div><input value={customer.phone} onChange={(e) => setCustomer((c) => ({ ...c, phone: e.target.value }))} placeholder="+1 787 555 0100" /></div>
+                    <div><div className="label">Email address</div><input type="email" value={customer.email} onChange={(e) => { setCustomer((c) => ({ ...c, email: e.target.value })); setFieldErrors((f) => ({ ...f, email: undefined })); }} placeholder="jane@example.com" style={fieldErrors.email ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.email && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.email}</div>}</div>
+                    <div><div className="label">Phone number</div><input value={customer.phone} onChange={(e) => { setCustomer((c) => ({ ...c, phone: e.target.value })); setFieldErrors((f) => ({ ...f, phone: undefined })); }} placeholder="+1 787 555 0100" style={fieldErrors.phone ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.phone}</div>}</div>
                   </div>
                   <div className="form-grid-3">
                     <div><div className="label">Date of birth</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((c) => ({ ...c, dateOfBirth: e.target.value }))} /></div>
@@ -510,7 +523,7 @@ function CheckoutInner() {
                       className={styles.checkoutPrimaryButton}
                       style={{ background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', border: 'none', boxShadow: '0 10px 24px rgba(110,73,255,.3)' }}
                       onClick={() => {
-                        if (step === 1 && !guestInfoComplete) return setError('Please complete your details first.');
+                        if (step === 1) { validateAndAdvance(2); return; }
                         if (step === 2 && !insuranceComplete) return setError('Please choose a coverage option.');
                         setError('');
                         setStep((s) => s + 1);
