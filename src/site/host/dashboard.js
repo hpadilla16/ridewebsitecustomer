@@ -114,6 +114,7 @@ export default function HostDashboardPage() {
           <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
             <Link href="/host/listings" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Manage Listings</Link>
             <Link href="/host/trips" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>View Trips</Link>
+            <Link href="/host/messages" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Messages</Link>
             <Link href="/host/reviews" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Reviews</Link>
             <Link href="/host/earnings" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Earnings</Link>
           </div>
