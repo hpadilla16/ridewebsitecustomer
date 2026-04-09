@@ -295,7 +295,14 @@ export default function AccountPage() {
                     )}
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                    <Link
+                      href={`/account/trips?ref=${encodeURIComponent(ref)}`}
+                      className={styles.resultSecondaryAction}
+                      style={{ textDecoration: 'none', fontSize: '0.84rem', padding: '8px 16px' }}
+                    >
+                      View Details
+                    </Link>
                     <Link
                       href={issueHref}
                       className={styles.resultSecondaryAction}
