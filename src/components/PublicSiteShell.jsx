@@ -2,10 +2,19 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import styles from './PublicSiteShell.module.css';
 import { resolveSiteBasePath, withSiteBase } from '../site/sitePreviewShared';
 import { siteConfig } from '../site/siteConfig';
+
+function useIsHostLoggedIn() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    try { setLoggedIn(!!window.localStorage.getItem('fleet_jwt')); } catch { setLoggedIn(false); }
+  }, []);
+  return loggedIn;
+}
 
 const navItems = [
   { path: '', label: 'Home' },
@@ -20,6 +29,7 @@ const navItems = [
 export function PublicSiteShell({ children, basePath: forcedBasePath }) {
   const pathname = usePathname();
   const basePath = forcedBasePath || resolveSiteBasePath(pathname);
+  const isHost = useIsHostLoggedIn();
   const year = new Date().getFullYear();
   const navHrefFor = (path) => withSiteBase(basePath, path);
   const isActive = (path) => {
@@ -66,13 +76,23 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               >
                 Sign In
               </Link>
-              <Link
-                href={withSiteBase(basePath, '/host-login')}
-                className={`${styles.navLink} ${isActive('/host-login') ? styles.navLinkActive : ''}`}
-                aria-current={isActive('/host-login') ? 'page' : undefined}
-              >
-                Host Login
-              </Link>
+              {isHost ? (
+                <Link
+                  href="/host/dashboard"
+                  className={`${styles.navLink} ${pathname.startsWith('/host/') ? styles.navLinkActive : ''}`}
+                  aria-current={pathname.startsWith('/host/') ? 'page' : undefined}
+                >
+                  Host Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href={withSiteBase(basePath, '/host-login')}
+                  className={`${styles.navLink} ${isActive('/host-login') ? styles.navLinkActive : ''}`}
+                  aria-current={isActive('/host-login') ? 'page' : undefined}
+                >
+                  Host Login
+                </Link>
+              )}
             </div>
           </div>
           <div className={styles.navRow}>
