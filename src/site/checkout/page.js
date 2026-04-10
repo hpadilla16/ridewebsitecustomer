@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
 import { validateGuestInfo } from '../../lib/validation';
+import { Breadcrumbs } from '../../components/Breadcrumbs';
 import {
   backendLocationIdsForPublicOption,
   buildPublicLocationOptions,
@@ -303,6 +304,11 @@ function CheckoutInner() {
 
   return (
     <div style={{ maxWidth: 960, margin: '0 auto', padding: '28px 18px 60px', display: 'grid', gap: 20 }}>
+      <Breadcrumbs items={[
+        { label: 'Home', href: '/' },
+        { label: searchMode === 'CAR_SHARING' ? 'Car Sharing' : 'Rent', href: searchMode === 'CAR_SHARING' ? '/car-sharing' : '/rent' },
+        { label: 'Checkout' }
+      ]} />
       <div>
         <Link href={backHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.88rem', fontWeight: 700, color: '#4a38be', textDecoration: 'none' }}>
           ← Back to listing

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
+import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import {
   addDays,
   backendLocationIdsForPublicOption,
@@ -182,6 +183,11 @@ function CarSharingDetailPreviewContent() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
+      <Breadcrumbs items={[
+        { label: 'Home', href: '/' },
+        { label: 'Car Sharing', href: '/car-sharing' },
+        { label: vehicleLabel || 'Listing' }
+      ]} />
 
       {/* ── Back link ── */}
       <div>

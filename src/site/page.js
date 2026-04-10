@@ -312,6 +312,31 @@ export default function SitePreviewHomePage() {
       name: siteConfig.name,
       url: siteConfig.url,
       description: siteConfig.description
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'AutoRental',
+      name: siteConfig.name,
+      url: siteConfig.url,
+      description: siteConfig.description,
+      logo: absoluteSiteUrl('/brand/ride-logo-white-horizontal.png'),
+      image: absoluteSiteUrl('/brand/ride-banner-facebook-cover.jpg'),
+      priceRange: '$$',
+      areaServed: [
+        { '@type': 'City', name: 'San Juan' },
+        { '@type': 'City', name: 'Miami' },
+        { '@type': 'City', name: 'Orlando' },
+        { '@type': 'City', name: 'Fort Lauderdale' },
+        { '@type': 'City', name: 'Los Angeles' }
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Rental Vehicles & Car Sharing',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Daily Car Rental' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Car Sharing' } }
+        ]
+      }
     }
   ];
 

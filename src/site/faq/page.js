@@ -53,8 +53,19 @@ const faqThemes = [
 export default function FaqPreviewPage() {
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+    }))
+  };
+
   return (
     <div className="stack" style={{ gap: 24 }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="glass card-lg" style={{ padding: 28 }}>
         <span className="eyebrow">Guest FAQ</span>
         <h1 style={{ marginTop: 8 }}>Answer the guest questions before they become support tickets</h1>

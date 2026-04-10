@@ -16,7 +16,11 @@ export const metadata = {
   publisher: siteConfig.name,
   category: 'travel',
   alternates: {
-    canonical: '/'
+    canonical: '/',
+    languages: {
+      'en': '/',
+      'es': '/',
+    }
   },
   openGraph: {
     type: 'website',
