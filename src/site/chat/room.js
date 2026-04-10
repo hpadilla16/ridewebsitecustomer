@@ -6,7 +6,9 @@ import { api } from '@/lib/client';
 import { formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
 
-const POLL_INTERVAL = 8000;
+const POLL_INTERVAL = 30000; // Fallback polling — SSE is primary
+const API_BASE = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_API_BASE || '') : '';
+const TYPING_DEBOUNCE = 2000;
 
 function SystemMessage({ msg }) {
   return (
@@ -42,6 +44,20 @@ function ChatBubble({ msg, isOwn }) {
   );
 }
 
+function ImageMessage({ msg, isOwn }) {
+  const lines = (msg.body || '').split('\n');
+  const url = lines.find((l) => l.startsWith('http'));
+  const caption = lines.filter((l) => !l.startsWith('http')).join(' ').replace(/^📷\s*/, '').trim();
+  return (
+    <div style={{ maxWidth: '80%', justifySelf: isOwn ? 'end' : 'start' }}>
+      <div style={{ fontSize: '0.72rem', opacity: 0.65, marginBottom: 4, fontWeight: 600, color: '#1e2847' }}>{msg.senderName || msg.senderType}</div>
+      {url && <img src={url} alt={caption || 'Shared image'} style={{ maxWidth: '100%', borderRadius: 12, marginBottom: 4 }} />}
+      {caption && <div style={{ fontSize: '0.86rem', color: '#53607b' }}>{caption}</div>}
+      <div style={{ fontSize: '0.68rem', opacity: 0.45, marginTop: 4 }}>{formatPublicDateTime(msg.createdAt)}</div>
+    </div>
+  );
+}
+
 export default function TripChatRoom() {
   const params = useParams();
   const token = params?.token;
@@ -55,8 +71,13 @@ export default function TripChatRoom() {
   const [showReport, setShowReport] = useState(false);
   const [reportForm, setReportForm] = useState({ issueType: 'SERVICE', description: '' });
   const [reportMsg, setReportMsg] = useState('');
+  const [otherTyping, setOtherTyping] = useState(false);
+  const [templates, setTemplates] = useState([]);
+  const [showTemplates, setShowTemplates] = useState(false);
   const messagesEndRef = useRef(null);
   const pollRef = useRef(null);
+  const typingRef = useRef(null);
+  const sseRef = useRef(null);
 
   async function loadRoom() {
     try {
@@ -73,15 +94,51 @@ export default function TripChatRoom() {
   useEffect(() => {
     if (!token) return;
     loadRoom();
-    // Mark as read
     api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/read`, { method: 'POST' }).catch(() => {});
-    // Poll for new messages
+
+    // SSE for real-time updates
+    let sseConnected = false;
+    try {
+      const sseUrl = `${API_BASE}/api/public/booking/trip-chat/${encodeURIComponent(token)}/stream`;
+      const es = new EventSource(sseUrl);
+      sseRef.current = es;
+
+      es.addEventListener('message', (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          setRoom((r) => r ? { ...r, messages: [...(r.messages || []), msg] } : r);
+        } catch {}
+      });
+
+      es.addEventListener('typing', () => {
+        setOtherTyping(true);
+        setTimeout(() => setOtherTyping(false), 3000);
+      });
+
+      es.addEventListener('connected', () => { sseConnected = true; });
+      es.onerror = () => {
+        sseConnected = false;
+        es.close();
+      };
+    } catch { sseConnected = false; }
+
+    // Fallback polling (slower when SSE is active)
     pollRef.current = setInterval(() => {
+      if (sseConnected) return;
       api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}`, { bypassCache: true })
         .then((data) => setRoom(data))
         .catch(() => {});
     }, POLL_INTERVAL);
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+
+    // Load templates for host
+    api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/templates`).then((t) => {
+      if (Array.isArray(t)) setTemplates(t);
+    }).catch(() => {});
+
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+      if (sseRef.current) sseRef.current.close();
+    };
   }, [token]);
 
   useEffect(() => {
@@ -103,6 +160,50 @@ export default function TripChatRoom() {
       setError(err?.message || 'Unable to send message');
     } finally {
       setSending(false);
+    }
+  }
+
+  function handleInputChange(value) {
+    setNewMsg(value);
+    if (typingRef.current) clearTimeout(typingRef.current);
+    typingRef.current = setTimeout(() => {
+      api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/typing`, { method: 'POST' }).catch(() => {});
+    }, 500);
+  }
+
+  async function sendTemplate(templateId) {
+    try {
+      const msg = await api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/template`, {
+        method: 'POST', body: JSON.stringify({ templateId })
+      });
+      setRoom((r) => r ? { ...r, messages: [...(r.messages || []), msg] } : r);
+      setShowTemplates(false);
+    } catch (err) {
+      setError(err?.message || 'Unable to send template');
+    }
+  }
+
+  async function sendImage() {
+    const url = prompt('Paste image URL:');
+    if (!url || !url.startsWith('http')) return;
+    const caption = prompt('Caption (optional):') || '';
+    try {
+      const msg = await api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/image`, {
+        method: 'POST', body: JSON.stringify({ imageUrl: url, caption })
+      });
+      setRoom((r) => r ? { ...r, messages: [...(r.messages || []), msg] } : r);
+    } catch (err) {
+      setError(err?.message || 'Unable to send image');
+    }
+  }
+
+  async function blockChat() {
+    if (!confirm('Are you sure you want to end this conversation? This cannot be undone.')) return;
+    try {
+      await api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/block`, { method: 'POST' });
+      loadRoom();
+    } catch (err) {
+      setError(err?.message || 'Unable to block');
     }
   }
 
@@ -282,18 +383,51 @@ export default function TripChatRoom() {
           if (msg.messageType === 'SYSTEM' || msg.senderType === 'SYSTEM') {
             return <SystemMessage key={msg.id} msg={msg} />;
           }
+          if (msg.messageType === 'IMAGE') {
+            const isOwn = (isHost && msg.senderType === 'HOST') || (!isHost && msg.senderType === 'GUEST');
+            return <ImageMessage key={msg.id} msg={msg} isOwn={isOwn} />;
+          }
           const isOwn = (isHost && msg.senderType === 'HOST') || (!isHost && msg.senderType === 'GUEST');
           return <ChatBubble key={msg.id} msg={msg} isOwn={isOwn} />;
         })}
+        {otherTyping && (
+          <div style={{ fontSize: '0.8rem', color: '#6b7a9a', fontStyle: 'italic', padding: '4px 8px' }}>
+            {isHost ? room.guestName : room.hostName} is typing...
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Action bar */}
+      {!room.closedAt && (
+        <div style={{ display: 'flex', gap: 6, padding: '6px 0', flexWrap: 'wrap' }}>
+          <button onClick={sendImage} style={{ background: 'none', border: '1px solid rgba(110,73,255,.15)', borderRadius: 8, padding: '4px 10px', cursor: 'pointer', color: '#6e49ff', fontSize: '0.76rem', fontWeight: 600 }}>📷 Photo</button>
+          {isHost && templates.length > 0 && (
+            <button onClick={() => setShowTemplates(!showTemplates)} style={{ background: 'none', border: '1px solid rgba(110,73,255,.15)', borderRadius: 8, padding: '4px 10px', cursor: 'pointer', color: '#6e49ff', fontSize: '0.76rem', fontWeight: 600 }}>💬 Templates</button>
+          )}
+          <button onClick={blockChat} style={{ marginLeft: 'auto', background: 'none', border: '1px solid rgba(255,80,80,.15)', borderRadius: 8, padding: '4px 10px', cursor: 'pointer', color: '#991b1b', fontSize: '0.76rem', fontWeight: 600 }}>End Chat</button>
+        </div>
+      )}
+
+      {/* Template selector */}
+      {showTemplates && templates.length > 0 && (
+        <div style={{ padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(110,73,255,.1)', background: 'rgba(110,73,255,.03)', marginBottom: 8, display: 'grid', gap: 6 }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e2847' }}>Quick Messages</div>
+          {templates.map((t) => (
+            <button key={t.id} onClick={() => sendTemplate(t.id)} style={{ textAlign: 'left', padding: '8px 12px', borderRadius: 8, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', cursor: 'pointer', fontSize: '0.82rem' }}>
+              <strong style={{ color: '#6e49ff' }}>{t.label}</strong>
+              <div style={{ color: '#6b7a9a', fontSize: '0.78rem', marginTop: 2 }}>{t.body.slice(0, 80)}...</div>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Compose */}
       {!room.closedAt ? (
         <form onSubmit={sendMessage} style={{ display: 'flex', gap: 10, padding: '12px 0', borderTop: '1px solid rgba(135,82,254,.08)' }}>
           <input
             value={newMsg}
-            onChange={(e) => setNewMsg(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
             placeholder="Type a message..."
             maxLength={5000}
             style={{ flex: 1, fontSize: '0.92rem' }}
