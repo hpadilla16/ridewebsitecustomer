@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
+import { ListingSkeleton } from '../../components/Skeleton';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
@@ -546,7 +547,7 @@ function CarSharingPreviewPageContent() {
 
 export default function CarSharingPreviewPage() {
   return (
-    <Suspense fallback={<div className="glass card" style={{ padding: 32 }}>Loading car sharing…</div>}>
+    <Suspense fallback={<div style={{ maxWidth: 1100, margin: '40px auto', padding: '0 24px' }}><ListingSkeleton count={6} /></div>}>
       <CarSharingPreviewPageContent />
     </Suspense>
   );

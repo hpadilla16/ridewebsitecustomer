@@ -57,6 +57,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
     { path: '/fleet', label: t('common.fleet') },
     { path: '/faq', label: t('common.faq') },
     { path: '/contact', label: t('common.contact') },
+    { path: '/about', label: 'About' },
     { path: '/become-a-host', label: t('common.becomeAHost') }
   ];
 

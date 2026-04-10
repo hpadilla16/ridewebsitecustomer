@@ -9,6 +9,7 @@ import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
 import { validateGuestInfo } from '../../lib/validation';
 import { Breadcrumbs } from '../../components/Breadcrumbs';
+import { TrustBadges } from '../../components/TrustBadges';
 import {
   backendLocationIdsForPublicOption,
   buildPublicLocationOptions,
@@ -606,6 +607,7 @@ function CheckoutInner() {
                     </button>
                   )
                 }
+                <TrustBadges compact />
               </div>
             </div>
           )}

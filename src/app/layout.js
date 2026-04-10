@@ -53,7 +53,8 @@ export const metadata = {
   icons: {
     icon: '/brand/ride-symbol.png',
     apple: '/brand/ride-symbol.png'
-  }
+  },
+  manifest: '/manifest.json'
 };
 
 export const viewport = {
