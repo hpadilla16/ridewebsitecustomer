@@ -201,9 +201,11 @@ export default function ConfirmationPage() {
         )}
       </div>
 
-      {/* Back to browse */}
+      {/* Actions */}
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', paddingTop: 8 }}>
-        <Link href={withSiteBase(basePath, '/car-sharing')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 46, padding: '0 22px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, textDecoration: 'none', fontSize: '0.93rem' }}>Browse more cars</Link>
+        <button onClick={() => { if (typeof window !== 'undefined') window.print(); }} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 46, padding: '0 22px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, fontSize: '0.93rem', cursor: 'pointer' }}>Print Receipt</button>
+        <Link href={withSiteBase(basePath, '/account')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 46, padding: '0 22px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, textDecoration: 'none', fontSize: '0.93rem' }}>My Trips</Link>
+        <Link href={withSiteBase(basePath, '/car-sharing')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: 46, padding: '0 22px', borderRadius: 14, border: '1.5px solid rgba(110,73,255,.18)', background: 'rgba(255,255,255,.9)', color: '#4a38be', fontWeight: 800, textDecoration: 'none', fontSize: '0.93rem' }}>Browse More</Link>
       </div>
 
     </main>

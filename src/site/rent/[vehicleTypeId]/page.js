@@ -85,9 +85,9 @@ function RentalDetailPreviewContent() {
     { title: 'Real-time availability', body: 'Live pricing and availability updated in real time.' }
   ];
   const rentalHighlights = [
-    'Priority airport pickup framing',
-    'Clear due-now language before checkout',
-    'Premium storefront backed by real availability'
+    'Priority airport pickup',
+    'Clear due-now pricing before checkout',
+    'Trip protection included'
   ];
   const rentalProofSignals = [
     'Hosted payment confidence',

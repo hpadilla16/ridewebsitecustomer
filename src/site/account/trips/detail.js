@@ -36,6 +36,7 @@ export default function TripDetailPage() {
   const [allBookings, setAllBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [cancelMsg, setCancelMsg] = useState('');
 
   useEffect(() => {
     const guestToken = readGuestToken();
@@ -157,14 +158,44 @@ export default function TripDetailPage() {
         </div>
       </section>
 
+      {/* Cancellation policy */}
+      {['CONFIRMED', 'PENDING', 'PENDING_APPROVAL', 'NEW'].includes(booking.status) && (
+        <section className="glass card" style={{ padding: '16px 20px', marginBottom: 16, fontSize: '0.86rem', color: '#53607b', lineHeight: 1.6 }}>
+          <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4 }}>Cancellation Policy</div>
+          <div>{booking.type === 'CAR_SHARING'
+            ? 'Free cancellation up to 24 hours before pickup. Late cancellations may incur a fee.'
+            : 'Free cancellation up to 48 hours before pickup. Late cancellations may forfeit the deposit.'}
+          </div>
+        </section>
+      )}
+
+      {cancelMsg && <div className="surface-note" style={{ marginBottom: 12, color: cancelMsg.includes('cancelled') ? '#047857' : '#991b1b' }}>{cancelMsg}</div>}
+
       {/* Actions */}
       <section style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap' }}>
         <button onClick={handlePrint} className={styles.checkoutGhostButton} style={{ fontSize: '0.85rem', padding: '10px 20px' }}>
           Print Receipt
         </button>
-        <Link href="/account/issue" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>
+        <Link href={`/account/issue?reference=${encodeURIComponent(ref)}`} className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>
           Report an Issue
         </Link>
+        {['CONFIRMED', 'PENDING', 'PENDING_APPROVAL', 'NEW'].includes(booking.status) && (
+          <button
+            onClick={async () => {
+              if (!confirm('Are you sure you want to cancel this booking? This may incur a cancellation fee.')) return;
+              try {
+                await api('/api/public/booking/cancel', { method: 'POST', body: JSON.stringify({ reference: ref }) });
+                setCancelMsg('Booking cancelled successfully. Refund will be processed per our cancellation policy.');
+                setBooking((b) => b ? { ...b, status: 'CANCELLED' } : b);
+              } catch (err) {
+                setCancelMsg(err?.message || 'Unable to cancel booking. Please contact support.');
+              }
+            }}
+            style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(255,80,80,.2)', background: 'rgba(255,80,80,.06)', color: '#991b1b', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+          >
+            Cancel Booking
+          </button>
+        )}
       </section>
     </div>
   );

@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
+import { isFavorite, toggleFavorite as toggleFav } from '../../../lib/favorites';
 import {
   addDays,
   backendLocationIdsForPublicOption,
@@ -90,6 +91,7 @@ function CarSharingDetailPreviewContent() {
   const [bootstrap, setBootstrap] = useState(null);
   const [listing, setListing] = useState(null);
   const [hostProfile, setHostProfile] = useState(null);
+  const [faved, setFaved] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeThumb, setActiveThumb] = useState(0);
@@ -124,6 +126,7 @@ function CarSharingDetailPreviewContent() {
           || (boot?.featuredCarSharingListings || []).find((entry) => String(entry?.id || '') === listingId)
           || null;
         setListing(match);
+        if (match?.id) setFaved(isFavorite(match.id));
         if (!match) {
           setError('This car sharing listing is not currently available for the selected trip window.');
         } else {
@@ -510,6 +513,19 @@ function CarSharingDetailPreviewContent() {
               >
                 Book This Car
               </Link>
+              <button
+                onClick={() => { const saved = toggleFav(listing); setFaved(saved); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  height: 48, borderRadius: 14,
+                  border: faved ? '2px solid #f43f5e' : '1.5px solid rgba(135,82,254,.18)',
+                  background: faved ? 'rgba(244,63,94,.06)' : 'rgba(255,255,255,.9)',
+                  color: faved ? '#f43f5e' : '#6b7a9a',
+                  fontWeight: 700, fontSize: '0.92rem', cursor: 'pointer',
+                }}
+              >
+                {faved ? '❤️ Saved' : '🤍 Save'}
+              </button>
               {(listing?.deliveryAvailable || listing?.allowDelivery) && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.05)', fontSize: '0.84rem', fontWeight: 700, color: '#15803d' }}>
                   <span>🚗</span><span>Delivery available for this listing</span>
