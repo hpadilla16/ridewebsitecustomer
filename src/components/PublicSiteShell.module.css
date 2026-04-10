@@ -537,3 +537,21 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Mobile menu */
+.mobileMenuBtn { display: none !important; }
+.mobileDrawer {
+  display: none;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(135,82,254,.1);
+  padding: 8px 16px;
+}
+
+@media (max-width: 768px) {
+  .mobileMenuBtn { display: inline-flex !important; }
+  .mobileDrawer { display: block; }
+  .nav { display: none !important; }
+  .headerAuthLinks { display: none !important; }
+  .headerAside { display: none !important; }
+}

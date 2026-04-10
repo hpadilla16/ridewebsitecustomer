@@ -1,6 +1,8 @@
 import '../app/globals.css';
 import { PublicSiteShell } from '../components/PublicSiteShell';
 import { I18nProvider } from '../components/I18nProvider';
+import { CookieConsent } from '../components/CookieConsent';
+import { Analytics } from '../components/Analytics';
 import { siteConfig } from '../site/siteConfig';
 
 export const metadata = {
@@ -69,7 +71,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body suppressHydrationWarning>
         <I18nProvider>
+          <Analytics />
           <PublicSiteShell>{children}</PublicSiteShell>
+          <CookieConsent />
         </I18nProvider>
       </body>
     </html>

@@ -41,6 +41,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
   const pathname = usePathname();
   const basePath = forcedBasePath || resolveSiteBasePath(pathname);
   const isHost = useIsHostLoggedIn();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const year = new Date().getFullYear();
   const navHrefFor = (path) => withSiteBase(basePath, path);
   const isActive = (path) => {
@@ -90,6 +91,17 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             <Link href={withSiteBase(basePath, '/rent')} className={styles.navButton}>
               {t('common.startBooking')}
             </Link>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle navigation menu"
+              style={{
+                display: 'none', background: 'none', border: '1px solid rgba(135,82,254,.2)',
+                borderRadius: 8, padding: '8px 10px', cursor: 'pointer', color: '#6e49ff', fontSize: '1.2rem', lineHeight: 1,
+              }}
+              className={styles.mobileMenuBtn}
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
             <div className={styles.headerAuthLinks}>
               <LanguageToggle />
               <Link
@@ -138,6 +150,42 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
           </div>
         </header>
 
+        {/* Mobile nav drawer */}
+        {mobileOpen && (
+          <div className={styles.mobileDrawer}>
+            <nav style={{ display: 'grid', gap: 4, padding: '12px 0' }}>
+              {navItems.map((item) => (
+                <Link
+                  key={item.path || 'home'}
+                  href={navHrefFor(item.path)}
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'block', padding: '12px 20px', borderRadius: 10, textDecoration: 'none',
+                    fontWeight: 600, fontSize: '0.92rem',
+                    color: isActive(item.path) ? '#6e49ff' : '#1e2847',
+                    background: isActive(item.path) ? 'rgba(110,73,255,.06)' : 'transparent',
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div style={{ borderTop: '1px solid rgba(135,82,254,.08)', margin: '8px 0' }} />
+              <Link href={withSiteBase(basePath, '/login')} onClick={() => setMobileOpen(false)} style={{ display: 'block', padding: '12px 20px', textDecoration: 'none', fontWeight: 600, fontSize: '0.92rem', color: '#6e49ff' }}>
+                {t('common.signIn')}
+              </Link>
+              {isHost ? (
+                <Link href="/host/dashboard" onClick={() => setMobileOpen(false)} style={{ display: 'block', padding: '12px 20px', textDecoration: 'none', fontWeight: 600, fontSize: '0.92rem', color: '#6e49ff' }}>
+                  {t('common.hostDashboard')}
+                </Link>
+              ) : (
+                <Link href={withSiteBase(basePath, '/host-login')} onClick={() => setMobileOpen(false)} style={{ display: 'block', padding: '12px 20px', textDecoration: 'none', fontWeight: 600, fontSize: '0.92rem', color: '#1e2847' }}>
+                  {t('common.hostLogin')}
+                </Link>
+              )}
+            </nav>
+          </div>
+        )}
+
         <main id="main-content" className={styles.mainContent}>
           {children}
         </main>
@@ -185,8 +233,16 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               <span className={styles.footerColumnLabel}>{t('shell.trustPolicy')}</span>
               <div className={styles.footerLinks}>
                 <Link href="/privacy">{t('shell.privacy')}</Link>
-                <Link href={withSiteBase(basePath, '/checkout')}>{t('shell.checkout')}</Link>
+                <Link href="/terms">Terms of Service</Link>
                 <Link href={withSiteBase(basePath, '/fleet')}>{t('common.fleet')}</Link>
+              </div>
+            </div>
+            <div className={styles.footerColumn}>
+              <span className={styles.footerColumnLabel}>Contact</span>
+              <div className={styles.footerLinks}>
+                <a href="mailto:support@ride-carsharing.com">support@ride-carsharing.com</a>
+                <a href="tel:+17875550100">+1 (787) 555-0100</a>
+                <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>San Juan, Puerto Rico</span>
               </div>
             </div>
           </div>
