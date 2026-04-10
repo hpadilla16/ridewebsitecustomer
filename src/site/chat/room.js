@@ -295,6 +295,7 @@ export default function TripChatRoom() {
             value={newMsg}
             onChange={(e) => setNewMsg(e.target.value)}
             placeholder="Type a message..."
+            maxLength={5000}
             style={{ flex: 1, fontSize: '0.92rem' }}
           />
           <button
