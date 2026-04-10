@@ -46,7 +46,7 @@ const supportChannels = [
 const serviceDetails = [
   {
     label: 'Airport and local pickup',
-    value: 'Promote airport-friendly instructions, branch guidance, and digital readiness in the public site before a guest ever calls support.'
+    value: 'Airport-friendly pickup instructions, branch guidance, and digital readiness information are available before you arrive.'
   },
   {
     label: 'Payments and deposits',
@@ -74,9 +74,9 @@ export default function ContactPreviewPage() {
     <div className="stack" style={{ gap: 24 }}>
       <section className="glass card-lg" style={{ padding: 28 }}>
         <span className="eyebrow">Contact and Support</span>
-        <h1 style={{ marginTop: 8 }}>A support page that feels more concierge than contact form</h1>
+        <h1 style={{ marginTop: 8 }}>Get in touch with us</h1>
         <p className="ui-muted" style={{ maxWidth: 760 }}>
-          The public site should separate guest support, host inquiries, and operational escalations without dumping everyone into the internal Ride Fleet UI. This page turns the current contact story into something clearer, warmer, and easier for guests to self-serve.
+          Whether you need help with a reservation, have a question about car sharing, or want to partner with us as a host — we are here to help.
         </p>
         <div className="inline-actions" style={{ marginTop: 16, flexWrap: 'wrap' }}>
           <Link href={withSiteBase(basePath, '/faq')} className="ios-action-btn" style={{ textDecoration: 'none' }}>
@@ -139,10 +139,10 @@ export default function ContactPreviewPage() {
       <section className="glass card-lg" style={{ padding: 28 }}>
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
           <div className="stack" style={{ gap: 8, maxWidth: 760 }}>
-            <span className="eyebrow">Support Story</span>
-            <h2 style={{ margin: 0 }}>Keep customer service tied to the website experience</h2>
+            <span className="eyebrow">Self-Service</span>
+            <h2 style={{ margin: 0 }}>Most questions answered before you need to call</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              The new public site should reduce random support calls by making the common steps obvious: browse, book, pay, sign, and prepare for pickup from one coherent guest journey.
+              Browse, book, pay, sign your agreement, and prepare for pickup — all from one seamless experience.
             </p>
           </div>
           <Link href={withSiteBase(basePath, '/checkout')} className="button-subtle" style={{ textDecoration: 'none' }}>

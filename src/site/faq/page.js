@@ -7,31 +7,31 @@ import { resolveSiteBasePath, withSiteBase } from '../sitePreviewShared';
 const faqs = [
   {
     question: 'How do I reserve a vehicle?',
-    answer: 'Choose whether you want a traditional rental or a car sharing trip, run a search, review the detail page, and continue into the live Ride Fleet checkout flow.'
+    answer: 'Choose whether you want a traditional rental or a car sharing trip, search for available vehicles, review pricing on the detail page, and complete your reservation through checkout.'
   },
   {
     question: 'Do you offer airport pickup?',
-    answer: 'Yes. The new site experience keeps airport-oriented pickup messaging front and center while the actual reservation and operational workflow stays inside Ride Fleet.'
+    answer: 'Yes. Our airport pickup locations have clear staging instructions, shuttle details, and digital readiness so you know exactly where to go when you land.'
   },
   {
     question: 'Can I save my card and handle deposits digitally?',
-    answer: 'Yes. The booking and payment flow uses the Ride Fleet plus Authorize.Net setup already handling hosted payments, saved cards, and security deposit holds.'
+    answer: 'Yes. Our payment flow supports hosted payments, saved cards, and security deposit holds through our secure payment partner.'
   },
   {
     question: 'What is the difference between rentals and car sharing?',
-    answer: 'Rentals are class-based and inventory-driven. Car sharing is listing-based and merchandised more like a marketplace. Both still resolve into the same booking backbone.'
+    answer: 'Rentals are class-based — you pick a vehicle category and we assign the best available car. Car sharing is listing-based — you browse specific vehicles from verified local hosts, similar to a marketplace.'
   },
   {
     question: 'Can I book outside normal office hours?',
-    answer: 'Yes, if the location allows after-hours reservations and pickup rules are configured for that branch. The public website should communicate those rules before the guest commits.'
+    answer: 'Yes, depending on the pickup location. After-hours availability and pickup instructions are shown on each location page before you book.'
   },
   {
     question: 'What documents should I have ready?',
-    answer: 'Guests should expect to complete customer information, review the agreement, and provide any required ID or license details in the portal before pickup.'
+    answer: 'You will need a valid driver\'s license, a credit or debit card, and to complete your customer information and rental agreement digitally before pickup.'
   },
   {
-    question: 'How will the new website launch?',
-    answer: 'The recommended rollout is to soft-launch the new storefront first, validate the real guest journey, and then move the main domain over once checkout and payment flows are fully proven.'
+    question: 'What happens if I need to cancel?',
+    answer: 'Cancellations made 24-48 hours before pickup are free depending on the booking type. Late cancellations may incur a fee. Full details are shown at checkout.'
   }
 ];
 
@@ -68,9 +68,9 @@ export default function FaqPreviewPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="glass card-lg" style={{ padding: 28 }}>
         <span className="eyebrow">Guest FAQ</span>
-        <h1 style={{ marginTop: 8 }}>Answer the guest questions before they become support tickets</h1>
+        <h1 style={{ marginTop: 8 }}>Frequently Asked Questions</h1>
         <p className="ui-muted" style={{ maxWidth: 760 }}>
-          The current site already hints at convenience, airport pickup, and affordability. The new FAQ should support that message while clarifying how rentals, car sharing, payments, and pickup actually work.
+          Everything you need to know about rentals, car sharing, payments, airport pickup, and your booking experience.
         </p>
         <div className="inline-actions" style={{ marginTop: 16, flexWrap: 'wrap' }}>
           <Link href={withSiteBase(basePath, '/rent')} className="ios-action-btn" style={{ textDecoration: 'none' }}>
@@ -105,15 +105,17 @@ export default function FaqPreviewPage() {
       <section className="glass card-lg" style={{ padding: 28 }}>
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
           <div className="stack" style={{ gap: 8, maxWidth: 760 }}>
-            <span className="eyebrow">Rollout Recommendation</span>
-            <h2 style={{ margin: 0 }}>Launch this FAQ with the new storefront</h2>
-            <p className="ui-muted" style={{ margin: 0 }}>
-              Launch the new FAQ with the new booking lanes so support can validate the language before the main domain switch.
-            </p>
+            <span className="eyebrow">Ready to get started?</span>
+            <h2 style={{ margin: 0 }}>Book your ride or become a host today</h2>
           </div>
-          <Link href={withSiteBase(basePath, '/become-a-host')} className="button-subtle" style={{ textDecoration: 'none' }}>
-            Host onboarding
-          </Link>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link href={withSiteBase(basePath, '/rent')} className="button-subtle" style={{ textDecoration: 'none' }}>
+              Rent a car
+            </Link>
+            <Link href={withSiteBase(basePath, '/become-a-host')} className="button-subtle" style={{ textDecoration: 'none' }}>
+              Become a host
+            </Link>
+          </div>
         </div>
       </section>
     </div>

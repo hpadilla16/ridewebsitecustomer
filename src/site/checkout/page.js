@@ -540,18 +540,6 @@ function CheckoutInner() {
                     )}
                   </div>
 
-                  {/* Promo code */}
-                  <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)' }}>
-                    <details>
-                      <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#6e49ff', fontSize: '0.88rem' }}>{t('checkout.promoCode')}</summary>
-                      <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-                        <input placeholder="Enter code" style={{ flex: 1 }} disabled />
-                        <button type="button" disabled style={{ padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(110,73,255,.2)', background: 'rgba(110,73,255,.05)', color: '#6e49ff', fontWeight: 600, fontSize: '0.84rem', cursor: 'not-allowed', opacity: 0.5 }}>Apply</button>
-                      </div>
-                      <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: 6 }}>{t('checkout.promoComingSoon')}</div>
-                    </details>
-                  </div>
-
                   {/* Cancellation policy */}
                   <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', fontSize: '0.86rem', color: '#53607b', lineHeight: 1.6 }}>
                     <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 6 }}>{t('checkout.cancellationPolicy')}</div>

@@ -384,8 +384,7 @@ function CarSharingDetailPreviewContent() {
               <div className={`glass card ${styles.contentPanel}`} style={{ gap: 14 }}>
                 <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>The Host</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  {/* Avatar placeholder */}
-                  <div style={{
+                    <div style={{
                     width: 56, height: 56, borderRadius: '50%',
                     background: 'linear-gradient(135deg, #6e49ff, #0fb0d8)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -401,7 +400,7 @@ function CarSharingDetailPreviewContent() {
                       ) : (hostName || 'Verified Host')}
                     </div>
                     <div style={{ fontSize: '0.84rem', color: '#6b7a9a', fontWeight: 600, marginTop: 2 }}>
-                      Member since 2023 · Verified host
+                      Verified host
                     </div>
                     <div style={{ marginTop: 6 }}>
                       <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />

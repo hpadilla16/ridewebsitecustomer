@@ -28,20 +28,15 @@ const heroFeatureCards = [
   }
 ];
 
-const phases = [
-  'Stand up a public-facing shell that can live on a beta subdomain without touching the current WordPress production site.',
-  'Connect rental search and checkout to Ride Fleet APIs while reusing the existing public booking and payment machinery.',
-  'Build a distinct car sharing UX on top of the same backend so both products live under one branded website.'
-];
 
 const marketingMoments = [
   {
     title: 'Search your ride',
-    body: 'Explore vehicle classes, pickup hubs, and car sharing listings without waiting on a WordPress booking widget to catch up.'
+    body: 'Explore vehicle classes, pickup hubs, and car sharing listings with real-time pricing and availability.'
   },
   {
     title: 'Reserve with confidence',
-    body: 'Keep the operational logic inside Ride Fleet while the public website tells a clearer pricing, pickup, and trust story.'
+    body: 'Clear pricing, transparent fees, and trip protection give you confidence before you commit.'
   },
   {
     title: 'Pick up and go',
@@ -136,9 +131,9 @@ const airportJourney = [
 
 const launchSignals = [
   'Airport-first Puerto Rico flow',
-  'Hosted payments with cleaner trust cues',
-  'Marketplace visuals without ops fragmentation',
-  'Ready for a polished public launch'
+  'Hosted payments with transparent pricing',
+  'Marketplace visuals for car sharing',
+  'Verified hosts and trip protection'
 ];
 
 const prestigeSignals = [
@@ -152,7 +147,7 @@ const prestigeSignals = [
   },
   {
     title: 'Launch-ready motion',
-    body: 'Use restrained animation, glow, and layered gradients to make the site feel advanced without becoming noisy.'
+    body: 'Restrained animation, clean design, and layered gradients create an elevated experience.'
   }
 ];
 
@@ -199,7 +194,7 @@ const testimonialRibbon = [
 const prestigeTicker = [
   'Airport-first guest experience',
   'Hosted Authorize.Net trust flow',
-  'Puerto Rico to Miami launch story',
+  'Puerto Rico to Miami coverage',
   'Marketplace-style car sharing',
   'Digital agreements and inspections',
   'Premium storefront, real ops backbone'
@@ -360,10 +355,13 @@ export default function SitePreviewHomePage() {
 
   return (
     <div className="stack" style={{ gap: 24 }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      {structuredData.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
 
       <section className={styles.heroShell} aria-labelledby="home-hero-title">
         <div className={styles.heroGrid}>
@@ -866,7 +864,7 @@ export default function SitePreviewHomePage() {
       <section className={styles.launchFinale}>
         <div className={styles.launchFinaleCopy}>
           <span className="eyebrow">Launch-ready direction</span>
-          <h2 style={{ margin: 0 }}>Build the new public site so the brand already feels established.</h2>
+          <h2 style={{ margin: 0 }}>A premium booking experience that matches the quality of the ride.</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
             The goal is to make the public booking experience polished enough that moving the main domain feels like an infrastructure switch, not a redesign under pressure.
           </p>
@@ -904,27 +902,6 @@ export default function SitePreviewHomePage() {
           </div>
         </div>
 
-        <div className={`glass card ${styles.editorialPanel}`}>
-          <span className="eyebrow">Go-live recommendation</span>
-          <h2 style={{ margin: '8px 0 10px' }}>Soft-launch the new storefront before the main domain switch</h2>
-          <p className="ui-muted">
-            The safest path is to validate search, checkout, payments, and portal links in a soft-launch environment first, then move the main domain once the guest journey is fully proven.
-          </p>
-          <div className="stack" style={{ gap: 10 }}>
-            <div className="surface-note">
-              <strong>Phase A</strong>
-              <div className="ui-muted">Keep WordPress live on the main domain while the new storefront is validated in a protected rollout environment.</div>
-            </div>
-            <div className="surface-note">
-              <strong>Phase B</strong>
-              <div className="ui-muted">Move internal testing, support scripts, and selected traffic into the new storefront to validate the real guest journey.</div>
-            </div>
-            <div className="surface-note">
-              <strong>Phase C</strong>
-              <div className="ui-muted">Cut over the main domain after checkout, payments, and customer portal flows are proven end to end.</div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section className={styles.spotlightGrid}>
@@ -932,7 +909,7 @@ export default function SitePreviewHomePage() {
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
               <span className="eyebrow">Live Locations</span>
-              <h3 style={{ margin: '6px 0 0' }}>Pickup hubs ready for the public site</h3>
+              <h3 style={{ margin: '6px 0 0' }}>Airport and city pickup hubs</h3>
             </div>
             <Link href={withSiteBase(basePath, '/fleet')} className="button-subtle" style={{ textDecoration: 'none' }}>View fleet</Link>
           </div>
@@ -942,7 +919,7 @@ export default function SitePreviewHomePage() {
                 <strong>{location.name}</strong>
                 <div className="ui-muted">{publicLocationLabel(location)}</div>
               </div>
-            )) : <div className="ui-muted">Locations will appear here once bootstrap data loads.</div>}
+            )) : <div className="ui-muted">No pickup locations available right now.</div>}
           </div>
         </div>
 
@@ -950,7 +927,7 @@ export default function SitePreviewHomePage() {
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
               <span className="eyebrow">Rental Classes</span>
-              <h3 style={{ margin: '6px 0 0' }}>Vehicle types from Ride Fleet</h3>
+              <h3 style={{ margin: '6px 0 0' }}>Available vehicle classes</h3>
             </div>
             <Link href={withSiteBase(basePath, '/rent')} className="button-subtle" style={{ textDecoration: 'none' }}>Search rentals</Link>
           </div>
@@ -960,7 +937,7 @@ export default function SitePreviewHomePage() {
                 <strong>{vehicleTypeLabel(vehicleType)}</strong>
                 <div className="ui-muted">{vehicleType.code || 'Rental class'}</div>
               </div>
-            )) : <div className="ui-muted">Vehicle classes will appear here once bootstrap data loads.</div>}
+            )) : <div className="ui-muted">No vehicle classes available right now.</div>}
           </div>
         </div>
 
@@ -968,7 +945,7 @@ export default function SitePreviewHomePage() {
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
               <span className="eyebrow">Car Sharing Catalog</span>
-              <h3 style={{ margin: '6px 0 0' }}>Featured listings from the API</h3>
+              <h3 style={{ margin: '6px 0 0' }}>Featured car sharing vehicles</h3>
             </div>
             <Link href={withSiteBase(basePath, '/car-sharing')} className="button-subtle" style={{ textDecoration: 'none' }}>Open catalog</Link>
           </div>
@@ -980,30 +957,11 @@ export default function SitePreviewHomePage() {
                   {publicLocationLabel(listing.location)}{Number(listing.baseDailyRate || 0) ? ` | From ${fmtMoney(listing.baseDailyRate)}/day` : ''}
                 </div>
               </div>
-            )) : <div className="ui-muted">Featured car sharing listings will appear here once bootstrap data loads.</div>}
+            )) : <div className="ui-muted">No featured listings available right now.</div>}
           </div>
         </div>
       </section>
 
-      <section className="glass card-lg" style={{ padding: 28 }}>
-        <div className="row-between" style={{ alignItems: 'flex-start' }}>
-          <div className="stack" style={{ gap: 8, maxWidth: 700 }}>
-            <span className="eyebrow">Execution Phases</span>
-            <h2 style={{ margin: 0 }}>What we build next on this branch</h2>
-            <p className="ui-muted" style={{ margin: 0 }}>
-              The first goal is to create a polished public shell and then progressively connect real Ride Fleet booking flows.
-            </p>
-          </div>
-        </div>
-        <div className="stack" style={{ gap: 12, marginTop: 18 }}>
-          {phases.map((phase, index) => (
-            <div key={phase} className="glass card" style={{ padding: 18 }}>
-              <div className="label">Phase {index + 1}</div>
-              <div style={{ fontWeight: 700, marginTop: 4 }}>{phase}</div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
