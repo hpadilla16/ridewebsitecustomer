@@ -88,6 +88,7 @@ function CarSharingDetailPreviewContent() {
   const carSharingTenantSlug = publicCarSharingTenantSlug();
   const [bootstrap, setBootstrap] = useState(null);
   const [listing, setListing] = useState(null);
+  const [hostProfile, setHostProfile] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeThumb, setActiveThumb] = useState(0);
@@ -126,6 +127,13 @@ function CarSharingDetailPreviewContent() {
           setError('This car sharing listing is not currently available for the selected trip window.');
         } else {
           setError('');
+          // Fetch host profile with reviews in background
+          const hostId = match?.host?.id || match?.hostProfileId;
+          if (hostId) {
+            api(`/api/public/booking/hosts/${hostId}`).then((hp) => {
+              if (!ignore) setHostProfile(hp || null);
+            }).catch(() => {});
+          }
         }
       } catch (err) {
         setListing(null);
@@ -382,7 +390,9 @@ function CarSharingDetailPreviewContent() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>
-                      {hostName || 'Verified Host'}
+                      {(listing?.host?.id) ? (
+                        <Link href={`/hosts/${listing.host.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{hostName || 'Verified Host'}</Link>
+                      ) : (hostName || 'Verified Host')}
                     </div>
                     <div style={{ fontSize: '0.84rem', color: '#6b7a9a', fontWeight: 600, marginTop: 2 }}>
                       Member since 2023 · Verified host
@@ -530,6 +540,32 @@ function CarSharingDetailPreviewContent() {
           ))}
         </div>
       </section>
+
+      {/* ── Guest Reviews ── */}
+      {hostProfile?.reviews?.length > 0 && (
+        <section className={`glass card ${styles.journeyPanel}`} style={{ marginTop: 8 }}>
+          <div className={styles.editorialHeader}>
+            <span className="eyebrow">Guest Reviews</span>
+            <h2 style={{ margin: 0 }}>
+              {hostProfile.host?.averageRating ? `${Number(hostProfile.host.averageRating).toFixed(1)} ★` : ''} {hostProfile.host?.reviewCount || hostProfile.reviews.length} reviews
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gap: 14 }}>
+            {hostProfile.reviews.map((review) => (
+              <div key={review.id} style={{ padding: '16px 18px', borderRadius: 14, background: 'rgba(135,82,254,.03)', border: '1px solid rgba(135,82,254,.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                  <div>
+                    <span style={{ color: '#f5a623', letterSpacing: 2 }}>{'★'.repeat(Math.min(Math.round(Number(review.rating || 0)), 5))}{'☆'.repeat(Math.max(0, 5 - Math.round(Number(review.rating || 0))))}</span>
+                    <span style={{ marginLeft: 8, fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{review.reviewerName || 'Guest'}</span>
+                  </div>
+                  {review.submittedAt && <span style={{ fontSize: '0.76rem', color: '#9ca3af' }}>{formatPublicDateTime(review.submittedAt)}</span>}
+                </div>
+                {review.comments && <p style={{ margin: 0, color: '#53607b', fontSize: '0.88rem', lineHeight: 1.6 }}>{review.comments}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
     </div>
   );

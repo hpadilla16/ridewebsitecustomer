@@ -184,6 +184,12 @@ export default function AccountPage() {
           </p>
         )}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 16 }}>
+          <Link href="/account/messages" className={styles.heroSecondaryAction} style={{ textDecoration: 'none', border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.07)', fontSize: '0.88rem' }}>
+            Messages
+          </Link>
+          <Link href="/account/reviews" className={styles.heroSecondaryAction} style={{ textDecoration: 'none', border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.07)', fontSize: '0.88rem' }}>
+            Leave a Review
+          </Link>
           <button
             type="button"
             onClick={handleSignOut}
