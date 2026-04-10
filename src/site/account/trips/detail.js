@@ -37,6 +37,9 @@ export default function TripDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [cancelMsg, setCancelMsg] = useState('');
+  const [showExtend, setShowExtend] = useState(false);
+  const [extendDays, setExtendDays] = useState(1);
+  const [extendMsg, setExtendMsg] = useState('');
 
   useEffect(() => {
     const guestToken = readGuestToken();
@@ -196,7 +199,48 @@ export default function TripDetailPage() {
             Cancel Booking
           </button>
         )}
+        {['CONFIRMED', 'ACTIVE', 'IN_PROGRESS'].includes(booking.status) && (
+          <button
+            onClick={() => setShowExtend(!showExtend)}
+            style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.06)', color: '#047857', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+          >
+            Extend Trip
+          </button>
+        )}
       </section>
+
+      {/* Extend trip form */}
+      {showExtend && (
+        <section className="glass card" style={{ padding: '18px 20px', marginBottom: 16 }}>
+          <h3 style={{ margin: '0 0 10px', fontSize: '0.95rem', fontWeight: 700, color: '#1e2847' }}>Request Trip Extension</h3>
+          <p style={{ fontSize: '0.84rem', color: '#6b7a9a', margin: '0 0 12px' }}>
+            Request additional days for your trip. The host will review and confirm the extension. Additional charges will apply.
+          </p>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+            <div>
+              <div className="label">Extra days</div>
+              <select value={extendDays} onChange={(e) => setExtendDays(Number(e.target.value))} style={{ minWidth: 100 }}>
+                {[1, 2, 3, 5, 7, 14].map((d) => <option key={d} value={d}>{d} {d === 1 ? 'day' : 'days'}</option>)}
+              </select>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  await api('/api/public/booking/extend', { method: 'POST', body: JSON.stringify({ reference: ref, extraDays: extendDays }) });
+                  setExtendMsg(`Extension request submitted for ${extendDays} day${extendDays > 1 ? 's' : ''}. Your host will confirm shortly.`);
+                  setShowExtend(false);
+                } catch (err) {
+                  setExtendMsg(err?.message || 'Unable to submit extension request. Please contact support.');
+                }
+              }}
+              style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #8752FE, #6d3df2)', color: '#fff', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+            >
+              Submit Request
+            </button>
+          </div>
+          {extendMsg && <div style={{ marginTop: 10, fontSize: '0.84rem', color: extendMsg.includes('submitted') ? '#047857' : '#991b1b' }}>{extendMsg}</div>}
+        </section>
+      )}
     </div>
   );
 }

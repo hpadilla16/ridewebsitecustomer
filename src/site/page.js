@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { addDays, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, normalizePublicLocationSelectionId, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from './sitePreviewShared';
 import styles from './sitePreviewPremium.module.css';
 import { absoluteSiteUrl, siteConfig } from './siteConfig';
+import { saveSearch, getSavedSearches, clearSavedSearches } from '../lib/savedSearches';
 
 const heroStats = [
   { value: '24/7', label: 'Guest-first booking access' },
@@ -246,6 +247,7 @@ export default function SitePreviewHomePage() {
   const [bootstrap, setBootstrap] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState('');
+  const [recentSearches, setRecentSearches] = useState([]);
   const [rentalSearch, setRentalSearch] = useState({
     pickupLocationId: '',
     returnLocationId: '',
@@ -259,6 +261,7 @@ export default function SitePreviewHomePage() {
   });
 
   useEffect(() => {
+    setRecentSearches(getSavedSearches());
     (async () => {
       try {
         const payload = await api('/api/public/booking/bootstrap');
@@ -341,6 +344,8 @@ export default function SitePreviewHomePage() {
     }
     setBusy('rental');
     setError('');
+    const pickupOption = locationOptions.find((o) => o.id === rentalSearch.pickupLocationId);
+    setRecentSearches(saveSearch({ mode: 'RENTAL', locationId: rentalSearch.pickupLocationId, locationLabel: pickupOption?.label || '', pickupAt: rentalSearch.pickupAt, returnAt: rentalSearch.returnAt }));
     router.push(`${withSiteBase(basePath, '/rent')}?${searchParamsToString(rentalSearch)}`);
   };
 
@@ -350,6 +355,8 @@ export default function SitePreviewHomePage() {
     }
     setBusy('carsharing');
     setError('');
+    const locOption = locationOptions.find((o) => o.id === carSharingSearch.locationId);
+    setRecentSearches(saveSearch({ mode: 'CAR_SHARING', locationId: carSharingSearch.locationId, locationLabel: locOption?.label || '', pickupAt: carSharingSearch.pickupAt, returnAt: carSharingSearch.returnAt }));
     router.push(`${withSiteBase(basePath, '/car-sharing')}?${searchParamsToString(carSharingSearch)}`);
   };
 
@@ -634,10 +641,33 @@ export default function SitePreviewHomePage() {
         </div>
       </section>
 
+      {/* Recent searches */}
+      {recentSearches.length > 0 && (
+        <section className="glass card-lg" style={{ padding: '20px 24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Recent Searches</h2>
+            <button onClick={() => { clearSavedSearches(); setRecentSearches([]); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7a9a', fontSize: '0.78rem', fontWeight: 600 }}>Clear all</button>
+          </div>
+          <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
+            {recentSearches.map((s) => (
+              <Link
+                key={s.id}
+                href={withSiteBase(basePath, s.mode === 'CAR_SHARING' ? `/car-sharing?locationId=${encodeURIComponent(s.locationId)}&pickupAt=${encodeURIComponent(s.pickupAt)}&returnAt=${encodeURIComponent(s.returnAt)}` : `/rent?pickupLocationId=${encodeURIComponent(s.locationId)}&returnLocationId=${encodeURIComponent(s.locationId)}&pickupAt=${encodeURIComponent(s.pickupAt)}&returnAt=${encodeURIComponent(s.returnAt)}`)}
+                style={{ flex: '0 0 auto', padding: '10px 16px', borderRadius: 12, border: '1px solid rgba(135,82,254,.1)', background: 'rgba(135,82,254,.03)', textDecoration: 'none', display: 'grid', gap: 2, minWidth: 180 }}
+              >
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#6e49ff', textTransform: 'uppercase' }}>{s.mode === 'CAR_SHARING' ? 'Car Sharing' : 'Rental'}</span>
+                <span style={{ fontWeight: 600, color: '#1e2847', fontSize: '0.88rem' }}>{s.locationLabel || 'Search'}</span>
+                {s.pickupAt && <span style={{ fontSize: '0.76rem', color: '#6b7a9a' }}>{new Date(s.pickupAt).toLocaleDateString()}</span>}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className={styles.destinationRail}>
         {destinationPanels.map((panel, index) => (
           <article key={panel.city} className={`glass card ${styles.destinationCard}`} style={{ animationDelay: `${index * 0.15}s` }}>
-            <div className="label">Launch city</div>
+            <div className="label">Destination</div>
             <h3 style={{ margin: '8px 0 8px' }}>{panel.city}</h3>
             <p className="ui-muted" style={{ margin: 0 }}>{panel.note}</p>
           </article>

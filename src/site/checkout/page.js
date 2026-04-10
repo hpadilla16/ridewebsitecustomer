@@ -115,6 +115,7 @@ function CheckoutInner() {
   const [selectedServices, setSelectedServices] = useState({});
   const [insuranceSelection, setInsuranceSelection] = useState({ selectedPlanCode: '', declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false, ownPolicyNumber: '' });
   const [fieldErrors, setFieldErrors] = useState({});
+  const [createAccount, setCreateAccount] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -228,7 +229,8 @@ function CheckoutInner() {
             liabilityAccepted: !!insuranceSelection.liabilityAccepted,
             ownPolicyNumber: insuranceSelection.ownPolicyNumber || ''
           } : null,
-          customer
+          customer,
+          createGuestAccount: createAccount || false
         })
       });
       try { if (typeof window !== 'undefined') sessionStorage.setItem(CONFIRMATION_KEY, JSON.stringify(payload)); } catch { /* storage quota or private browsing */ }
@@ -353,8 +355,16 @@ function CheckoutInner() {
                     <div><div className="label">License state</div><input value={customer.licenseState} onChange={(e) => setCustomer((c) => ({ ...c, licenseState: e.target.value }))} placeholder="PR" /></div>
                   </div>
                   <div style={{ padding: '12px 16px', borderRadius: 14, background: 'rgba(110,73,255,.05)', border: '1px solid rgba(110,73,255,.1)', fontSize: '0.84rem', color: '#53607b', lineHeight: 1.6 }}>
-                    🔒 Your information is encrypted and used only to manage your reservation.
+                    🔒 {t('checkout.encrypted')}
                   </div>
+                  {/* Create account option */}
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '14px 16px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} style={{ marginTop: 2 }} />
+                    <div>
+                      <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>Create an account for faster future bookings</div>
+                      <div style={{ fontSize: '0.82rem', color: '#6b7a9a', marginTop: 2 }}>Save your details so you can view trips, message hosts, and leave reviews.</div>
+                    </div>
+                  </label>
                 </>
               )}
 
