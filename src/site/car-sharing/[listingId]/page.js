@@ -515,6 +515,12 @@ function CarSharingDetailPreviewContent() {
             {/* Trust line */}
             <ProtectedBadge />
 
+            {/* Cancellation policy */}
+            <div style={{ padding: '12px 14px', borderRadius: 12, border: '1px solid rgba(110,73,255,.06)', background: 'rgba(110,73,255,.02)', fontSize: '0.82rem', color: '#53607b', lineHeight: 1.6 }}>
+              <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4, fontSize: '0.84rem' }}>Cancellation Policy</div>
+              <div>Free cancellation up to 24 hours before pickup. Late cancellations may incur a fee.</div>
+            </div>
+
             <p style={{ margin: 0, fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
               You won't be charged until your reservation is confirmed.
             </p>

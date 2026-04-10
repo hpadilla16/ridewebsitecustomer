@@ -470,11 +470,34 @@ function CheckoutInner() {
                     </div>
                   </div>
 
-                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 10 }}>
+                  <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
                     <div style={{ fontWeight: 800, color: '#1e2847' }}>Price breakdown</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                      <span>Base trip</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
-                    </div>
+                    {/* Daily rate × days */}
+                    {selectedResult?.quote?.dailyRate && selectedResult?.quote?.days && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>{fmtMoney(selectedResult.quote.dailyRate)} × {selectedResult.quote.days} {selectedResult.quote.days === 1 ? 'day' : 'days'}</span>
+                        <strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.subtotal || baseTotal)}</strong>
+                      </div>
+                    )}
+                    {/* Car sharing: tripDays */}
+                    {!selectedResult?.quote?.dailyRate && selectedResult?.quote?.tripDays && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Base trip ({selectedResult.quote.tripDays} {selectedResult.quote.tripDays === 1 ? 'day' : 'days'})</span>
+                        <strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.subtotal || baseTotal)}</strong>
+                      </div>
+                    )}
+                    {/* Fees */}
+                    {Number(selectedResult?.quote?.fees || 0) > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Fees</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.fees)}</strong>
+                      </div>
+                    )}
+                    {/* Taxes */}
+                    {Number(selectedResult?.quote?.taxes || 0) > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                        <span>Taxes</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.taxes)}</strong>
+                      </div>
+                    )}
                     {addOnsTotal > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
                         <span>Add-ons</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
@@ -485,14 +508,57 @@ function CheckoutInner() {
                         <span>Coverage</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
                       </div>
                     )}
+                    {/* Multi-day discount hint */}
+                    {(() => {
+                      const days = Number(selectedResult?.quote?.days || selectedResult?.quote?.tripDays || 0);
+                      if (days >= 30) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>🎉 Monthly rate applied — best value</div>;
+                      if (days >= 7) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>✓ Weekly rate applied</div>;
+                      if (days >= 5) return <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>💡 Book 7+ days for a weekly discount</div>;
+                      return null;
+                    })()}
                     <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>Total</span>
                       <span style={{ fontWeight: 900, fontSize: '1.2rem', color: '#1e2847' }}>{fmtMoney(estimatedTotal)}</span>
                     </div>
-                    {estimatedDueNow > 0 && (
+                    {estimatedDueNow > 0 && estimatedDueNow < estimatedTotal && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
                         <span>Due now</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
                       </div>
+                    )}
+                    {estimatedDueNow > 0 && estimatedDueNow < estimatedTotal && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#6b7a9a' }}>
+                        <span>Due at pickup</span><span>{fmtMoney(estimatedTotal - estimatedDueNow)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Promo code */}
+                  <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)' }}>
+                    <details>
+                      <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#6e49ff', fontSize: '0.88rem' }}>Have a promo code?</summary>
+                      <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+                        <input placeholder="Enter code" style={{ flex: 1 }} disabled />
+                        <button type="button" disabled style={{ padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(110,73,255,.2)', background: 'rgba(110,73,255,.05)', color: '#6e49ff', fontWeight: 600, fontSize: '0.84rem', cursor: 'not-allowed', opacity: 0.5 }}>Apply</button>
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: 6 }}>Promo codes are coming soon.</div>
+                    </details>
+                  </div>
+
+                  {/* Cancellation policy */}
+                  <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', fontSize: '0.86rem', color: '#53607b', lineHeight: 1.6 }}>
+                    <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 6 }}>Cancellation Policy</div>
+                    {searchMode === 'CAR_SHARING' ? (
+                      <>
+                        <div>• <strong>Free cancellation</strong> up to 24 hours before pickup</div>
+                        <div>• Cancellations within 24 hours may incur a fee</div>
+                        <div>• No-shows are charged the full trip amount</div>
+                      </>
+                    ) : (
+                      <>
+                        <div>• <strong>Free cancellation</strong> up to 48 hours before pickup</div>
+                        <div>• Late cancellations may forfeit the deposit</div>
+                        <div>• Modifications subject to availability</div>
+                      </>
                     )}
                   </div>
 
