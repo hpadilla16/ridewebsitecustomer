@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/client';
 import styles from '../sitePreviewPremium.module.css';
 import { validateGuestInfo } from '../../lib/validation';
@@ -84,6 +85,7 @@ function CheckoutStepBar({ step, searchMode }) {
 }
 
 function CheckoutInner() {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
@@ -311,7 +313,7 @@ function CheckoutInner() {
       ]} />
       <div>
         <Link href={backHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.88rem', fontWeight: 700, color: '#4a38be', textDecoration: 'none' }}>
-          ← Back to listing
+          {t('checkout.backToListing')}
         </Link>
       </div>
 
@@ -333,16 +335,16 @@ function CheckoutInner() {
               {step === 1 && (
                 <>
                   <div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Your information</h2>
-                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>We need a few details to complete your reservation.</p>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{t('checkout.yourInfo')}</h2>
+                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>{t('checkout.yourInfoSubtitle')}</p>
                   </div>
                   <div className="form-grid-2">
-                    <div><div className="label">First name</div><input value={customer.firstName} onChange={(e) => { setCustomer((c) => ({ ...c, firstName: e.target.value })); setFieldErrors((f) => ({ ...f, firstName: undefined })); }} placeholder="Jane" style={fieldErrors.firstName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.firstName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.firstName}</div>}</div>
-                    <div><div className="label">Last name</div><input value={customer.lastName} onChange={(e) => { setCustomer((c) => ({ ...c, lastName: e.target.value })); setFieldErrors((f) => ({ ...f, lastName: undefined })); }} placeholder="Smith" style={fieldErrors.lastName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.lastName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.lastName}</div>}</div>
+                    <div><div className="label">{t('checkout.firstName')}</div><input value={customer.firstName} onChange={(e) => { setCustomer((c) => ({ ...c, firstName: e.target.value })); setFieldErrors((f) => ({ ...f, firstName: undefined })); }} placeholder="Jane" style={fieldErrors.firstName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.firstName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.firstName}</div>}</div>
+                    <div><div className="label">{t('checkout.lastName')}</div><input value={customer.lastName} onChange={(e) => { setCustomer((c) => ({ ...c, lastName: e.target.value })); setFieldErrors((f) => ({ ...f, lastName: undefined })); }} placeholder="Smith" style={fieldErrors.lastName ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.lastName && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.lastName}</div>}</div>
                   </div>
                   <div className="form-grid-2">
-                    <div><div className="label">Email address</div><input type="email" value={customer.email} onChange={(e) => { setCustomer((c) => ({ ...c, email: e.target.value })); setFieldErrors((f) => ({ ...f, email: undefined })); }} placeholder="jane@example.com" style={fieldErrors.email ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.email && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.email}</div>}</div>
-                    <div><div className="label">Phone number</div><input value={customer.phone} onChange={(e) => { setCustomer((c) => ({ ...c, phone: e.target.value })); setFieldErrors((f) => ({ ...f, phone: undefined })); }} placeholder="+1 787 555 0100" style={fieldErrors.phone ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.phone}</div>}</div>
+                    <div><div className="label">{t('checkout.email')}</div><input type="email" value={customer.email} onChange={(e) => { setCustomer((c) => ({ ...c, email: e.target.value })); setFieldErrors((f) => ({ ...f, email: undefined })); }} placeholder="jane@example.com" style={fieldErrors.email ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.email && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.email}</div>}</div>
+                    <div><div className="label">{t('checkout.phone')}</div><input value={customer.phone} onChange={(e) => { setCustomer((c) => ({ ...c, phone: e.target.value })); setFieldErrors((f) => ({ ...f, phone: undefined })); }} placeholder="+1 787 555 0100" style={fieldErrors.phone ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.phone}</div>}</div>
                   </div>
                   <div className="form-grid-3">
                     <div><div className="label">Date of birth</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((c) => ({ ...c, dateOfBirth: e.target.value }))} /></div>
@@ -454,8 +456,8 @@ function CheckoutInner() {
               {step === 3 && (
                 <>
                   <div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Review your booking</h2>
-                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Check everything looks right before confirming.</p>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{t('checkout.reviewBooking')}</h2>
+                    <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>{t('checkout.checkEverything')}</p>
                   </div>
 
                   <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
@@ -477,7 +479,7 @@ function CheckoutInner() {
                   </div>
 
                   <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
-                    <div style={{ fontWeight: 800, color: '#1e2847' }}>Price breakdown</div>
+                    <div style={{ fontWeight: 800, color: '#1e2847' }}>{t('checkout.priceBreakdown')}</div>
                     {/* Daily rate × days */}
                     {selectedResult?.quote?.dailyRate && selectedResult?.quote?.days && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
@@ -506,12 +508,12 @@ function CheckoutInner() {
                     )}
                     {addOnsTotal > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Add-ons</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
+                        <span>{t('checkout.addOns')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
                       </div>
                     )}
                     {insuranceTotal > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Coverage</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
+                        <span>{t('checkout.coverage')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
                       </div>
                     )}
                     {/* Multi-day discount hint */}
@@ -523,17 +525,17 @@ function CheckoutInner() {
                       return null;
                     })()}
                     <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>Total</span>
+                      <span style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>{t('checkout.total')}</span>
                       <span style={{ fontWeight: 900, fontSize: '1.2rem', color: '#1e2847' }}>{fmtMoney(estimatedTotal)}</span>
                     </div>
                     {estimatedDueNow > 0 && estimatedDueNow < estimatedTotal && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Due now</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
+                        <span>{t('checkout.dueNow')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
                       </div>
                     )}
                     {estimatedDueNow > 0 && estimatedDueNow < estimatedTotal && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#6b7a9a' }}>
-                        <span>Due at pickup</span><span>{fmtMoney(estimatedTotal - estimatedDueNow)}</span>
+                        <span>{t('checkout.dueAtPickup')}</span><span>{fmtMoney(estimatedTotal - estimatedDueNow)}</span>
                       </div>
                     )}
                   </div>
@@ -541,29 +543,29 @@ function CheckoutInner() {
                   {/* Promo code */}
                   <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)' }}>
                     <details>
-                      <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#6e49ff', fontSize: '0.88rem' }}>Have a promo code?</summary>
+                      <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#6e49ff', fontSize: '0.88rem' }}>{t('checkout.promoCode')}</summary>
                       <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
                         <input placeholder="Enter code" style={{ flex: 1 }} disabled />
                         <button type="button" disabled style={{ padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(110,73,255,.2)', background: 'rgba(110,73,255,.05)', color: '#6e49ff', fontWeight: 600, fontSize: '0.84rem', cursor: 'not-allowed', opacity: 0.5 }}>Apply</button>
                       </div>
-                      <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: 6 }}>Promo codes are coming soon.</div>
+                      <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: 6 }}>{t('checkout.promoComingSoon')}</div>
                     </details>
                   </div>
 
                   {/* Cancellation policy */}
                   <div style={{ padding: '14px 18px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', fontSize: '0.86rem', color: '#53607b', lineHeight: 1.6 }}>
-                    <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 6 }}>Cancellation Policy</div>
+                    <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 6 }}>{t('checkout.cancellationPolicy')}</div>
                     {searchMode === 'CAR_SHARING' ? (
                       <>
-                        <div>• <strong>Free cancellation</strong> up to 24 hours before pickup</div>
-                        <div>• Cancellations within 24 hours may incur a fee</div>
-                        <div>• No-shows are charged the full trip amount</div>
+                        <div>• <strong>{t('checkout.carSharingCancel')}</strong></div>
+                        <div>• {t('checkout.carSharingCancelLate')}</div>
+                        <div>• {t('checkout.carSharingNoShow')}</div>
                       </>
                     ) : (
                       <>
-                        <div>• <strong>Free cancellation</strong> up to 48 hours before pickup</div>
-                        <div>• Late cancellations may forfeit the deposit</div>
-                        <div>• Modifications subject to availability</div>
+                        <div>• <strong>{t('checkout.rentalCancel')}</strong></div>
+                        <div>• {t('checkout.rentalCancelLate')}</div>
+                        <div>• {t('checkout.rentalModify')}</div>
                       </>
                     )}
                   </div>
@@ -601,7 +603,7 @@ function CheckoutInner() {
                         setStep((s) => s + 1);
                       }}
                     >
-                      Continue →
+                      {t('checkout.continue')}
                     </button>
                   )
                   : (

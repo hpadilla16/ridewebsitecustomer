@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useHostAuth, hostApi } from '@/lib/useHostAuth';
 import { fmtMoney, formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
@@ -37,6 +38,7 @@ function StarRating({ rating }) {
 }
 
 export default function HostDashboardPage() {
+  const { t } = useTranslation();
   const { token, user, ready, logout } = useHostAuth();
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,7 @@ export default function HostDashboardPage() {
       {/* Host header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
-          <span className="eyebrow">Host Dashboard</span>
+          <span className="eyebrow">{t('host.dashboard')}</span>
           <h1 style={{ margin: '4px 0 0', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 800, color: '#1e2847' }}>
             {profile?.displayName || user?.name || 'Host'}
           </h1>
@@ -83,8 +85,8 @@ export default function HostDashboardPage() {
           )}
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <Link href="/host/listings" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '8px 16px' }}>My Listings</Link>
-          <button onClick={logout} style={{ background: 'none', border: '1px solid rgba(110,73,255,.2)', borderRadius: 10, padding: '8px 16px', cursor: 'pointer', color: '#6e49ff', fontWeight: 600, fontSize: '0.85rem' }}>Sign out</button>
+          <Link href="/host/listings" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '8px 16px' }}>{t('host.myListings')}</Link>
+          <button onClick={logout} style={{ background: 'none', border: '1px solid rgba(110,73,255,.2)', borderRadius: 10, padding: '8px 16px', cursor: 'pointer', color: '#6e49ff', fontWeight: 600, fontSize: '0.85rem' }}>{t('common.signOut')}</button>
         </div>
       </div>
 
@@ -96,12 +98,12 @@ export default function HostDashboardPage() {
           {/* Metrics grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14, marginBottom: 28 }}>
             {[
-              { label: 'Active Listings', value: metrics.publishedListings ?? 0 },
-              { label: 'Total Trips', value: metrics.totalTrips ?? 0 },
-              { label: 'Active Trips', value: metrics.activeTrips ?? 0 },
-              { label: 'Completed', value: metrics.completedTrips ?? 0 },
-              { label: 'Avg Rating', value: profile?.averageRating ? Number(profile.averageRating).toFixed(1) : '—' },
-              { label: 'Reviews', value: profile?.reviewCount ?? 0 },
+              { label: t('host.activeListings'), value: metrics.publishedListings ?? 0 },
+              { label: t('host.totalTrips'), value: metrics.totalTrips ?? 0 },
+              { label: t('host.activeTrips'), value: metrics.activeTrips ?? 0 },
+              { label: t('host.completed'), value: metrics.completedTrips ?? 0 },
+              { label: t('host.avgRating'), value: profile?.averageRating ? Number(profile.averageRating).toFixed(1) : '—' },
+              { label: t('common.reviews'), value: profile?.reviewCount ?? 0 },
             ].map((m) => (
               <div key={m.label} className="glass card" style={{ padding: '16px 18px', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.04em' }}>{m.label}</div>
@@ -112,20 +114,20 @@ export default function HostDashboardPage() {
 
           {/* Quick nav */}
           <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
-            <Link href="/host/listings" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Manage Listings</Link>
-            <Link href="/host/trips" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>View Trips</Link>
-            <Link href="/host/messages" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Messages</Link>
-            <Link href="/host/reviews" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Reviews</Link>
-            <Link href="/host/earnings" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>Earnings</Link>
+            <Link href="/host/listings" className={styles.checkoutPrimaryButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>{t('host.manageListings')}</Link>
+            <Link href="/host/trips" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>{t('host.viewTrips')}</Link>
+            <Link href="/host/messages" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>{t('common.messages')}</Link>
+            <Link href="/host/reviews" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>{t('common.reviews')}</Link>
+            <Link href="/host/earnings" className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>{t('common.earnings')}</Link>
           </div>
 
           {/* Recent Listings */}
           <section className="glass card-lg" style={{ padding: '24px 22px', marginBottom: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>Your Listings</h2>
+              <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{t('host.yourListings')}</h2>
               <Link href="/host/listings" style={{ fontSize: '0.84rem', color: '#6e49ff', fontWeight: 600 }}>View all →</Link>
             </div>
-            {!listings.length && <div style={{ color: '#6b7a9a', fontSize: '0.9rem' }}>No listings yet. Submit a vehicle to get started.</div>}
+            {!listings.length && <div style={{ color: '#6b7a9a', fontSize: '0.9rem' }}>{t('host.noListings')}</div>}
             <div style={{ display: 'grid', gap: 12 }}>
               {listings.slice(0, 4).map((listing) => (
                 <div key={listing.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderRadius: 12, background: 'rgba(135,82,254,.03)', border: '1px solid rgba(135,82,254,.08)' }}>
@@ -147,10 +149,10 @@ export default function HostDashboardPage() {
           {/* Recent Trips */}
           <section className="glass card-lg" style={{ padding: '24px 22px', marginBottom: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>Recent Trips</h2>
+              <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{t('host.recentTrips')}</h2>
               <Link href="/host/trips" style={{ fontSize: '0.84rem', color: '#6e49ff', fontWeight: 600 }}>View all →</Link>
             </div>
-            {!trips.length && <div style={{ color: '#6b7a9a', fontSize: '0.9rem' }}>No trips yet.</div>}
+            {!trips.length && <div style={{ color: '#6b7a9a', fontSize: '0.9rem' }}>{t('host.noTrips')}</div>}
             <div style={{ display: 'grid', gap: 10 }}>
               {trips.slice(0, 5).map((trip) => (
                 <div key={trip.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderRadius: 12, background: 'rgba(135,82,254,.02)', border: '1px solid rgba(135,82,254,.06)' }}>
@@ -176,7 +178,7 @@ export default function HostDashboardPage() {
           {reviews.length > 0 && (
             <section className="glass card-lg" style={{ padding: '24px 22px', marginBottom: 24 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>Recent Reviews</h2>
+                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{t('host.recentReviews')}</h2>
                 <Link href="/host/reviews" style={{ fontSize: '0.84rem', color: '#6e49ff', fontWeight: 600 }}>View all →</Link>
               </div>
               <div style={{ display: 'grid', gap: 12 }}>

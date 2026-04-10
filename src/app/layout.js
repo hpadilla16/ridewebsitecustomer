@@ -1,5 +1,6 @@
 import '../app/globals.css';
 import { PublicSiteShell } from '../components/PublicSiteShell';
+import { I18nProvider } from '../components/I18nProvider';
 import { siteConfig } from '../site/siteConfig';
 
 export const metadata = {
@@ -67,7 +68,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <PublicSiteShell>{children}</PublicSiteShell>
+        <I18nProvider>
+          <PublicSiteShell>{children}</PublicSiteShell>
+        </I18nProvider>
       </body>
     </html>
   );
