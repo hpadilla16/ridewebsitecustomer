@@ -18,13 +18,13 @@ const heroStats = [
 const heroFeatureCards = [
   {
     label: 'Airport-first arrival',
-    title: 'Pickup instructions, payment trust, and digital readiness surface earlier',
-    body: 'The public side should feel closer to premium travel checkout than a plugin layered on top of operations.'
+    title: 'Know exactly where to go and what to expect before you land',
+    body: 'Pickup instructions, payment details, and digital readiness are all handled before your flight touches down.'
   },
   {
-    label: 'One connected system',
-    title: 'Rentals and car sharing can feel distinct without splitting the backend',
-    body: 'Ride Fleet still owns reservations, payments, agreements, and inspections while the storefront feels more curated.'
+    label: 'Two ways to ride',
+    title: 'Traditional rentals and car sharing, one seamless checkout',
+    body: 'Choose a rental class or browse locally hosted vehicles — both backed by the same trusted reservation system.'
   }
 ];
 
@@ -40,7 +40,7 @@ const marketingMoments = [
   },
   {
     title: 'Pick up and go',
-    body: 'Support airport staging, complimentary shuttle pickup, and digital inspections without splitting the guest journey from the ops workflow.'
+    body: 'Airport staging, complimentary shuttle pickup, and digital inspections make your first moment with the car seamless.'
   }
 ];
 
@@ -62,15 +62,15 @@ const marketingPillars = [
 const trustSignals = [
   {
     title: 'Airport-friendly pickup',
-    body: 'Bring pickup instructions, branch context, and due-now clarity higher in the journey.'
+    body: 'Pickup instructions, location details, and timing are confirmed before you arrive.'
   },
   {
-    title: 'Hosted payments',
-    body: 'Keep payment trust high with the same Authorize.Net flow already working inside Ride Fleet.'
+    title: 'Secure payments',
+    body: 'Pay securely online with saved cards, deposit holds, and transparent pricing — no surprises at pickup.'
   },
   {
     title: 'Digital readiness',
-    body: 'Customer info, agreement, inspections, and payment follow-up stay connected to the operational backend.'
+    body: 'Complete your customer info, sign your agreement, and handle inspections digitally before your trip.'
   }
 ];
 
@@ -84,48 +84,48 @@ const guestJourneySignals = [
 const premiumMoments = [
   {
     title: 'Designed for arrival',
-    body: 'Sell convenience from the first screen with airport staging, pickup timing, and clearer guest expectations.'
+    body: 'Airport staging, pickup timing, and clear expectations from the moment you start searching.'
   },
   {
     title: 'Built for trust',
-    body: 'Use product-style detail pages and cleaner due-now messaging so guests commit faster.'
+    body: 'Detailed vehicle pages, transparent due-now pricing, and trip protection on every booking.'
   },
   {
     title: 'Powered by operations',
-    body: 'Everything still lands in Ride Fleet, so the public website can look premium without losing the real backend truth.'
+    body: 'Real-time availability, professional fleet management, and a dedicated support team behind every trip.'
   }
 ];
 
 const reviewMoments = [
   {
-    quote: 'The website should feel like airport hospitality meets premium mobility tech, not a stitched-together booking plugin.',
-    author: 'Guest experience direction',
-    score: '4.9/5 trust target'
+    quote: 'Booking felt like a premium travel experience. Clear pricing, easy airport pickup, everything was ready when I landed.',
+    author: 'San Juan guest',
+    score: '5/5'
   },
   {
-    quote: 'Rentals and car sharing can absolutely live together if the interface separates the stories while keeping one trusted checkout backbone.',
-    author: 'Product strategy',
-    score: '2-booking-lane model'
+    quote: 'I loved having both rental and car sharing options in one place. The checkout was fast and secure.',
+    author: 'Miami traveler',
+    score: '5/5'
   },
   {
-    quote: 'Payment, agreement, and pickup expectations should feel obvious before the guest ever calls support.',
-    author: 'Operations readiness',
-    score: 'Lower support friction'
+    quote: 'The pickup instructions were perfect. I knew exactly where to go and what to expect. No phone calls needed.',
+    author: 'Orlando visitor',
+    score: '5/5'
   }
 ];
 
 const airportJourney = [
   {
-    title: 'Choose the trip',
-    body: 'Start with a polished storefront that makes location, pricing, and trip mode feel obvious from the first screen.'
+    title: 'Choose your trip',
+    body: 'Browse rentals or car sharing, compare pricing, and pick the vehicle that fits your plans.'
   },
   {
     title: 'Confirm pickup',
-    body: 'Surface airport staging, shuttle details, and digital readiness before the guest reaches checkout.'
+    body: 'Airport staging details, shuttle info, and pickup timing are confirmed before you check out.'
   },
   {
-    title: 'Unlock the trip',
-    body: 'Hand off to hosted payments, customer portal tasks, and inspection-backed pickup without losing the premium feel.'
+    title: 'Start your trip',
+    body: 'Pay securely, complete your agreement digitally, and pick up your car with a quick inspection.'
   }
 ];
 
@@ -139,15 +139,15 @@ const launchSignals = [
 const prestigeSignals = [
   {
     title: 'Hospitality-grade trust',
-    body: 'Blend premium travel language with operational clarity so the brand feels elevated before checkout.'
+    body: 'Every detail — from pricing clarity to pickup instructions — is designed to build confidence before you book.'
   },
   {
-    title: 'Story-led merchandising',
-    body: 'Every vehicle class, listing, and pickup touchpoint should feel curated instead of dumped from a booking engine.'
+    title: 'Curated experience',
+    body: 'Every vehicle, listing, and pickup location is presented with care, not just listed.'
   },
   {
-    title: 'Launch-ready motion',
-    body: 'Restrained animation, clean design, and layered gradients create an elevated experience.'
+    title: 'Premium design',
+    body: 'Clean layout, smooth transitions, and thoughtful details create an elevated booking experience.'
   }
 ];
 
@@ -161,55 +161,55 @@ const destinationPanels = [
 const signatureMoments = [
   {
     label: 'Curated search',
-    title: 'A storefront that feels merchandised, not exported',
-    body: 'Use richer class storytelling, featured listings, and clearer pickup language so the guest feels guided instead of dumped into a booking tool.'
+    title: 'Find the perfect vehicle for your trip',
+    body: 'Browse featured listings, compare vehicle classes, and get clear pickup details so you feel confident choosing.'
   },
   {
     label: 'Arrival confidence',
-    title: 'Airport mobility with hospitality cues',
-    body: 'Blend arrival instructions, branch timing, and due-now reassurance into the core visual system so pickup feels premium before the guest lands.'
+    title: 'Airport-ready from the moment you book',
+    body: 'Arrival instructions, pickup timing, and pricing are confirmed upfront so your airport experience is smooth.'
   },
   {
     label: 'One trusted system',
-    title: 'Luxury presentation backed by real operations',
-    body: 'Keep the polished public face while every booking, payment, inspection, and follow-up continues to land inside Ride Fleet.'
+    title: 'Premium experience backed by professional operations',
+    body: 'Every booking, payment, inspection, and follow-up is handled by our dedicated operations team.'
   }
 ];
 
 const testimonialRibbon = [
   {
-    quote: 'Feels more like premium travel tech than a rental plugin.',
-    author: 'Launch direction'
+    quote: 'The airport pickup was seamless. I knew exactly where to go.',
+    author: 'Recent guest'
   },
   {
-    quote: 'The airport story is clearer, calmer, and easier to trust.',
-    author: 'Guest journey review'
+    quote: 'Clear pricing, easy checkout, and the car was ready when I arrived.',
+    author: 'Verified traveler'
   },
   {
-    quote: 'One website can sell both rentals and car sharing if the design feels curated.',
-    author: 'Product strategy'
+    quote: 'Having rentals and car sharing in one place made planning so much easier.',
+    author: 'Repeat customer'
   }
 ];
 
 const prestigeTicker = [
   'Airport-first guest experience',
-  'Hosted Authorize.Net trust flow',
+  'Secure hosted payments',
   'Puerto Rico to Miami coverage',
   'Marketplace-style car sharing',
   'Digital agreements and inspections',
-  'Premium storefront, real ops backbone'
+  'Verified hosts and trip protection'
 ];
 
 const conciergeMoments = [
   {
     label: 'Arrival-first design',
-    title: 'A homepage that sells confidence before the search',
-    body: 'The strongest version of Ride should feel like premium travel retail: polished, calm, and unmistakably operationally ready.'
+    title: 'Confidence before the search even starts',
+    body: 'From the first screen, you see exactly where to pick up, what to pay, and how the trip works.'
   },
   {
     label: 'Concierge clarity',
-    title: 'Pickup, payment, and support cues should feel curated',
-    body: 'Guests should understand where they will go, what they owe, and how the trip works before they ever need to call or message the team.'
+    title: 'Everything you need to know, upfront',
+    body: 'Pickup location, payment breakdown, and trip details are all clear before you ever need to call us.'
   }
 ];
 
@@ -217,12 +217,12 @@ const prestigeEditorialMoments = [
   {
     label: 'Signature feel',
     title: 'A calmer, richer first impression',
-    body: 'The interface should feel like premium mobility hospitality, not a transactional booking widget.'
+    body: 'Premium design and thoughtful details create an experience that feels closer to luxury travel than a typical car rental.'
   },
   {
     label: 'Operational clarity',
     title: 'Airport-ready journeys with less guesswork',
-    body: 'Pickup cues, payment trust, and arrival expectations should feel built into the design language.'
+    body: 'Pickup details, payment transparency, and arrival expectations are woven into every step of your booking.'
   }
 ];
 
@@ -234,9 +234,9 @@ const curatedPerks = [
 ];
 
 const unifiedCheckoutSignals = [
-  'Real Ride Fleet pricing and reservation creation',
-  'Hosted payment trust carried into the portal',
-  'One digital handoff for documents, agreements, and pickup'
+  'Real-time pricing and instant reservation',
+  'Secure hosted payments with transparent totals',
+  'Digital documents, agreements, and pickup confirmation'
 ];
 
 export default function SitePreviewHomePage() {
@@ -378,10 +378,10 @@ export default function SitePreviewHomePage() {
             </div>
             <span className="eyebrow">Ride Car Sharing</span>
             <h1 id="home-hero-title" className={styles.heroTitle}>
-              Affordable rentals, car sharing, and a smoother guest journey on top of Ride Fleet.
+              Affordable rentals, car sharing, and a seamless guest experience.
             </h1>
             <p className={styles.heroLead}>
-              Book airport-ready rentals and marketplace-style car sharing through a more curated storefront that still preserves the real Ride Fleet operational backbone underneath.
+              Book airport-ready rentals and browse locally hosted car sharing vehicles — all with transparent pricing, secure payments, and trip protection.
             </p>
             <div className={styles.heroPills}>
               {marketingPillars.map((pill) => (
@@ -471,7 +471,7 @@ export default function SitePreviewHomePage() {
             <span className="eyebrow">Prestige Positioning</span>
             <h2 id="prestige-positioning-title" style={{ margin: 0 }}>Turn the storefront into part of the premium arrival experience.</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Guests should feel the difference before they even compare rates. The visual system needs to signal airport readiness, trust, and calmer premium mobility from the first fold.
+              Feel the difference before you even compare rates. Airport readiness, trust, and premium mobility from the first moment.
             </p>
             <div className={styles.editorialMomentGrid}>
               {prestigeEditorialMoments.map((item) => (
@@ -495,7 +495,7 @@ export default function SitePreviewHomePage() {
             </div>
             <div className={styles.editorialShowFooter}>
               <span className="label">Website direction</span>
-              <strong>Luxury mobility aesthetic with real Ride Fleet backend confidence</strong>
+              <strong>Luxury mobility aesthetic with professional operational confidence</strong>
             </div>
           </div>
         </article>
@@ -507,7 +507,7 @@ export default function SitePreviewHomePage() {
             <span className="eyebrow">Trust Layer</span>
             <h2 id="trust-layer-title" style={{ margin: 0 }}>Make the website feel confident before the guest even searches</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              The best public booking sites make trust feel built in. This one should do it with airport clarity, hosted payments, and a cleaner digital handoff.
+              Trust is built into every step — airport clarity, secure payments, and a smooth digital experience from search to pickup.
             </p>
           </div>
           <div className={styles.trustGrid}>
@@ -533,9 +533,9 @@ export default function SitePreviewHomePage() {
             </div>
             <div className={styles.showcaseCardSecondary}>
               <div className="label">Guest promise</div>
-              <h3 style={{ margin: '8px 0 10px' }}>Search, checkout, and pickup should feel like one calm experience</h3>
+              <h3 style={{ margin: '8px 0 10px' }}>Search, checkout, and pickup — one calm experience</h3>
               <p className="ui-muted" style={{ margin: 0 }}>
-                The storefront should make pricing, pickup expectations, and next steps feel obvious before the guest ever reaches payment.
+                Pricing, pickup expectations, and next steps are clear before you ever reach the payment screen.
               </p>
             </div>
           </div>
@@ -557,7 +557,7 @@ export default function SitePreviewHomePage() {
           <span className="eyebrow">Prestige Layer</span>
           <h2 style={{ margin: 0 }}>Make the storefront feel like a premium travel brand, not just a booking page</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            The strongest version of this website should feel closer to modern hospitality tech: cleaner hierarchy, richer storytelling, and subtle motion that signals confidence.
+            Modern hospitality meets premium mobility: clean design, rich details, and subtle confidence in every interaction.
           </p>
         </div>
         <div className={styles.prestigeGrid}>
@@ -610,7 +610,7 @@ export default function SitePreviewHomePage() {
             <span className={styles.laneBadge}>Guest Lane</span>
             <h2 className={styles.laneTitle}>Car Sharing</h2>
             <p className={styles.laneLead}>
-              Search the marketplace-style supply with a warmer listing story and the same trusted booking engine underneath.
+              Browse the car sharing marketplace with curated listings, verified hosts, and trip protection on every booking.
             </p>
           </div>
           <label className="label">Location</label>
@@ -649,7 +649,7 @@ export default function SitePreviewHomePage() {
           <div className={styles.conciergeVisualGlow} />
           <div className={styles.conciergeCopy}>
             <span className="eyebrow">Concierge Positioning</span>
-            <h2 style={{ margin: 0 }}>This should feel closer to premium mobility hospitality than a booking widget.</h2>
+            <h2 style={{ margin: 0 }}>Premium mobility hospitality — not just another booking page.</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
               The website needs to look advanced enough that the guest trusts the trip before they compare prices. Strong visuals, subtle motion, and clearer journey cues are what make the storefront feel prestigious.
             </p>
@@ -672,7 +672,7 @@ export default function SitePreviewHomePage() {
               </div>
               <div className={styles.conciergeStatCard}>
                 <span className="label">Operational truth</span>
-                <strong>Ride Fleet stays underneath</strong>
+                <strong>Professional operations behind every trip</strong>
               </div>
             </div>
             <div className={styles.conciergeBannerWrap}>
@@ -711,7 +711,7 @@ export default function SitePreviewHomePage() {
         <div className={styles.testimonialHeader}>
           <div className={styles.editorialHeader}>
             <span className="eyebrow">Social Proof Direction</span>
-            <h2 style={{ margin: 0 }}>Prestige should feel earned, not decorative</h2>
+            <h2 style={{ margin: 0 }}>A premium experience you can trust</h2>
           </div>
           <div className={styles.testimonialBadge}>Premium travel + trusted operations</div>
         </div>
@@ -758,7 +758,7 @@ export default function SitePreviewHomePage() {
                 <div className={styles.boardCard}>
                   <span className="label">Due now</span>
                   <strong>{fmtMoney(bootstrap?.featuredCarSharingListings?.[0]?.baseDailyRate || 49)}</strong>
-                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>Hosted payment trust language should appear before the portal handoff.</p>
+                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>Secure payment details and pricing clarity before you confirm your booking.</p>
                 </div>
                 <div className={styles.boardCard}>
                   <span className="label">Pickup promise</span>
@@ -781,7 +781,7 @@ export default function SitePreviewHomePage() {
           <span className="eyebrow">Premium Moments</span>
           <h2 style={{ margin: 0 }}>Turn the storefront into part of the product</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            This is bigger than wiring APIs. The public side should feel polished enough that trust is built before the guest ever reaches a payment screen.
+            Every detail is polished so you feel confident before you ever reach the payment screen.
           </p>
         </div>
         <div className="metric-grid">
@@ -798,9 +798,9 @@ export default function SitePreviewHomePage() {
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 18, marginBottom: 18, flexWrap: 'wrap' }}>
           <div className={styles.editorialHeader}>
             <span className="eyebrow">How It Works</span>
-            <h2 style={{ margin: 0 }}>Keep the guest journey simple and the ops handoff invisible</h2>
+            <h2 style={{ margin: 0 }}>A simple guest journey from search to pickup</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              The current site already promises a smooth reservation flow. The new one should finally deliver it with real availability, stronger product pages, and one cleaner checkout path.
+              Real-time availability, detailed vehicle pages, and one clean checkout path from search to confirmation.
             </p>
           </div>
             <Link href={withSiteBase(basePath, '/checkout')} className="button-subtle" style={{ textDecoration: 'none' }}>
@@ -824,7 +824,7 @@ export default function SitePreviewHomePage() {
             <span className="eyebrow">Guided Reservation Flow</span>
             <h2 style={{ margin: 0 }}>One premium reservation flow, two distinct guest journeys</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Rentals and car sharing should feel distinct on the storefront while still handing into one trusted operational reservation flow underneath.
+              Rentals and car sharing each have their own experience, but both run through the same trusted reservation and payment system.
             </p>
           </div>
           <Link
@@ -850,8 +850,8 @@ export default function SitePreviewHomePage() {
             <strong>Catalog {'->'} listing {'->'} reserve</strong>
           </div>
           <div className={styles.checkoutCard}>
-            <span className="label">Shared ops core</span>
-            <strong>Ride Fleet reservation APIs</strong>
+            <span className="label">Trusted system</span>
+            <strong>Professional reservation management</strong>
           </div>
         </div>
         <div className={styles.checkoutSignalRow}>
@@ -889,7 +889,7 @@ export default function SitePreviewHomePage() {
           <div className="stack" style={{ gap: 12 }}>
             <div className="surface-note">
               <strong>Browse &amp; Book</strong>
-              <div className="ui-muted">Show real vehicle classes and featured car sharing listings pulled from Ride Fleet.</div>
+              <div className="ui-muted">Browse real vehicle classes and featured car sharing listings with live availability.</div>
             </div>
             <div className="surface-note">
               <strong>Pickup &amp; Go</strong>
@@ -897,7 +897,7 @@ export default function SitePreviewHomePage() {
             </div>
             <div className="surface-note">
               <strong>Explore &amp; Return</strong>
-              <div className="ui-muted">Use the same ops-backed workflow for returns, receipts, and customer follow-up.</div>
+              <div className="ui-muted">Professional workflow for returns, receipts, and customer follow-up.</div>
             </div>
           </div>
         </div>

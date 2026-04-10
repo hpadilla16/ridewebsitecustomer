@@ -40,7 +40,7 @@ export default function FleetPreviewPage() {
     <div className="stack" style={{ gap: 24 }}>
       <section className="glass card-lg" style={{ padding: 28 }}>
         <span className="eyebrow">Fleet Catalog</span>
-        <h1 style={{ marginTop: 8 }}>Real inventory scaffolding for the new public website</h1>
+        <h1 style={{ marginTop: 8 }}>Our Fleet</h1>
         <p className="ui-muted" style={{ maxWidth: 760 }}>
           This page reads live bootstrap data so the public fleet catalog can be shaped around real locations, rental classes, and featured car sharing supply.
         </p>
@@ -96,9 +96,9 @@ export default function FleetPreviewPage() {
         <div className="row-between" style={{ alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <div className="stack" style={{ gap: 8, maxWidth: 760 }}>
             <span className="eyebrow">Website Direction</span>
-            <h2 style={{ margin: 0 }}>Use one catalog language, then branch into the right guest journey</h2>
+            <h2 style={{ margin: 0 }}>Explore our fleet</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Rentals should group by vehicle type and pickup hub. Car sharing should spotlight individual listings. Both should still resolve into one booking and payment system.
+              Rentals are grouped by vehicle type and pickup hub. Car sharing features individual listings from verified local hosts. Both are backed by the same trusted booking system.
             </p>
           </div>
           <div className="inline-actions">

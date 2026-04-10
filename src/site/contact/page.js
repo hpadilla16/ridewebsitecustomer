@@ -17,7 +17,7 @@ const contactCards = [
   },
   {
     label: 'Hosts and Partners',
-    value: 'Route host inquiries into a polished onboarding funnel instead of making partners hunt through the internal platform.',
+    value: 'Start your host journey with a guided onboarding process designed to get your vehicle listed quickly.',
     action: { href: '/become-a-host', label: 'Become a host' }
   }
 ];
@@ -35,7 +35,7 @@ const supportChannels = [
   },
   {
     title: 'After booking',
-    body: 'Send guests into the payment, signature, and customer-information portal instead of bouncing them into internal tools.'
+    body: 'Complete your payment, sign your agreement, and submit your information through our secure guest portal.'
   },
   {
     title: 'Hosts and partnerships',
@@ -54,7 +54,7 @@ const serviceDetails = [
   },
   {
     label: 'Trip help and extensions',
-    value: 'Reserve the internal ops tools for exceptions while the public website handles the common questions with stronger self-service pages.'
+    value: 'Most common questions are answered right here with our self-service pages and FAQ.'
   }
 ];
 
@@ -108,7 +108,7 @@ export default function ContactPreviewPage() {
           <div className="label">When guests reach out</div>
           <h2 style={{ margin: '8px 0 10px' }}>Use this page to guide, not just collect a message</h2>
           <p className="ui-muted">
-            The stronger version of this page combines contact details, self-service links, and clear paths back into the real booking journey.
+            Contact details, self-service links, and clear paths to get you back on your booking journey.
           </p>
           <div className="stack" style={{ gap: 10 }}>
             {supportMoments.map((moment) => (

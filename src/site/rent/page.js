@@ -108,9 +108,9 @@ function RentPreviewPageContent() {
     <div className="stack" style={{ gap: 24 }}>
       <section className="glass card-lg" style={{ padding: 28 }}>
         <span className="eyebrow">Rental Search</span>
-        <h1 style={{ marginTop: 8, marginBottom: 8 }}>Traditional rental booking lane</h1>
+        <h1 style={{ marginTop: 8, marginBottom: 8 }}>Rent a Car</h1>
         <p className="ui-muted" style={{ maxWidth: 760 }}>
-          Search real Ride Fleet rental availability with a cleaner public booking experience built for airport-ready trips.
+          Search available vehicles with real-time pricing, choose your pickup location, and book your airport-ready trip in minutes.
         </p>
       </section>
 
@@ -158,7 +158,7 @@ function RentPreviewPageContent() {
         </div>
         {error ? <div className="label" style={{ color: '#b91c1c', marginTop: 12 }}>{error}</div> : null}
         <div className={styles.reassuranceBand} style={{ marginTop: 18 }}>
-          <span className={styles.reassurancePill}>Live availability from Ride Fleet</span>
+          <span className={styles.reassurancePill}>Live availability</span>
           <span className={styles.reassurancePill}>Hosted payment handoff at checkout</span>
           <span className={styles.reassurancePill}>Airport pickup expectations surfaced earlier</span>
         </div>

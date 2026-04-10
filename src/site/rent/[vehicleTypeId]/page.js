@@ -80,9 +80,9 @@ function RentalDetailPreviewContent() {
     returnAt
   });
   const rentalExperience = [
-    { title: 'Airport-ready', body: 'Clear pickup expectations and faster arrival confidence.' },
-    { title: 'Payment-trusted', body: 'Hosted checkout language keeps the handoff feel secure.' },
-    { title: 'Ops-backed', body: 'Real availability and pricing still come from Ride Fleet.' }
+    { title: 'Airport-ready', body: 'Clear pickup instructions and location details before you arrive.' },
+    { title: 'Secure payments', body: 'Pay online with transparent pricing and no hidden fees.' },
+    { title: 'Real-time availability', body: 'Live pricing and availability updated in real time.' }
   ];
   const rentalHighlights = [
     'Priority airport pickup framing',
@@ -162,7 +162,7 @@ function RentalDetailPreviewContent() {
                 <div className="label">Guest fit</div>
                 <h3 style={{ margin: '8px 0 10px' }}>Built for airport arrivals and a more premium trip handoff</h3>
                 <p className="ui-muted" style={{ margin: 0 }}>
-                  This page should feel closer to premium travel retail: cleaner pricing, stronger pickup context, and less guesswork before the guest commits.
+                  Clear pricing, detailed pickup instructions, and everything you need to know before you book.
                 </p>
               </div>
               <div className="metric-grid">
@@ -243,7 +243,7 @@ function RentalDetailPreviewContent() {
           </div>
           <div className="surface-note">
             <strong>Website goal</strong>
-            <div className="ui-muted">This becomes the merchandised detail page that replaces generic booking results with a more intentional, premium reservation narrative.</div>
+            <div className="ui-muted">Detailed vehicle information, transparent pricing, and clear pickup instructions to help you book with confidence.</div>
           </div>
           <div className={styles.detailCtaStack}>
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="ios-action-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>

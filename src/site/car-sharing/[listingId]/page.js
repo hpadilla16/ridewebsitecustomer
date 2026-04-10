@@ -60,7 +60,7 @@ function ProtectedBadge() {
       fontWeight: 700
     }}>
       <span style={{ fontSize: '1.1rem' }}>🛡</span>
-      <span>Protected by Ride Fleet — trip coverage included on every booking</span>
+      <span>Trip protection included on every booking</span>
     </div>
   );
 }
@@ -359,7 +359,7 @@ function CarSharingDetailPreviewContent() {
                     background: 'rgba(246,244,255,0.7)', color: '#32405d', fontSize: '0.88rem', fontWeight: 700
                   }}>
                     <span style={{ fontSize: '1.05rem' }}>💳</span>
-                    <span>Hosted payment — pay securely through the Ride Fleet checkout flow</span>
+                    <span>Hosted payment — pay securely through our hosted checkout</span>
                   </div>
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',

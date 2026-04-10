@@ -111,7 +111,7 @@ function ProtectedBadge() {
       fontSize: 11,
       fontWeight: 700
     }}>
-      <span>🛡</span> Protected by Ride Fleet
+      <span>🛡</span> Trip Protection Included
     </span>
   );
 }
@@ -523,7 +523,7 @@ function CarSharingPreviewPageContent() {
             {
               icon: '🛡',
               title: 'Protected Trips',
-              body: 'Trip protection is included on every booking. Your reservation is backed by Ride Fleet coverage from pickup to return.'
+              body: 'Trip protection is included on every booking. Your reservation is covered from pickup to return.'
             },
             {
               icon: '✈️',

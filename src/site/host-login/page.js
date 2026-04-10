@@ -45,13 +45,12 @@ export default function HostLoginPage() {
         <span className="eyebrow">Host Access</span>
         <h1 className="legal-title">Host Sign In</h1>
         <p className="legal-lead">
-          Sign in to your Ride Fleet host account. Once signed in, open the Host App to manage your
-          listings, review incoming trip requests, and handle your fleet from one place.
+          Sign in to your host account. Manage your listings, review incoming trip requests, and track your earnings from one place.
         </p>
         <div className="hero-meta">
           <span className="hero-pill">Host App access</span>
           <span className="hero-pill">Listing management</span>
-          <span className="hero-pill">Ride Fleet-powered operations</span>
+          <span className="hero-pill">Professional fleet operations</span>
         </div>
         <div className="inline-actions">
           <Link href="/become-a-host" className="legal-link-pill">Become a Host</Link>
