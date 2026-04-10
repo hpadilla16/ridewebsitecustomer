@@ -52,6 +52,9 @@ export default function TripChatRoom() {
   const [sending, setSending] = useState(false);
   const [pickupForm, setPickupForm] = useState({ address: '', instructions: '' });
   const [showPickup, setShowPickup] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportForm, setReportForm] = useState({ issueType: 'SERVICE', description: '' });
+  const [reportMsg, setReportMsg] = useState('');
   const messagesEndRef = useRef(null);
   const pollRef = useRef(null);
 
@@ -100,6 +103,34 @@ export default function TripChatRoom() {
       setError(err?.message || 'Unable to send message');
     } finally {
       setSending(false);
+    }
+  }
+
+  async function sendHotAction(action) {
+    try {
+      const msg = await api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/action`, {
+        method: 'POST',
+        body: JSON.stringify({ action })
+      });
+      setRoom((r) => r ? { ...r, messages: [...(r.messages || []), msg] } : r);
+    } catch (err) {
+      setError(err?.message || 'Unable to send');
+    }
+  }
+
+  async function submitReport(e) {
+    e.preventDefault();
+    if (!reportForm.description.trim()) { setReportMsg('Please describe the issue'); return; }
+    try {
+      const result = await api(`/api/public/booking/trip-chat/${encodeURIComponent(token)}/report-issue`, {
+        method: 'POST',
+        body: JSON.stringify(reportForm)
+      });
+      setReportMsg(`Issue reported — Ticket #${result.ticketRef}`);
+      setShowReport(false);
+      loadRoom();
+    } catch (err) {
+      setReportMsg(err?.message || 'Unable to report issue');
     }
   }
 
@@ -190,6 +221,55 @@ export default function TripChatRoom() {
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="submit" className={styles.checkoutPrimaryButton} style={{ fontSize: '0.82rem', padding: '8px 18px' }}>Save Pickup Details</button>
             <button type="button" onClick={() => setShowPickup(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7a9a', fontWeight: 600, fontSize: '0.82rem' }}>Cancel</button>
+          </div>
+        </form>
+      )}
+
+      {/* Hot action buttons */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+        {!isHost && (
+          <>
+            <button onClick={() => sendHotAction('ARRIVED_PICKUP')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(15,176,216,.2)', background: 'rgba(15,176,216,.06)', color: '#0e7490', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>📍 I'm at pickup</button>
+            <button onClick={() => sendHotAction('ARRIVED_RETURN')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(110,73,255,.2)', background: 'rgba(110,73,255,.06)', color: '#6e49ff', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>📍 I'm at return</button>
+            <button onClick={() => sendHotAction('RUNNING_LATE')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(245,158,11,.2)', background: 'rgba(245,158,11,.06)', color: '#b45309', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>⏰ Running late</button>
+            <button onClick={() => sendHotAction('NEED_HELP')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(255,80,80,.2)', background: 'rgba(255,80,80,.06)', color: '#991b1b', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>🆘 Need help</button>
+          </>
+        )}
+        {isHost && (
+          <>
+            <button onClick={() => sendHotAction('VEHICLE_READY')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.06)', color: '#047857', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>✅ Vehicle ready</button>
+            <button onClick={() => sendHotAction('VEHICLE_INSPECTED')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(110,73,255,.2)', background: 'rgba(110,73,255,.06)', color: '#6e49ff', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>🔍 Inspection done</button>
+            <button onClick={() => sendHotAction('RUNNING_LATE')} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(245,158,11,.2)', background: 'rgba(245,158,11,.06)', color: '#b45309', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>⏰ Running late</button>
+            <button onClick={() => setShowReport(true)} style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(255,80,80,.2)', background: 'rgba(255,80,80,.06)', color: '#991b1b', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>🎫 Report Issue</button>
+          </>
+        )}
+      </div>
+
+      {/* Host: report issue form */}
+      {isHost && showReport && (
+        <form onSubmit={submitReport} style={{ padding: '16px 18px', borderRadius: 14, border: '1px solid rgba(255,80,80,.15)', background: 'rgba(255,80,80,.03)', marginBottom: 12, display: 'grid', gap: 10 }}>
+          <div style={{ fontWeight: 700, color: '#991b1b', fontSize: '0.92rem' }}>Report an Issue</div>
+          <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>The full chat transcript will be attached to the ticket automatically.</div>
+          <div>
+            <div className="label">Issue type</div>
+            <select value={reportForm.issueType} onChange={(e) => setReportForm((f) => ({ ...f, issueType: e.target.value }))}>
+              <option value="VEHICLE_DAMAGE">Vehicle Damage</option>
+              <option value="BILLING">Billing Issue</option>
+              <option value="SERVICE">Service Issue</option>
+              <option value="SAFETY">Safety Concern</option>
+              <option value="NO_SHOW">Guest No-Show</option>
+              <option value="LATE_RETURN">Late Return</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div>
+            <div className="label">Describe the issue</div>
+            <textarea rows={3} value={reportForm.description} onChange={(e) => setReportForm((f) => ({ ...f, description: e.target.value }))} placeholder="What happened? Be specific so our support team can help..." style={{ width: '100%', resize: 'vertical' }} />
+          </div>
+          {reportMsg && <div style={{ fontSize: '0.84rem', color: reportMsg.includes('reported') ? '#047857' : '#991b1b' }}>{reportMsg}</div>}
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="submit" style={{ padding: '8px 18px', borderRadius: 10, border: 'none', background: '#991b1b', color: '#fff', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}>Submit Issue Report</button>
+            <button type="button" onClick={() => { setShowReport(false); setReportMsg(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7a9a', fontWeight: 600, fontSize: '0.82rem' }}>Cancel</button>
           </div>
         </form>
       )}
