@@ -2,17 +2,26 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api, TOKEN_KEY, USER_KEY, readStoredToken, clearStoredAuth } from '@/lib/client';
 
-const STATUS_MAP = {
-  PENDING_REVIEW: { label: 'Pending Review', color: '#b45309', bg: 'rgba(245,158,11,.1)', border: 'rgba(245,158,11,.25)', icon: '⏳' },
-  PENDING_INFO: { label: 'Info Requested', color: '#9333ea', bg: 'rgba(147,51,234,.08)', border: 'rgba(147,51,234,.2)', icon: '📋' },
-  APPROVED: { label: 'Approved', color: '#15803d', bg: 'rgba(22,128,61,.08)', border: 'rgba(22,128,61,.2)', icon: '✅' },
-  REJECTED: { label: 'Rejected', color: '#dc2626', bg: 'rgba(220,38,38,.08)', border: 'rgba(220,38,38,.2)', icon: '❌' },
+const STATUS_STYLES = {
+  PENDING_REVIEW: { color: '#b45309', bg: 'rgba(245,158,11,.1)', border: 'rgba(245,158,11,.25)', icon: '⏳' },
+  PENDING_INFO: { color: '#9333ea', bg: 'rgba(147,51,234,.08)', border: 'rgba(147,51,234,.2)', icon: '📋' },
+  APPROVED: { color: '#15803d', bg: 'rgba(22,128,61,.08)', border: 'rgba(22,128,61,.2)', icon: '✅' },
+  REJECTED: { color: '#dc2626', bg: 'rgba(220,38,38,.08)', border: 'rgba(220,38,38,.2)', icon: '❌' },
 };
 
-function statusMeta(status) {
-  return STATUS_MAP[String(status || '').toUpperCase()] || STATUS_MAP.PENDING_REVIEW;
+function statusMeta(status, t) {
+  const key = String(status || '').toUpperCase();
+  const style = STATUS_STYLES[key] || STATUS_STYLES.PENDING_REVIEW;
+  const labelMap = {
+    PENDING_REVIEW: t('hostStatus.pendingReview'),
+    PENDING_INFO: t('hostStatus.infoRequested'),
+    APPROVED: t('hostStatus.approved'),
+    REJECTED: t('hostStatus.rejected'),
+  };
+  return { ...style, label: labelMap[key] || labelMap.PENDING_REVIEW };
 }
 
 function formatDate(value) {
@@ -50,6 +59,7 @@ const ghostBtn = {
 };
 
 export default function HostStatusPage() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
@@ -78,7 +88,7 @@ export default function HostStatusPage() {
           if (err?.status === 401) {
             setNoAuth(true);
           } else {
-            setError(err?.message || 'Unable to load your submission status.');
+            setError(err?.message || t('hostStatus.unableToLoad'));
           }
         }
       } finally {
@@ -104,14 +114,14 @@ export default function HostStatusPage() {
       <main style={{ maxWidth: 560, margin: '0 auto', padding: '80px 20px', textAlign: 'center', display: 'grid', gap: 24 }}>
         <div style={{ fontSize: '2.6rem' }}>🔒</div>
         <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', margin: 0 }}>
-          Sign in to view your status
+          {t('hostStatus.signInToView')}
         </h1>
         <p style={{ color: '#6f668f', lineHeight: 1.7, margin: 0 }}>
-          Log in with the email and password you used during your host application to track your vehicle submission.
+          {t('hostStatus.signInDescription')}
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/host-login" style={{ ...primaryBtn, textDecoration: 'none' }}>Host Sign In</Link>
-          <Link href="/become-a-host" style={{ ...ghostBtn }}>Apply to become a host</Link>
+          <Link href="/host-login" style={{ ...primaryBtn, textDecoration: 'none' }}>{t('hostLogin.title')}</Link>
+          <Link href="/become-a-host" style={{ ...ghostBtn }}>{t('hostStatus.applyToBeHost')}</Link>
         </div>
       </main>
     );
@@ -121,7 +131,7 @@ export default function HostStatusPage() {
   if (loading) {
     return (
       <main style={{ maxWidth: 700, margin: '0 auto', padding: '80px 20px', textAlign: 'center' }}>
-        <p style={{ color: '#6f668f', fontWeight: 600 }}>Loading your submission status...</p>
+        <p style={{ color: '#6f668f', fontWeight: 600 }}>{t('hostStatus.loadingStatus')}</p>
       </main>
     );
   }
@@ -138,8 +148,8 @@ export default function HostStatusPage() {
           {error}
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={() => window.location.reload()} style={primaryBtn}>Retry</button>
-          <Link href="/host-login" style={{ ...ghostBtn }}>Sign in again</Link>
+          <button onClick={() => window.location.reload()} style={primaryBtn}>{t('hostStatus.retry')}</button>
+          <Link href="/host-login" style={{ ...ghostBtn }}>{t('hostStatus.signInAgain')}</Link>
         </div>
       </main>
     );
@@ -153,17 +163,17 @@ export default function HostStatusPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
         <div>
           <span style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: 'rgba(135,82,254,.08)', border: '1px solid rgba(135,82,254,.18)', color: '#6d3df2', fontSize: 11, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 10 }}>
-            Host Dashboard
+            {t('host.dashboard')}
           </span>
           <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', margin: 0 }}>
-            {hostName ? `Welcome back, ${hostName}` : 'Your submissions'}
+            {hostName ? t('hostStatus.welcomeBack', { name: hostName }) : t('hostStatus.yourSubmissions')}
           </h1>
           <p style={{ color: '#6f668f', marginTop: 6, lineHeight: 1.6 }}>
-            Track the status of your vehicle submissions and next steps.
+            {t('hostStatus.trackStatus')}
           </p>
         </div>
         <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6f668f', fontWeight: 700, fontSize: '0.88rem', padding: '8px 0' }}>
-          Sign out
+          {t('common.signOut')}
         </button>
       </div>
 
@@ -171,20 +181,20 @@ export default function HostStatusPage() {
       {!submissions.length && (
         <div className="glass card-lg" style={{ textAlign: 'center', padding: '48px 32px', display: 'grid', gap: 16 }}>
           <div style={{ fontSize: '2.4rem' }}>📦</div>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>No submissions yet</h2>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('hostStatus.noSubmissions')}</h2>
           <p style={{ color: '#6f668f', margin: 0, lineHeight: 1.65 }}>
-            You haven&apos;t submitted a vehicle for review yet. Start your host application and list your first car.
+            {t('hostStatus.noSubmissionsDesc')}
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-            <Link href="/become-a-host" style={{ ...primaryBtn, textDecoration: 'none' }}>List your car</Link>
+            <Link href="/become-a-host" style={{ ...primaryBtn, textDecoration: 'none' }}>{t('hostStatus.listYourCar')}</Link>
           </div>
         </div>
       )}
 
       {/* Submission cards */}
       {submissions.map((sub) => {
-        const meta = statusMeta(sub.status);
-        const vehicle = [sub.year, sub.make, sub.model].filter(Boolean).join(' ') || 'Vehicle';
+        const meta = statusMeta(sub.status, t);
+        const vehicle = [sub.year, sub.make, sub.model].filter(Boolean).join(' ') || t('hostStatus.vehicle');
         const hasComms = Array.isArray(sub.communications) && sub.communications.length > 0;
         return (
           <div key={sub.id} className="glass card-lg" style={{ display: 'grid', gap: 20, padding: 'clamp(20px, 4vw, 32px)' }}>
@@ -194,7 +204,7 @@ export default function HostStatusPage() {
               <div>
                 <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1a1230', margin: '0 0 6px' }}>{vehicle}</h2>
                 {sub.color && <span style={{ fontSize: '0.88rem', color: '#6f668f' }}>{sub.color}</span>}
-                {sub.plate && <span style={{ fontSize: '0.88rem', color: '#6f668f', marginLeft: 12 }}>Plate: {sub.plate}</span>}
+                {sub.plate && <span style={{ fontSize: '0.88rem', color: '#6f668f', marginLeft: 12 }}>{t('hostStatus.plate')}: {sub.plate}</span>}
               </div>
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -210,25 +220,25 @@ export default function HostStatusPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
               {sub.vehicleType?.name && (
                 <div style={{ padding: '12px 14px', borderRadius: 14, background: 'rgba(135,82,254,.04)', border: '1px solid rgba(135,82,254,.1)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Type</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{t('hostStatus.type')}</div>
                   <div style={{ fontWeight: 700, color: '#1a1230', fontSize: '0.92rem' }}>{sub.vehicleType.name}</div>
                 </div>
               )}
               {sub.baseDailyRate > 0 && (
                 <div style={{ padding: '12px 14px', borderRadius: 14, background: 'rgba(135,82,254,.04)', border: '1px solid rgba(135,82,254,.1)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Daily Rate</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{t('hostStatus.dailyRate')}</div>
                   <div style={{ fontWeight: 700, color: '#1a1230', fontSize: '0.92rem' }}>${Number(sub.baseDailyRate).toFixed(2)}</div>
                 </div>
               )}
               {sub.preferredLocation && (
                 <div style={{ padding: '12px 14px', borderRadius: 14, background: 'rgba(135,82,254,.04)', border: '1px solid rgba(135,82,254,.1)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Hub</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{t('hostStatus.hub')}</div>
                   <div style={{ fontWeight: 700, color: '#1a1230', fontSize: '0.92rem' }}>{sub.preferredLocation.name}</div>
                 </div>
               )}
               {sub.createdAt && (
                 <div style={{ padding: '12px 14px', borderRadius: 14, background: 'rgba(135,82,254,.04)', border: '1px solid rgba(135,82,254,.1)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>Submitted</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#6f668f', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 4 }}>{t('hostStatus.submitted')}</div>
                   <div style={{ fontWeight: 700, color: '#1a1230', fontSize: '0.92rem' }}>{formatDate(sub.createdAt)}</div>
                 </div>
               )}
@@ -237,15 +247,15 @@ export default function HostStatusPage() {
             {/* Status explanation */}
             {sub.status === 'PENDING_REVIEW' && (
               <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(245,158,11,.06)', border: '1px solid rgba(245,158,11,.18)', fontSize: '0.88rem', color: '#92400e', lineHeight: 1.65 }}>
-                Your submission is in queue for review. Our team typically reviews new vehicles within <strong>48 hours</strong>. You&apos;ll receive an email when your vehicle is approved or if we need more info.
+                {t('hostStatus.pendingReviewDesc')}
               </div>
             )}
             {sub.status === 'PENDING_INFO' && (
               <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(147,51,234,.06)', border: '1px solid rgba(147,51,234,.18)', fontSize: '0.88rem', color: '#6b21a8', lineHeight: 1.65 }}>
-                Our review team needs additional information before approving your vehicle. Check your email at <strong>{data?.hostProfile?.email || 'your registered address'}</strong> for a reply link.
+                {t('hostStatus.pendingInfoDesc', { email: data?.hostProfile?.email || t('hostStatus.yourRegisteredAddress') })}
                 {sub.reviewNotes && (
                   <div style={{ marginTop: 10, padding: '10px 14px', borderRadius: 10, background: 'rgba(147,51,234,.05)', border: '1px solid rgba(147,51,234,.12)' }}>
-                    <div style={{ fontWeight: 800, marginBottom: 4, fontSize: '0.84rem' }}>Review note:</div>
+                    <div style={{ fontWeight: 800, marginBottom: 4, fontSize: '0.84rem' }}>{t('hostStatus.reviewNote')}:</div>
                     {sub.reviewNotes}
                   </div>
                 )}
@@ -253,7 +263,7 @@ export default function HostStatusPage() {
             )}
             {sub.status === 'APPROVED' && (
               <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(22,128,61,.06)', border: '1px solid rgba(22,128,61,.18)', fontSize: '0.88rem', color: '#166534', lineHeight: 1.65 }}>
-                Your vehicle is approved and live! Manage your listing, pricing, and availability from the Host App.
+                {t('hostStatus.approvedDesc')}
                 <div style={{ marginTop: 12 }}>
                   <a
                     href="https://ridefleetmanager.com/host"
@@ -261,21 +271,21 @@ export default function HostStatusPage() {
                     rel="noopener noreferrer"
                     style={{ ...primaryBtn, display: 'inline-flex', height: 42, padding: '0 22px', fontSize: '0.9rem', textDecoration: 'none' }}
                   >
-                    Open Host App →
+                    {t('hostStatus.openHostApp')}
                   </a>
                 </div>
               </div>
             )}
             {sub.status === 'REJECTED' && (
               <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(220,38,38,.06)', border: '1px solid rgba(220,38,38,.18)', fontSize: '0.88rem', color: '#991b1b', lineHeight: 1.65 }}>
-                This submission was not approved.
+                {t('hostStatus.rejectedDesc')}
                 {sub.reviewNotes && (
                   <div style={{ marginTop: 8 }}>
-                    <strong>Reason:</strong> {sub.reviewNotes}
+                    <strong>{t('hostStatus.reason')}:</strong> {sub.reviewNotes}
                   </div>
                 )}
                 <div style={{ marginTop: 10 }}>
-                  <Link href="/become-a-host" style={{ color: '#6d3df2', fontWeight: 700, textDecoration: 'none' }}>Submit a new application →</Link>
+                  <Link href="/become-a-host" style={{ color: '#6d3df2', fontWeight: 700, textDecoration: 'none' }}>{t('hostStatus.submitNewApplication')}</Link>
                 </div>
               </div>
             )}
@@ -283,7 +293,7 @@ export default function HostStatusPage() {
             {/* Communications timeline */}
             {hasComms && (
               <div style={{ borderTop: '1px solid rgba(135,82,254,.1)', paddingTop: 16, display: 'grid', gap: 12 }}>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Communication history</h3>
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('hostStatus.communicationHistory')}</h3>
                 {sub.communications.map((comm, i) => (
                   <div key={comm.id || i} style={{
                     padding: '12px 16px', borderRadius: 14,
@@ -293,7 +303,7 @@ export default function HostStatusPage() {
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                       <span style={{ fontWeight: 700, fontSize: '0.84rem' }}>
-                        {comm.direction === 'INBOUND' ? 'Your reply' : 'Review team'}
+                        {comm.direction === 'INBOUND' ? t('hostStatus.yourReply') : t('hostStatus.reviewTeam')}
                       </span>
                       {comm.createdAt && (
                         <span style={{ fontSize: '0.78rem', color: '#9990b0' }}>{formatDate(comm.createdAt)}</span>
@@ -317,10 +327,10 @@ export default function HostStatusPage() {
           rel="noopener noreferrer"
           style={{ ...ghostBtn }}
         >
-          Open Host App ↗
+          {t('hostStatus.openHostAppExternal')}
         </a>
-        <Link href="/become-a-host" style={{ ...ghostBtn }}>Submit another vehicle</Link>
-        <Link href="/contact" style={{ ...ghostBtn }}>Contact support</Link>
+        <Link href="/become-a-host" style={{ ...ghostBtn }}>{t('hostStatus.submitAnotherVehicle')}</Link>
+        <Link href="/contact" style={{ ...ghostBtn }}>{t('hostLogin.contactSupport')}</Link>
       </div>
 
     </main>

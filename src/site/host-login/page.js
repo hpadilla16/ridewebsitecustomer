@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api, TOKEN_KEY, USER_KEY } from '@/lib/client';
 import styles from '../sitePreviewPremium.module.css';
 
 export default function HostLoginPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +35,7 @@ export default function HostLoginPage() {
         email;
       setSignedInUser({ ...user, _resolvedName: name });
     } catch (err) {
-      setError(err.message || 'Sign-in failed. Please check your credentials and try again.');
+      setError(err.message || t('hostLogin.signInFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -42,43 +44,43 @@ export default function HostLoginPage() {
   return (
     <main className="legal-shell">
       <section className="glass card-lg legal-hero">
-        <span className="eyebrow">Host Access</span>
-        <h1 className="legal-title">Host Sign In</h1>
+        <span className="eyebrow">{t('hostLogin.hostAccess')}</span>
+        <h1 className="legal-title">{t('hostLogin.title')}</h1>
         <p className="legal-lead">
-          Sign in to your host account. Manage your listings, review incoming trip requests, and track your earnings from one place.
+          {t('hostLogin.subtitle')}
         </p>
         <div className="hero-meta">
-          <span className="hero-pill">Host App access</span>
-          <span className="hero-pill">Listing management</span>
-          <span className="hero-pill">Professional fleet operations</span>
+          <span className="hero-pill">{t('hostLogin.pillAppAccess')}</span>
+          <span className="hero-pill">{t('hostLogin.pillListingMgmt')}</span>
+          <span className="hero-pill">{t('hostLogin.pillFleetOps')}</span>
         </div>
         <div className="inline-actions">
-          <Link href="/become-a-host" className="legal-link-pill">Become a Host</Link>
-          <Link href="/contact" className="legal-link-pill">Contact Support</Link>
+          <Link href="/become-a-host" className="legal-link-pill">{t('common.becomeAHost')}</Link>
+          <Link href="/contact" className="legal-link-pill">{t('hostLogin.contactSupport')}</Link>
         </div>
       </section>
 
       <section className="legal-layout">
         <aside className="glass card legal-nav">
-          <div className="label">Host Resources</div>
+          <div className="label">{t('hostLogin.hostResources')}</div>
           <div className="stack" style={{ gap: 10 }}>
             <div className="surface-note">
-              The Host App is where you manage your active listings, review incoming reservations, update pricing, and communicate with guests.
+              {t('hostLogin.resourceManage')}
             </div>
             <div className="surface-note">
-              Sign in here to get your session started, then follow the link to open the Host App in a new tab.
+              {t('hostLogin.resourceSignIn')}
             </div>
             <div className="surface-note">
-              Not a host yet?{' '}
+              {t('hostLogin.notAHostYet')}{' '}
               <Link href="/become-a-host" style={{ color: '#4530c8', fontWeight: 700, textDecoration: 'none' }}>
-                Apply to become a host
+                {t('hostLogin.applyToBeHost')}
               </Link>{' '}
-              and submit your vehicle for review.
+              {t('hostLogin.andSubmitVehicle')}
             </div>
             <div className="surface-note">
-              Looking to book a car as a guest?{' '}
+              {t('hostLogin.lookingToBook')}{' '}
               <Link href="/login" style={{ color: '#4530c8', fontWeight: 700, textDecoration: 'none' }}>
-                Guest sign-in is here
+                {t('hostLogin.guestSignInHere')}
               </Link>.
             </div>
           </div>
@@ -119,14 +121,14 @@ export default function HostLoginPage() {
                       flexShrink: 0
                     }}
                   />
-                  Signed in
+                  {t('hostLogin.signedIn')}
                 </div>
 
                 <h2 style={{ margin: 0, fontSize: '1.6rem', letterSpacing: '-0.02em', color: '#1f2340' }}>
-                  You're signed in as {signedInUser._resolvedName}.
+                  {t('hostLogin.signedInAs', { name: signedInUser._resolvedName })}
                 </h2>
                 <p style={{ margin: 0, color: '#4f5a77', lineHeight: 1.72, fontSize: '1rem' }}>
-                  Open the Host App to manage your listings and trips.
+                  {t('hostLogin.openHostAppManage')}
                 </p>
 
                 <div className="inline-actions" style={{ marginTop: 4 }}>
@@ -149,7 +151,7 @@ export default function HostLoginPage() {
                       cursor: 'pointer'
                     }}
                   >
-                    View Submission Status
+                    {t('hostLogin.viewSubmissionStatus')}
                   </Link>
                   <a
                     href="https://ridefleetmanager.com/host"
@@ -158,7 +160,7 @@ export default function HostLoginPage() {
                     className="button-subtle"
                     style={{ textDecoration: 'none' }}
                   >
-                    Open Host App ↗
+                    {t('hostLogin.openHostApp')}
                   </a>
                 </div>
 
@@ -166,15 +168,15 @@ export default function HostLoginPage() {
                   className="surface-note"
                   style={{ marginTop: 4, fontSize: '0.88rem', color: '#66708d' }}
                 >
-                  The Host App opens in a new tab. Your session is active in this browser.
+                  {t('hostLogin.hostAppNewTab')}
                 </div>
               </div>
             </section>
           ) : (
             <section className="glass card-lg legal-section">
-              <h2>Sign in to your host account</h2>
+              <h2>{t('hostLogin.signInToAccount')}</h2>
               <p style={{ margin: '0 0 20px', color: '#4f5a77', lineHeight: 1.72 }}>
-                Enter the email address and password you used when creating your host account.
+                {t('hostLogin.enterCredentials')}
               </p>
 
               {error ? (
@@ -193,7 +195,7 @@ export default function HostLoginPage() {
 
               <form onSubmit={handleSubmit} className="stack" style={{ gap: 16 }}>
                 <label style={{ display: 'grid', gap: 6 }}>
-                  <span className="label">Email address</span>
+                  <span className="label">{t('hostLogin.emailAddress')}</span>
                   <input
                     type="email"
                     value={email}
@@ -206,12 +208,12 @@ export default function HostLoginPage() {
                 </label>
 
                 <label style={{ display: 'grid', gap: 6 }}>
-                  <span className="label">Password</span>
+                  <span className="label">{t('hostLogin.password')}</span>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Your password"
+                    placeholder={t('hostLogin.yourPassword')}
                     required
                     autoComplete="current-password"
                     style={{ fontSize: '1rem' }}
@@ -220,14 +222,14 @@ export default function HostLoginPage() {
 
                 <div className="inline-actions" style={{ marginTop: 4 }}>
                   <button type="submit" disabled={submitting}>
-                    {submitting ? 'Signing in...' : 'Sign In to Host Account'}
+                    {submitting ? t('hostLogin.signingIn') : t('hostLogin.signInButton')}
                   </button>
                   <Link
                     href="/become-a-host"
                     className="button-subtle"
                     style={{ textDecoration: 'none' }}
                   >
-                    Create host account
+                    {t('hostLogin.createAccount')}
                   </Link>
                 </div>
 
@@ -244,22 +246,22 @@ export default function HostLoginPage() {
                   }}
                 >
                   <span>
-                    Not a host?{' '}
+                    {t('hostLogin.notAHost')}{' '}
                     <Link
                       href="/login"
                       style={{ color: '#4530c8', fontWeight: 700, textDecoration: 'none' }}
                     >
-                      Guest sign-in
+                      {t('hostLogin.guestSignIn')}
                     </Link>
                   </span>
                   <span style={{ color: 'rgba(102,112,141,0.4)' }}>|</span>
                   <span>
-                    New to Ride?{' '}
+                    {t('hostLogin.newToRide')}{' '}
                     <Link
                       href="/become-a-host"
                       style={{ color: '#4530c8', fontWeight: 700, textDecoration: 'none' }}
                     >
-                      Apply to become a host
+                      {t('hostLogin.applyToBeHost')}
                     </Link>
                   </span>
                 </div>

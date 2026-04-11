@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import { fmtMoney, formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
@@ -16,7 +17,14 @@ const STATUS_COLORS = {
   PENDING_APPROVAL: 'rgba(255, 194, 88, 0.18)',
 };
 
-function statusLabel(s) { return s ? String(s).replace(/_/g, ' ') : 'Unknown'; }
+const STATUS_KEYS = {
+  CONFIRMED: 'status.confirmed',
+  ACTIVE: 'status.active',
+  COMPLETED: 'status.completed',
+  CANCELLED: 'status.cancelled',
+  PENDING: 'status.pending',
+  PENDING_APPROVAL: 'status.pendingApproval',
+};
 
 function StarRating({ rating }) {
   const stars = Math.round(Number(rating || 0));
@@ -29,6 +37,7 @@ function readGuestToken() {
 }
 
 export default function TripDetailPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = searchParams.get('ref') || '';
@@ -40,6 +49,12 @@ export default function TripDetailPage() {
   const [showExtend, setShowExtend] = useState(false);
   const [extendDays, setExtendDays] = useState(1);
   const [extendMsg, setExtendMsg] = useState('');
+
+  function statusLabel(s) {
+    const key = STATUS_KEYS[s];
+    if (key) return t(key);
+    return s ? String(s).replace(/_/g, ' ') : t('account.unknown');
+  }
 
   useEffect(() => {
     const guestToken = readGuestToken();
@@ -58,15 +73,15 @@ export default function TripDetailPage() {
           b.reference === ref || b.reservationNumber === ref || b.tripCode === ref || b.id === ref
         );
         if (match) setBooking(match);
-        else setError('Trip not found. It may have been removed or the reference is incorrect.');
+        else setError(t('account.tripNotFound'));
       } catch (err) {
-        if (!cancelled) setError(err?.message || 'Unable to load trip details');
+        if (!cancelled) setError(err?.message || t('account.loadError'));
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, [ref, router]);
+  }, [ref, router, t]);
 
   function handlePrint() {
     if (typeof window !== 'undefined') window.print();
@@ -75,7 +90,7 @@ export default function TripDetailPage() {
   if (loading) {
     return (
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-        <div className="surface-note" style={{ color: '#6b7a9a' }}>Loading trip details...</div>
+        <div className="surface-note" style={{ color: '#6b7a9a' }}>{t('account.loadingTripDetails')}</div>
       </div>
     );
   }
@@ -83,9 +98,9 @@ export default function TripDetailPage() {
   if (error || !booking) {
     return (
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '64px 24px' }}>
-        <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← My Trips</Link>
+        <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>{t('account.backToTrips')}</Link>
         <div className="surface-note" style={{ marginTop: 16, borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)' }}>
-          {error || 'Trip not found'}
+          {error || t('account.tripNotFound')}
         </div>
       </div>
     );
@@ -93,13 +108,13 @@ export default function TripDetailPage() {
 
   return (
     <div style={{ maxWidth: 700, margin: '0 auto', padding: '32px 24px' }}>
-      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← My Trips</Link>
+      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>{t('account.backToTrips')}</Link>
 
       {/* Header */}
       <section className={`glass card-lg ${styles.detailHero}`} style={{ marginTop: 12, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <span className="eyebrow">{booking.type === 'CAR_SHARING' ? 'Car Sharing Trip' : 'Rental Reservation'}</span>
+            <span className="eyebrow">{booking.type === 'CAR_SHARING' ? t('account.carSharingTrip') : t('account.rentalReservation')}</span>
             <h1 style={{ margin: '4px 0 0', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>
               {booking.reference || booking.reservationNumber}
             </h1>
@@ -112,21 +127,21 @@ export default function TripDetailPage() {
 
       {/* Vehicle */}
       <section className="glass card-lg" style={{ padding: '22px 20px', marginBottom: 16 }}>
-        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Vehicle</h2>
-        <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{booking.vehicleLabel || 'Vehicle'}</div>
+        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('account.vehicle')}</h2>
+        <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{booking.vehicleLabel || t('account.vehicle')}</div>
       </section>
 
       {/* Schedule */}
       <section className="glass card-lg" style={{ padding: '22px 20px', marginBottom: 16 }}>
-        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Schedule</h2>
+        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('account.schedule')}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div>
-            <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase' }}>Pickup</div>
+            <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase' }}>{t('account.pickup')}</div>
             <div style={{ fontWeight: 600, color: '#1e2847', marginTop: 4 }}>{booking.pickupAt ? formatPublicDateTime(booking.pickupAt) : '—'}</div>
             {booking.pickupLocationName && <div style={{ fontSize: '0.84rem', color: '#53607b', marginTop: 2 }}>{booking.pickupLocationName}</div>}
           </div>
           <div>
-            <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase' }}>Return</div>
+            <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase' }}>{t('account.return')}</div>
             <div style={{ fontWeight: 600, color: '#1e2847', marginTop: 4 }}>{booking.returnAt ? formatPublicDateTime(booking.returnAt) : '—'}</div>
           </div>
         </div>
@@ -135,7 +150,7 @@ export default function TripDetailPage() {
       {/* Host (car sharing only) */}
       {booking.host && (
         <section className="glass card-lg" style={{ padding: '22px 20px', marginBottom: 16 }}>
-          <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Your Host</h2>
+          <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('account.yourHost')}</h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #8752FE, #6d3df2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '1.1rem' }}>
               {(booking.host.displayName || '?')[0].toUpperCase()}
@@ -144,7 +159,7 @@ export default function TripDetailPage() {
               <div style={{ fontWeight: 700, color: '#1e2847' }}>{booking.host.displayName}</div>
               {booking.host.averageRating > 0 && (
                 <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 2 }}>
-                  <StarRating rating={booking.host.averageRating} /> ({booking.host.reviewCount} reviews)
+                  <StarRating rating={booking.host.averageRating} /> ({booking.host.reviewCount} {t('common.reviews').toLowerCase()})
                 </div>
               )}
             </div>
@@ -154,9 +169,9 @@ export default function TripDetailPage() {
 
       {/* Pricing */}
       <section className="glass card-lg" style={{ padding: '22px 20px', marginBottom: 16 }}>
-        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Pricing</h2>
+        <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('account.pricing')}</h2>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: '#53607b' }}>Estimated Total</span>
+          <span style={{ color: '#53607b' }}>{t('account.estimatedTotal')}</span>
           <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#1e2847' }}>{fmtMoney(booking.estimatedTotal || 0)}</span>
         </div>
       </section>
@@ -164,39 +179,39 @@ export default function TripDetailPage() {
       {/* Cancellation policy */}
       {['CONFIRMED', 'PENDING', 'PENDING_APPROVAL', 'NEW'].includes(booking.status) && (
         <section className="glass card" style={{ padding: '16px 20px', marginBottom: 16, fontSize: '0.86rem', color: '#53607b', lineHeight: 1.6 }}>
-          <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4 }}>Cancellation Policy</div>
+          <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4 }}>{t('account.cancellationPolicy')}</div>
           <div>{booking.type === 'CAR_SHARING'
-            ? 'Free cancellation up to 24 hours before pickup. Late cancellations may incur a fee.'
-            : 'Free cancellation up to 48 hours before pickup. Late cancellations may forfeit the deposit.'}
+            ? t('account.carSharingCancelPolicy')
+            : t('account.rentalCancelPolicy')}
           </div>
         </section>
       )}
 
-      {cancelMsg && <div className="surface-note" style={{ marginBottom: 12, color: cancelMsg.includes('cancelled') ? '#047857' : '#991b1b' }}>{cancelMsg}</div>}
+      {cancelMsg && <div className="surface-note" style={{ marginBottom: 12, color: cancelMsg.includes('cancelled') || cancelMsg.includes('cancelad') ? '#047857' : '#991b1b' }}>{cancelMsg}</div>}
 
       {/* Actions */}
       <section style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap' }}>
         <button onClick={handlePrint} className={styles.checkoutGhostButton} style={{ fontSize: '0.85rem', padding: '10px 20px' }}>
-          Print Receipt
+          {t('account.printReceipt')}
         </button>
         <Link href={`/account/issue?reference=${encodeURIComponent(ref)}`} className={styles.checkoutGhostButton} style={{ textDecoration: 'none', fontSize: '0.85rem', padding: '10px 20px' }}>
-          Report an Issue
+          {t('common.reportIssue')}
         </Link>
         {['CONFIRMED', 'PENDING', 'PENDING_APPROVAL', 'NEW'].includes(booking.status) && (
           <button
             onClick={async () => {
-              if (!confirm('Are you sure you want to cancel this booking? This may incur a cancellation fee.')) return;
+              if (!confirm(t('account.cancelConfirm'))) return;
               try {
                 await api('/api/public/booking/cancel', { method: 'POST', body: JSON.stringify({ reference: ref }) });
-                setCancelMsg('Booking cancelled successfully. Refund will be processed per our cancellation policy.');
+                setCancelMsg(t('account.bookingCancelled'));
                 setBooking((b) => b ? { ...b, status: 'CANCELLED' } : b);
               } catch (err) {
-                setCancelMsg(err?.message || 'Unable to cancel booking. Please contact support.');
+                setCancelMsg(err?.message || t('account.unableToCancel'));
               }
             }}
             style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(255,80,80,.2)', background: 'rgba(255,80,80,.06)', color: '#991b1b', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
           >
-            Cancel Booking
+            {t('account.cancelBooking')}
           </button>
         )}
         {['CONFIRMED', 'ACTIVE', 'IN_PROGRESS'].includes(booking.status) && (
@@ -204,7 +219,7 @@ export default function TripDetailPage() {
             onClick={() => setShowExtend(!showExtend)}
             style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.06)', color: '#047857', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
           >
-            Extend Trip
+            {t('account.extendTrip')}
           </button>
         )}
       </section>
@@ -212,33 +227,33 @@ export default function TripDetailPage() {
       {/* Extend trip form */}
       {showExtend && (
         <section className="glass card" style={{ padding: '18px 20px', marginBottom: 16 }}>
-          <h3 style={{ margin: '0 0 10px', fontSize: '0.95rem', fontWeight: 700, color: '#1e2847' }}>Request Trip Extension</h3>
+          <h3 style={{ margin: '0 0 10px', fontSize: '0.95rem', fontWeight: 700, color: '#1e2847' }}>{t('account.requestExtension')}</h3>
           <p style={{ fontSize: '0.84rem', color: '#6b7a9a', margin: '0 0 12px' }}>
-            Request additional days for your trip. The host will review and confirm the extension. Additional charges will apply.
+            {t('account.extensionHint')}
           </p>
           <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', flexWrap: 'wrap' }}>
             <div>
-              <div className="label">Extra days</div>
+              <div className="label">{t('account.extraDays')}</div>
               <select value={extendDays} onChange={(e) => setExtendDays(Number(e.target.value))} style={{ minWidth: 100 }}>
-                {[1, 2, 3, 5, 7, 14].map((d) => <option key={d} value={d}>{d} {d === 1 ? 'day' : 'days'}</option>)}
+                {[1, 2, 3, 5, 7, 14].map((d) => <option key={d} value={d}>{d} {d === 1 ? t('account.day') : t('account.days')}</option>)}
               </select>
             </div>
             <button
               onClick={async () => {
                 try {
                   await api('/api/public/booking/extend', { method: 'POST', body: JSON.stringify({ reference: ref, extraDays: extendDays }) });
-                  setExtendMsg(`Extension request submitted for ${extendDays} day${extendDays > 1 ? 's' : ''}. Your host will confirm shortly.`);
+                  setExtendMsg(t('account.extensionSubmitted', { days: extendDays }));
                   setShowExtend(false);
                 } catch (err) {
-                  setExtendMsg(err?.message || 'Unable to submit extension request. Please contact support.');
+                  setExtendMsg(err?.message || t('account.unableToExtend'));
                 }
               }}
               style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #8752FE, #6d3df2)', color: '#fff', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
             >
-              Submit Request
+              {t('account.submitRequest')}
             </button>
           </div>
-          {extendMsg && <div style={{ marginTop: 10, fontSize: '0.84rem', color: extendMsg.includes('submitted') ? '#047857' : '#991b1b' }}>{extendMsg}</div>}
+          {extendMsg && <div style={{ marginTop: 10, fontSize: '0.84rem', color: extendMsg.includes('submitted') || extendMsg.includes('enviada') ? '#047857' : '#991b1b' }}>{extendMsg}</div>}
         </section>
       )}
     </div>

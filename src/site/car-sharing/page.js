@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ListingSkeleton } from '../../components/Skeleton';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../lib/client';
@@ -25,12 +26,6 @@ import {
   withSiteBase
 } from '../sitePreviewShared';
 
-const FILTERS = [
-  { id: 'all', label: 'All Cars' },
-  { id: 'instantBook', label: 'Instant Book' },
-  { id: 'delivery', label: 'Delivery Available' }
-];
-
 const primaryBtn = {
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   height: 44, borderRadius: 14, border: 'none', textDecoration: 'none',
@@ -48,7 +43,7 @@ const ghostBtn = {
   color: '#4a38be', fontWeight: 800, fontSize: '0.88rem',
 };
 
-function StarRating({ count }) {
+function StarRating({ count, t }) {
   if (!count) {
     return (
       <span style={{
@@ -59,7 +54,7 @@ function StarRating({ count }) {
         fontWeight: 700,
         color: '#6b7a9a'
       }}>
-        <span style={{ color: '#94a3b8' }}>★★★★★</span> New
+        <span style={{ color: '#94a3b8' }}>★★★★★</span> {t('carSharingPage.new')}
       </span>
     );
   }
@@ -77,7 +72,7 @@ function StarRating({ count }) {
   );
 }
 
-function InstantBookBadge() {
+function InstantBookBadge({ t }) {
   return (
     <span style={{
       display: 'inline-flex',
@@ -93,12 +88,12 @@ function InstantBookBadge() {
       boxShadow: '0 4px 14px rgba(22,163,74,0.28)',
       whiteSpace: 'nowrap'
     }}>
-      <span style={{ fontSize: '0.7rem' }}>⚡</span> Instant Book
+      <span style={{ fontSize: '0.7rem' }}>⚡</span> {t('carSharingPage.instantBook')}
     </span>
   );
 }
 
-function ProtectedBadge() {
+function ProtectedBadge({ t }) {
   return (
     <span style={{
       display: 'inline-flex',
@@ -112,7 +107,7 @@ function ProtectedBadge() {
       fontSize: 11,
       fontWeight: 700
     }}>
-      <span>🛡</span> Trip Protection Included
+      <span>🛡</span> {t('carSharingPage.tripProtectionIncluded')}
     </span>
   );
 }
@@ -124,9 +119,16 @@ function applyFilter(listings, filter) {
 }
 
 function CarSharingPreviewPageContent() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
+
+  const FILTERS = [
+    { id: 'all', label: t('carSharingPage.allCars') },
+    { id: 'instantBook', label: t('carSharingPage.instantBook') },
+    { id: 'delivery', label: t('carSharingPage.deliveryAvailable') }
+  ];
   const carSharingTenantSlug = publicCarSharingTenantSlug();
   const [bootstrap, setBootstrap] = useState(null);
   const [results, setResults] = useState(null);
@@ -145,7 +147,7 @@ function CarSharingPreviewPageContent() {
         const payload = await fetchBookingBootstrap({ tenantSlug: carSharingTenantSlug });
         setBootstrap(payload);
       } catch (err) {
-        setError(String(err?.message || 'Unable to load car sharing search'));
+        setError(String(err?.message || t('carSharingPage.unableToLoadSearch')));
       }
     })();
   }, [carSharingTenantSlug]);
@@ -170,7 +172,7 @@ function CarSharingPreviewPageContent() {
       setError('');
       const locationIds = backendLocationIdsForPublicOption(publicLocationOptions, form.locationId);
       if (!locationIds.length) {
-        throw new Error('Pickup location not found');
+        throw new Error(t('carSharingPage.pickupLocationNotFound'));
       }
       const payload = await api('/api/public/booking/car-sharing-search', {
         method: 'POST',
@@ -185,7 +187,7 @@ function CarSharingPreviewPageContent() {
       setResults(payload);
     } catch (err) {
       setResults(null);
-      setError(String(err?.message || 'Unable to search car sharing listings'));
+      setError(String(err?.message || t('carSharingPage.unableToSearchListings')));
     } finally {
       setSearching(false);
     }
@@ -225,12 +227,12 @@ function CarSharingPreviewPageContent() {
           background: 'radial-gradient(circle at 80% 0%, rgba(15,176,216,0.18) 0%, transparent 40%), radial-gradient(circle at 10% 80%, rgba(255,194,88,0.12) 0%, transparent 36%)'
         }} />
         <div style={{ position: 'relative', zIndex: 1, marginBottom: 28 }}>
-          <p className={styles.heroNarrativeLabel} style={{ color: 'rgba(200,210,255,0.8)', marginBottom: 8 }}>Car Sharing</p>
+          <p className={styles.heroNarrativeLabel} style={{ color: 'rgba(200,210,255,0.8)', marginBottom: 8 }}>{t('common.carSharing')}</p>
           <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem,3.6vw,2.9rem)', fontWeight: 800, letterSpacing: '-0.03em', color: '#f7fbff', lineHeight: 1.1 }}>
-            Drive something local. Book it today.
+            {t('carSharingPage.heroTitle')}
           </h1>
           <p style={{ margin: '10px 0 0', color: 'rgba(220,226,255,0.84)', fontSize: '1rem', maxWidth: 560, lineHeight: 1.72 }}>
-            Peer-to-peer vehicles with real pickup context, instant book options, and trip protection baked in.
+            {t('carSharingPage.heroSubtitle')}
           </p>
         </div>
 
@@ -250,14 +252,14 @@ function CarSharingPreviewPageContent() {
         }}>
           <div className="stack" style={{ gap: 5 }}>
             <label style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7a9a' }}>
-              Pickup Location
+              {t('carSharingPage.pickupLocation')}
             </label>
             <select
               value={form.locationId}
               onChange={(e) => setForm((c) => ({ ...c, locationId: e.target.value }))}
               style={{ height: 44, borderRadius: 12, border: '1.5px solid rgba(110,73,255,0.18)', background: '#fff', color: '#26314d', fontWeight: 700, paddingLeft: 12, fontSize: '0.95rem' }}
             >
-              <option value="">Select location</option>
+              <option value="">{t('carSharingPage.selectLocation')}</option>
               {publicLocationOptions.map((loc) => (
                 <option key={loc.id} value={loc.id}>{loc.label}</option>
               ))}
@@ -266,7 +268,7 @@ function CarSharingPreviewPageContent() {
 
           <div className="stack" style={{ gap: 5 }}>
             <label style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7a9a' }}>
-              Pickup Date & Time
+              {t('carSharingPage.pickupDateTime')}
             </label>
             <input
               type="datetime-local"
@@ -278,7 +280,7 @@ function CarSharingPreviewPageContent() {
 
           <div className="stack" style={{ gap: 5 }}>
             <label style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7a9a' }}>
-              Return Date & Time
+              {t('carSharingPage.returnDateTime')}
             </label>
             <input
               type="datetime-local"
@@ -308,7 +310,7 @@ function CarSharingPreviewPageContent() {
               transition: 'opacity 0.2s ease'
             }}
           >
-            {searching ? 'Searching…' : 'Search Cars'}
+            {searching ? t('carSharingPage.searching') : t('carSharingPage.searchCars')}
           </button>
         </div>
 
@@ -353,7 +355,7 @@ function CarSharingPreviewPageContent() {
       {rawListings.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
           <span style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.95rem' }}>
-            {visibleListings.length} {visibleListings.length === 1 ? 'car' : 'cars'} available
+            {t('carSharingPage.carsAvailable', { count: visibleListings.length })}
           </span>
         </div>
       )}
@@ -399,7 +401,7 @@ function CarSharingPreviewPageContent() {
                   )}
                   {listing?.instantBook ? (
                     <div style={{ position: 'absolute', top: 12, left: 12 }}>
-                      <InstantBookBadge />
+                      <InstantBookBadge t={t} />
                     </div>
                   ) : null}
                 </div>
@@ -416,13 +418,13 @@ function CarSharingPreviewPageContent() {
                       <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#1e2847' }}>
                         {fmtMoney(dailyRate)}
                       </span>
-                      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#6b7a9a' }}> /day</span>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#6b7a9a' }}> {t('common.perDay')}</span>
                     </div>
                   </div>
 
                   {/* Row 2: star rating + host name */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />
+                    <StarRating count={listing?.reviewCount || listing?.ratingCount || null} t={t} />
                     {hostName ? (
                       <span style={{ fontSize: '0.82rem', color: '#6b7a9a', fontWeight: 600 }}>· {hostName}</span>
                     ) : null}
@@ -433,7 +435,7 @@ function CarSharingPreviewPageContent() {
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.84rem', color: '#53607b', fontWeight: 600 }}>
                       <span style={{ fontSize: '0.9rem' }}>📍</span> {locationLabel}
                     </span>
-                    <ProtectedBadge />
+                    <ProtectedBadge t={t} />
                   </div>
 
                   {/* Row 4: short description */}
@@ -446,7 +448,7 @@ function CarSharingPreviewPageContent() {
                   {/* Row 5: trip total */}
                   {tripTotal && tripTotal !== dailyRate ? (
                     <div style={{ fontSize: '0.82rem', color: '#6b7a9a', fontWeight: 600 }}>
-                      Est. {fmtMoney(tripTotal)} total
+                      {t('carSharingPage.estTotal', { amount: fmtMoney(tripTotal) })}
                     </div>
                   ) : null}
 
@@ -463,13 +465,13 @@ function CarSharingPreviewPageContent() {
                       })}`}
                       style={primaryBtn}
                     >
-                      Book Now
+                      {t('carSharingPage.bookNow')}
                     </Link>
                     <Link
                       href={`${withSiteBase(basePath, `/car-sharing/${listing?.id || ''}`)}?${searchParamsToString({ pickupAt: form.pickupAt, returnAt: form.returnAt, locationId: form.locationId, listingId: listing?.id || '' })}`}
                       style={ghostBtn}
                     >
-                      Details
+                      {t('carSharingPage.details')}
                     </Link>
                   </div>
                 </div>
@@ -481,9 +483,9 @@ function CarSharingPreviewPageContent() {
         /* Empty state */
         <section className="glass card" style={{ padding: 48, textAlign: 'center' }}>
           <div style={{ fontSize: '2.4rem', marginBottom: 14 }}>🚗</div>
-          <h3 style={{ margin: '0 0 10px', color: '#26314d', fontSize: '1.2rem' }}>No cars found for these dates</h3>
+          <h3 style={{ margin: '0 0 10px', color: '#26314d', fontSize: '1.2rem' }}>{t('carSharingPage.noCarsFoundTitle')}</h3>
           <p className="ui-muted" style={{ margin: '0 0 22px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7 }}>
-            No listings found for these dates. Try adjusting your dates or browse all available cars.
+            {t('carSharingPage.noCarsFoundBody')}
           </p>
           <button
             type="button"
@@ -503,7 +505,7 @@ function CarSharingPreviewPageContent() {
               boxShadow: '0 10px 24px rgba(110,73,255,0.26)'
             }}
           >
-            Browse All Cars
+            {t('carSharingPage.browseAllCars')}
           </button>
         </section>
       )}
@@ -511,25 +513,25 @@ function CarSharingPreviewPageContent() {
       {/* ── Why Ride Car Sharing trust section ── */}
       <section className={`glass card ${styles.prestigeBand}`} style={{ marginTop: 32 }}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">Why Ride Car Sharing</span>
-          <h2 style={{ margin: 0 }}>The smarter way to share the road</h2>
+          <span className="eyebrow">{t('carSharingPage.whyRideCarSharing')}</span>
+          <h2 style={{ margin: 0 }}>{t('carSharingPage.smarterWay')}</h2>
         </div>
         <div className={styles.prestigeGrid}>
           {[
             {
               icon: '✅',
-              title: 'Verified Hosts',
-              body: 'Every host is reviewed before listing. You get real vehicles from real people, with identity and insurance checks built in.'
+              title: t('carSharingPage.verifiedHostsTitle'),
+              body: t('carSharingPage.verifiedHostsBody')
             },
             {
               icon: '🛡',
-              title: 'Protected Trips',
-              body: 'Trip protection is included on every booking. Your reservation is covered from pickup to return.'
+              title: t('carSharingPage.protectedTripsTitle'),
+              body: t('carSharingPage.protectedTripsBody')
             },
             {
               icon: '✈️',
-              title: 'Airport-Ready Pickups',
-              body: 'Many listings offer airport-area pickup. Get detailed location instructions before you arrive so there are no surprises.'
+              title: t('carSharingPage.airportPickupsTitle'),
+              body: t('carSharingPage.airportPickupsBody')
             }
           ].map((card) => (
             <div key={card.title} className={styles.prestigeCard}>

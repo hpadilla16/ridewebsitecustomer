@@ -3,16 +3,9 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import styles from '../../sitePreviewPremium.module.css';
-
-const INCIDENT_TYPES = [
-  { value: 'DAMAGE', label: 'Vehicle Damage' },
-  { value: 'BILLING', label: 'Billing or Charges' },
-  { value: 'SERVICE', label: 'Service Issue' },
-  { value: 'SAFETY', label: 'Safety Concern' },
-  { value: 'OTHER', label: 'Other' },
-];
 
 function readGuestEmail() {
   if (typeof window === 'undefined') return '';
@@ -27,9 +20,18 @@ function readGuestEmail() {
 }
 
 function IssueForm() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const paramReference = searchParams.get('reference') || '';
   const paramEmail = searchParams.get('email') || '';
+
+  const INCIDENT_TYPES = [
+    { value: 'DAMAGE', label: t('issue.vehicleDamage') },
+    { value: 'BILLING', label: t('issue.billingCharges') },
+    { value: 'SERVICE', label: t('issue.serviceIssue') },
+    { value: 'SAFETY', label: t('issue.safetyConcern') },
+    { value: 'OTHER', label: t('issue.other') },
+  ];
 
   const [reference, setReference] = useState(paramReference);
   const [email, setEmail] = useState(paramEmail);
@@ -53,11 +55,11 @@ function IssueForm() {
     setError('');
 
     if (!description.trim()) {
-      setError('Please describe the issue before submitting.');
+      setError(t('issue.describeFirst'));
       return;
     }
     if (!email.trim()) {
-      setError('Please enter your email address so we can follow up.');
+      setError(t('issue.enterEmail'));
       return;
     }
 
@@ -76,7 +78,7 @@ function IssueForm() {
       setTicketId(result?.id || result?.ticketId || '');
       setSubmitted(true);
     } catch (err) {
-      setError(err?.message || 'Unable to submit your report. Please try again.');
+      setError(err?.message || t('issue.submitError'));
     } finally {
       setLoading(false);
     }
@@ -86,26 +88,26 @@ function IssueForm() {
     return (
       <div className="stack" style={{ gap: 24, maxWidth: 580, margin: '0 auto', padding: '48px 24px' }}>
         <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">Issue Reported</span>
+          <span className="eyebrow">{t('issue.issueReported')}</span>
           <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.5rem, 3vw, 2.2rem)' }}>
-            Your report has been received
+            {t('issue.reportReceived')}
           </h1>
           <p className={styles.detailLead}>
-            Our support team will review your submission and follow up at the email address you provided.
+            {t('issue.supportFollowUp')}
           </p>
         </section>
 
         <section className="glass card-lg" style={{ padding: '28px 24px', borderRadius: 18 }}>
           <div style={{ display: 'grid', gap: 16 }}>
             <div className="surface-note">
-              <strong>Report submitted</strong>
+              <strong>{t('issue.reportSubmitted')}</strong>
               {ticketId && (
                 <div className="ui-muted" style={{ marginTop: 6 }}>
-                  Ticket reference: <strong>{ticketId}</strong>
+                  {t('issue.ticketReference')}: <strong>{ticketId}</strong>
                 </div>
               )}
               <div className="ui-muted" style={{ marginTop: 6 }}>
-                A confirmation will be sent to <strong>{email}</strong>. Typical response time is 1 business day.
+                {t('issue.confirmationSent', { email })}
               </div>
             </div>
 
@@ -115,14 +117,14 @@ function IssueForm() {
                 className={styles.resultPrimaryAction}
                 style={{ textDecoration: 'none' }}
               >
-                Back to my trips
+                {t('issue.backToTrips')}
               </Link>
               <Link
                 href="/contact"
                 className={styles.resultSecondaryAction}
                 style={{ textDecoration: 'none' }}
               >
-                Contact support
+                {t('issue.contactSupport')}
               </Link>
             </div>
           </div>
@@ -134,12 +136,12 @@ function IssueForm() {
   return (
     <div className="stack" style={{ gap: 24, maxWidth: 580, margin: '0 auto', padding: '48px 24px' }}>
       <section className={`glass card-lg ${styles.detailHero}`}>
-        <span className="eyebrow">Report an Issue</span>
+        <span className="eyebrow">{t('issue.title')}</span>
         <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.5rem, 3vw, 2.2rem)' }}>
-          {reference ? `Issue with ${reference}` : 'Report an Issue'}
+          {reference ? t('issue.issueWith', { reference }) : t('issue.title')}
         </h1>
         <p className={styles.detailLead}>
-          Tell us what happened and our support team will follow up with you promptly.
+          {t('issue.tellUsWhatHappened')}
         </p>
       </section>
 
@@ -147,7 +149,7 @@ function IssueForm() {
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
           <div style={{ display: 'grid', gap: 8 }}>
             <label htmlFor="issue-reference" className="label">
-              Booking reference
+              {t('issue.reference')}
             </label>
             <input
               id="issue-reference"
@@ -172,14 +174,14 @@ function IssueForm() {
 
           <div style={{ display: 'grid', gap: 8 }}>
             <label htmlFor="issue-email" className="label">
-              Your email address
+              {t('issue.emailAddress')}
             </label>
             <input
               id="issue-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('issue.emailPlaceholder')}
               required
               disabled={loading}
               style={{
@@ -198,7 +200,7 @@ function IssueForm() {
 
           <div style={{ display: 'grid', gap: 8 }}>
             <label htmlFor="issue-type" className="label">
-              Issue type
+              {t('issue.issueType')}
             </label>
             <select
               id="issue-type"
@@ -219,9 +221,9 @@ function IssueForm() {
                 appearance: 'auto',
               }}
             >
-              {INCIDENT_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
+              {INCIDENT_TYPES.map((it) => (
+                <option key={it.value} value={it.value}>
+                  {it.label}
                 </option>
               ))}
             </select>
@@ -229,13 +231,13 @@ function IssueForm() {
 
           <div style={{ display: 'grid', gap: 8 }}>
             <label htmlFor="issue-description" className="label">
-              Description <span style={{ color: 'rgba(255,80,80,0.8)' }}>*</span>
+              {t('issue.issueDescription')} <span style={{ color: 'rgba(255,80,80,0.8)' }}>*</span>
             </label>
             <textarea
               id="issue-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Please describe what happened, including any relevant dates, times, or details that will help us resolve this quickly."
+              placeholder={t('issue.descriptionPlaceholder')}
               required
               rows={5}
               disabled={loading}
@@ -275,14 +277,14 @@ function IssueForm() {
                 minWidth: 160,
               }}
             >
-              {loading ? 'Submitting...' : 'Submit report'}
+              {loading ? t('common.submitting') : t('issue.submitReport')}
             </button>
             <Link
               href="/account"
               className={styles.checkoutGhostButton}
               style={{ textDecoration: 'none', textAlign: 'center', flex: '0 1 auto' }}
             >
-              Cancel
+              {t('common.cancel')}
             </Link>
           </div>
         </form>
@@ -290,9 +292,9 @@ function IssueForm() {
 
       <div className="surface-note" style={{ borderRadius: 14, padding: '14px 18px' }}>
         <span className="ui-muted" style={{ fontSize: '0.88rem' }}>
-          For urgent safety concerns, please contact us directly via the{' '}
+          {t('issue.urgentSafety')}{' '}
           <Link href="/contact" style={{ color: 'rgba(15,176,216,0.9)', fontWeight: 600, textDecoration: 'none' }}>
-            contact page
+            {t('issue.contactPage')}
           </Link>
           .
         </span>
@@ -302,12 +304,13 @@ function IssueForm() {
 }
 
 export default function IssuePageWrapper() {
+  const { t } = useTranslation();
   return (
     <Suspense fallback={
       <div className="stack" style={{ gap: 24, maxWidth: 580, margin: '0 auto', padding: '64px 24px' }}>
         <div className="glass card-lg" style={{ padding: '32px 28px', borderRadius: 20 }}>
-          <span className="eyebrow">Report an Issue</span>
-          <p className="ui-muted" style={{ marginTop: 12 }}>Loading form...</p>
+          <span className="eyebrow">{t('issue.title')}</span>
+          <p className="ui-muted" style={{ marginTop: 12 }}>{t('issue.loadingForm')}</p>
         </div>
       </div>
     }>

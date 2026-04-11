@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api, TOKEN_KEY, USER_KEY } from '../../lib/client';
 
 const MAX_INLINE_PDF_BYTES = 350 * 1024;
@@ -150,18 +151,18 @@ function appendDeliveryArea(text, area) {
 }
 
 // ─── Wizard step definitions ──────────────────────────────────────────────────
-const WIZARD_STEPS = [
-  { id: 1, label: 'Account' },
-  { id: 2, label: 'Vehicle' },
-  { id: 3, label: 'Pickup' },
-  { id: 4, label: 'Docs' },
+const WIZARD_STEP_KEYS = [
+  { id: 1, key: 'becomeAHost.stepAccount' },
+  { id: 2, key: 'becomeAHost.stepVehicle' },
+  { id: 3, key: 'becomeAHost.stepPickup' },
+  { id: 4, key: 'becomeAHost.stepDocs' },
 ];
 
 // ─── Progress indicator ───────────────────────────────────────────────────────
-function StepProgress({ current }) {
+function StepProgress({ current, t }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', marginBottom: 32, padding: '0 4px' }}>
-      {WIZARD_STEPS.map((s, i) => (
+      {WIZARD_STEP_KEYS.map((s, i) => (
         <div key={s.id} style={{ display: 'contents' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
             <div style={{
@@ -185,10 +186,10 @@ function StepProgress({ current }) {
               color: current >= s.id ? 'var(--brand-purple)' : '#a090c8',
               transition: 'color 0.25s',
             }}>
-              {s.label}
+              {t(s.key)}
             </span>
           </div>
-          {i < WIZARD_STEPS.length - 1 && (
+          {i < WIZARD_STEP_KEYS.length - 1 && (
             <div style={{
               flex: 1, height: 2.5, borderRadius: 2, marginBottom: 18, margin: '0 8px 18px',
               background: current > s.id
@@ -242,7 +243,7 @@ const inputStyle = {
 };
 
 // ─── Landing hero ─────────────────────────────────────────────────────────────
-function LandingSection({ onStart, loading }) {
+function LandingSection({ onStart, loading, t }) {
   return (
     <main style={{ minHeight: '100vh' }}>
       {/* Hero */}
@@ -274,10 +275,10 @@ function LandingSection({ onStart, loading }) {
                 Ride Car Sharing
               </span>
               <h1 style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', fontWeight: 900, lineHeight: 1.04, letterSpacing: '-.03em', color: '#1a1230', marginBottom: 20 }}>
-                Earn money<br />sharing your car
+                {t('becomeAHost.heroTitle')}
               </h1>
               <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.18rem)', color: '#5f567e', lineHeight: 1.72, maxWidth: 480 }}>
-                Set your schedule. Keep your keys. List your car in minutes and start earning — we handle the platform, payments, and guest support.
+                {t('becomeAHost.heroSubtitle')}
               </p>
             </div>
 
@@ -291,8 +292,8 @@ function LandingSection({ onStart, loading }) {
             }}>
               <div style={{ fontSize: '2rem', lineHeight: 1 }}>💵</div>
               <div>
-                <div style={{ fontWeight: 900, fontSize: '1.22rem', color: '#1a1230' }}>$500–$2,000 / month</div>
-                <div style={{ fontSize: 13, color: '#6f668f', marginTop: 2 }}>Typical host earnings in Puerto Rico</div>
+                <div style={{ fontWeight: 900, fontSize: '1.22rem', color: '#1a1230' }}>{t('becomeAHost.earningsRange')}</div>
+                <div style={{ fontSize: 13, color: '#6f668f', marginTop: 2 }}>{t('becomeAHost.typicalEarnings')}</div>
               </div>
             </div>
 
@@ -302,10 +303,10 @@ function LandingSection({ onStart, loading }) {
                 disabled={loading}
                 style={{ ...primaryBtn, padding: '16px 36px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}
               >
-                {loading ? 'Loading...' : 'List your car — it\'s free'}
+                {loading ? t('common.loading') : t('becomeAHost.listYourCar')}
               </button>
               <Link href="/host-login" style={{ ...ghostBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                Already a host? Sign in →
+                {t('becomeAHost.alreadyAHost')}
               </Link>
             </div>
           </div>
@@ -313,9 +314,9 @@ function LandingSection({ onStart, loading }) {
           {/* Feature cards — right column */}
           <div style={{ display: 'grid', gap: 14 }}>
             {[
-              { icon: '🛡️', title: '$1M protection plan', body: 'Every trip includes liability coverage and physical damage protection for your vehicle.' },
-              { icon: '📅', title: 'You control the schedule', body: 'Block off dates whenever you want. Your car is available only when you say so.' },
-              { icon: '⚡', title: 'Fast approval, faster earnings', body: 'Submit your vehicle today. Our review team aims to approve listings within 48 hours.' },
+              { icon: '🛡️', title: t('becomeAHost.featureProtectionTitle'), body: t('becomeAHost.featureProtectionBody') },
+              { icon: '📅', title: t('becomeAHost.featureScheduleTitle'), body: t('becomeAHost.featureScheduleBody') },
+              { icon: '⚡', title: t('becomeAHost.featureApprovalTitle'), body: t('becomeAHost.featureApprovalBody') },
             ].map(({ icon, title, body }) => (
               <div key={title} style={{
                 display: 'flex', gap: 16, alignItems: 'flex-start',
@@ -337,14 +338,14 @@ function LandingSection({ onStart, loading }) {
       {/* How it works strip */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 5vw, 80px)' }}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 40 }}>
-          How hosting works
+          {t('becomeAHost.howItWorksTitle')}
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24 }}>
           {[
-            { step: '01', title: 'Create your account', body: 'Set up your host profile with your name, contact info, and login credentials.' },
-            { step: '02', title: 'Add your vehicle', body: 'Describe your car, set your daily rate, and choose whether you offer delivery.' },
-            { step: '03', title: 'Set a pickup spot', body: 'Choose a tenant-approved hub or define your own guest handoff point.' },
-            { step: '04', title: 'Upload documents', body: 'Insurance, registration, and an initial inspection photo. We keep everything secure.' },
+            { step: '01', title: t('becomeAHost.howStep1Title'), body: t('becomeAHost.howStep1Body') },
+            { step: '02', title: t('becomeAHost.howStep2Title'), body: t('becomeAHost.howStep2Body') },
+            { step: '03', title: t('becomeAHost.howStep3Title'), body: t('becomeAHost.howStep3Body') },
+            { step: '04', title: t('becomeAHost.howStep4Title'), body: t('becomeAHost.howStep4Body') },
           ].map(({ step, title, body }) => (
             <div key={step} style={{ display: 'grid', gap: 12, padding: '24px 20px', borderRadius: 20, background: 'rgba(255,255,255,.88)', border: '1px solid rgba(135,82,254,.1)', boxShadow: '0 4px 14px rgba(135,82,254,.06)' }}>
               <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#8752FE' }}>{step}</div>
@@ -356,7 +357,7 @@ function LandingSection({ onStart, loading }) {
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
           <button onClick={onStart} disabled={loading} style={{ ...primaryBtn, padding: '16px 44px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}>
-            Get started
+            {t('becomeAHost.getStarted')}
           </button>
         </div>
       </section>
@@ -365,7 +366,7 @@ function LandingSection({ onStart, loading }) {
 }
 
 // ─── Success screen ───────────────────────────────────────────────────────────
-function SuccessScreen({ createdHost }) {
+function SuccessScreen({ createdHost, t }) {
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '40px 20px' }}>
       <div className="glass card-lg" style={{ maxWidth: 540, width: '100%', padding: '48px 40px', textAlign: 'center', display: 'grid', gap: 24 }}>
@@ -381,12 +382,12 @@ function SuccessScreen({ createdHost }) {
 
         <div>
           <h1 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 12 }}>
-            You&apos;re on your way!
+            {t('becomeAHost.successTitle')}
           </h1>
           <p style={{ color: '#5f567e', lineHeight: 1.72, fontSize: '1.02rem' }}>
-            Your vehicle has been submitted for review.
+            {t('becomeAHost.successSubtitle')}
             {createdHost?.hostProfile?.displayName && (
-              <> Welcome, <strong style={{ color: '#1a1230' }}>{createdHost.hostProfile.displayName}</strong>!</>
+              <> {t('becomeAHost.welcome')} <strong style={{ color: '#1a1230' }}>{createdHost.hostProfile.displayName}</strong>!</>
             )}
           </p>
         </div>
@@ -394,7 +395,7 @@ function SuccessScreen({ createdHost }) {
         {createdHost?.submission?.status && (
           <div className="surface-note" style={{ textAlign: 'left' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: 700, color: '#433b63' }}>Submission status</span>
+              <span style={{ fontWeight: 700, color: '#433b63' }}>{t('becomeAHost.submissionStatus')}</span>
               <span style={{
                 padding: '4px 12px', borderRadius: 999,
                 background: 'rgba(135,82,254,.1)', color: '#6d3df2',
@@ -404,7 +405,7 @@ function SuccessScreen({ createdHost }) {
               </span>
             </div>
             <p style={{ marginTop: 10, fontSize: '0.88rem', color: '#6f668f', lineHeight: 1.65 }}>
-              Our review team will reach out within 48 hours. Once approved, your listing goes live and guests can start booking.
+              {t('becomeAHost.reviewTeamMessage')}
             </p>
           </div>
         )}
@@ -414,7 +415,7 @@ function SuccessScreen({ createdHost }) {
             href="/host-status"
             style={{ ...primaryBtn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}
           >
-            Track your submission →
+            {t('becomeAHost.trackSubmission')}
           </Link>
           <a
             href="https://ridefleetmanager.com/host"
@@ -422,13 +423,13 @@ function SuccessScreen({ createdHost }) {
             rel="noopener noreferrer"
             style={{ ...ghostBtn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
           >
-            Open Host App ↗
+            {t('becomeAHost.openHostApp')}
           </a>
           <Link
             href="/contact"
             style={{ ...ghostBtn, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            Contact onboarding team
+            {t('becomeAHost.contactOnboarding')}
           </Link>
         </div>
       </div>
@@ -438,6 +439,7 @@ function SuccessScreen({ createdHost }) {
 
 // ─── Main wizard component ────────────────────────────────────────────────────
 function BecomeAHostPageInner() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const envTenantSlug = String(process.env.NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG || '').trim().toLowerCase();
   const initialTenantSlug = String(searchParams.get('tenantSlug') || '').trim().toLowerCase() || envTenantSlug;
@@ -538,21 +540,21 @@ function BecomeAHostPageInner() {
 
   function validate(currentStep) {
     if (currentStep === 1) {
-      if (!form.fullName.trim()) return 'Please enter your full name.';
-      if (!form.email.trim()) return 'Please enter your email address.';
-      if (!form.phone.trim()) return 'Please enter your phone number.';
-      if (!form.password || form.password.length < 8) return 'Password must be at least 8 characters.';
+      if (!form.fullName.trim()) return t('becomeAHost.valFullName');
+      if (!form.email.trim()) return t('becomeAHost.valEmail');
+      if (!form.phone.trim()) return t('becomeAHost.valPhone');
+      if (!form.password || form.password.length < 8) return t('becomeAHost.valPassword');
     }
     if (currentStep === 2) {
-      if (!form.vehicleTypeId) return 'Please select a vehicle type.';
-      if (!form.year) return 'Please enter the vehicle year.';
-      if (!form.make.trim()) return 'Please enter the vehicle make.';
-      if (!form.model.trim()) return 'Please enter the vehicle model.';
+      if (!form.vehicleTypeId) return t('becomeAHost.valVehicleType');
+      if (!form.year) return t('becomeAHost.valYear');
+      if (!form.make.trim()) return t('becomeAHost.valMake');
+      if (!form.model.trim()) return t('becomeAHost.valModel');
     }
     if (currentStep === 4) {
-      if (!form.photos.length) return 'Please upload at least one vehicle photo.';
-      if (!form.insuranceDocumentUrl) return 'Please upload your insurance document.';
-      if (!form.registrationDocumentUrl) return 'Please upload your registration document.';
+      if (!form.photos.length) return t('becomeAHost.valPhotos');
+      if (!form.insuranceDocumentUrl) return t('becomeAHost.valInsurance');
+      if (!form.registrationDocumentUrl) return t('becomeAHost.valRegistration');
     }
     return '';
   }
@@ -579,12 +581,12 @@ function BecomeAHostPageInner() {
 
   // Landing
   if (step === 0) {
-    return <LandingSection onStart={() => { setError(''); setStep(1); }} loading={loading} />;
+    return <LandingSection onStart={() => { setError(''); setStep(1); }} loading={loading} t={t} />;
   }
 
   // Success
   if (step === 5) {
-    return <SuccessScreen createdHost={createdHost} />;
+    return <SuccessScreen createdHost={createdHost} t={t} />;
   }
 
   // Wizard shell
@@ -595,10 +597,10 @@ function BecomeAHostPageInner() {
         onClick={step === 1 ? () => setStep(0) : handleBack}
         style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6d3df2', fontWeight: 700, fontSize: '0.9rem', padding: '0 0 24px', display: 'flex', alignItems: 'center', gap: 6 }}
       >
-        ← {step === 1 ? 'Back to overview' : 'Back'}
+        ← {step === 1 ? t('becomeAHost.backToOverview') : t('common.back')}
       </button>
 
-      <StepProgress current={step} />
+      <StepProgress current={step} t={t} />
 
       {/* Error banner */}
       {error && (
@@ -615,20 +617,20 @@ function BecomeAHostPageInner() {
       {step === 1 && (
         <div className="glass card-lg" style={{ display: 'grid', gap: 28, padding: 'clamp(24px, 4vw, 36px)' }}>
           <div>
-            <span className="eyebrow">Step 1 of 4</span>
+            <span className="eyebrow">{t('becomeAHost.step1of4')}</span>
             <h2 style={{ marginTop: 6, fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 850, color: '#1a1230' }}>
-              Create your host account
+              {t('becomeAHost.createHostAccount')}
             </h2>
             <p style={{ color: '#6f668f', marginTop: 8, lineHeight: 1.65 }}>
-              Your login gives you full access to the Ride Host App once your vehicle is approved.
+              {t('becomeAHost.createHostAccountDesc')}
             </p>
           </div>
 
           {/* Tenant selector — only when not env-scoped */}
           {!envTenantSlug && (
-            <Field label="Platform" required>
+            <Field label={t('becomeAHost.platform')} required>
               <select value={form.tenantSlug} onChange={set('tenantSlug')} required style={inputStyle}>
-                <option value="">Select a platform</option>
+                <option value="">{t('becomeAHost.selectPlatform')}</option>
                 {availableTenants.map((t) => (
                   <option key={t.id} value={t.slug}>{t.name}</option>
                 ))}
@@ -637,28 +639,28 @@ function BecomeAHostPageInner() {
           )}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-            <Field label="Full name" required>
-              <input value={form.fullName} onChange={set('fullName')} placeholder="Jane Smith" required style={inputStyle} />
+            <Field label={t('becomeAHost.fullName')} required>
+              <input value={form.fullName} onChange={set('fullName')} placeholder={t('becomeAHost.fullNamePlaceholder')} required style={inputStyle} />
             </Field>
-            <Field label="Display name" hint="How guests will see you">
-              <input value={form.displayName} onChange={set('displayName')} placeholder="Jane S." style={inputStyle} />
+            <Field label={t('becomeAHost.displayName')} hint={t('becomeAHost.displayNameHint')}>
+              <input value={form.displayName} onChange={set('displayName')} placeholder={t('becomeAHost.displayNamePlaceholder')} style={inputStyle} />
             </Field>
-            <Field label="Legal name" hint="Optional — for contracts">
+            <Field label={t('becomeAHost.legalName')} hint={t('becomeAHost.legalNameHint')}>
               <input value={form.legalName} onChange={set('legalName')} style={inputStyle} />
             </Field>
-            <Field label="Phone number" required>
-              <input value={form.phone} onChange={set('phone')} placeholder="+1 787 555 0100" required style={inputStyle} />
+            <Field label={t('becomeAHost.phoneNumber')} required>
+              <input value={form.phone} onChange={set('phone')} placeholder="(800) 676-5764" required style={inputStyle} />
             </Field>
-            <Field label="Email address" required>
-              <input type="email" value={form.email} onChange={set('email')} placeholder="you@example.com" required style={inputStyle} />
+            <Field label={t('becomeAHost.emailAddress')} required>
+              <input type="email" value={form.email} onChange={set('email')} placeholder={t('becomeAHost.emailPlaceholder')} required style={inputStyle} />
             </Field>
-            <Field label="Password" required hint="Minimum 8 characters">
+            <Field label={t('becomeAHost.password')} required hint={t('becomeAHost.passwordHint')}>
               <input type="password" value={form.password} onChange={set('password')} minLength={8} required style={inputStyle} />
             </Field>
           </div>
 
           <div className="surface-note" style={{ fontSize: '0.87rem' }}>
-            🔒 Your information is encrypted and never shared with guests without your permission.
+            {t('becomeAHost.encryptionNote')}
           </div>
         </div>
       )}
@@ -667,61 +669,61 @@ function BecomeAHostPageInner() {
       {step === 2 && (
         <div className="glass card-lg" style={{ display: 'grid', gap: 28, padding: 'clamp(24px, 4vw, 36px)' }}>
           <div>
-            <span className="eyebrow">Step 2 of 4</span>
+            <span className="eyebrow">{t('becomeAHost.step2of4')}</span>
             <h2 style={{ marginTop: 6, fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 850, color: '#1a1230' }}>
-              Tell us about your car
+              {t('becomeAHost.tellUsAboutCar')}
             </h2>
             <p style={{ color: '#6f668f', marginTop: 8, lineHeight: 1.65 }}>
-              Be as detailed as possible — this helps guests find your listing and speeds up the review process.
+              {t('becomeAHost.tellUsAboutCarDesc')}
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-            <Field label="Vehicle type" required>
+            <Field label={t('becomeAHost.vehicleType')} required>
               <select value={form.vehicleTypeId} onChange={set('vehicleTypeId')} required style={inputStyle}>
-                <option value="">Select type</option>
+                <option value="">{t('becomeAHost.selectType')}</option>
                 {(bootstrap?.vehicleTypes || []).map((row) => (
                   <option key={row.id} value={row.id}>{row.name}</option>
                 ))}
               </select>
             </Field>
-            <Field label="Year" required>
+            <Field label={t('becomeAHost.year')} required>
               <input type="number" value={form.year} onChange={set('year')} placeholder="2021" min="1990" max="2030" required style={inputStyle} />
             </Field>
-            <Field label="Make" required>
+            <Field label={t('becomeAHost.make')} required>
               <input value={form.make} onChange={set('make')} placeholder="Toyota" required style={inputStyle} />
             </Field>
-            <Field label="Model" required>
+            <Field label={t('becomeAHost.model')} required>
               <input value={form.model} onChange={set('model')} placeholder="Camry" required style={inputStyle} />
             </Field>
-            <Field label="Color">
-              <input value={form.color} onChange={set('color')} placeholder="Silver" style={inputStyle} />
+            <Field label={t('becomeAHost.color')}>
+              <input value={form.color} onChange={set('color')} placeholder={t('becomeAHost.colorPlaceholder')} style={inputStyle} />
             </Field>
-            <Field label="Mileage">
+            <Field label={t('becomeAHost.mileage')}>
               <input type="number" value={form.mileage} onChange={set('mileage')} placeholder="45000" style={inputStyle} />
             </Field>
-            <Field label="VIN">
+            <Field label={t('becomeAHost.vin')}>
               <input value={form.vin} onChange={set('vin')} placeholder="1HGCM82633A123456" style={inputStyle} />
             </Field>
-            <Field label="License plate">
+            <Field label={t('becomeAHost.licensePlate')}>
               <input value={form.plate} onChange={set('plate')} placeholder="ABC-1234" style={inputStyle} />
             </Field>
           </div>
 
           {/* Pricing */}
           <div style={{ borderTop: '1px solid rgba(135,82,254,.1)', paddingTop: 24, display: 'grid', gap: 18 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Pricing</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('becomeAHost.pricing')}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-              <Field label="Daily rate (USD)" hint="You keep ~85% of each booking">
+              <Field label={t('becomeAHost.dailyRate')} hint={t('becomeAHost.dailyRateHint')}>
                 <input type="number" step="0.01" value={form.baseDailyRate} onChange={set('baseDailyRate')} placeholder="75.00" style={inputStyle} />
               </Field>
-              <Field label="Cleaning fee (USD)" hint="Optional — charged once per trip">
+              <Field label={t('becomeAHost.cleaningFee')} hint={t('becomeAHost.cleaningFeeHint')}>
                 <input type="number" step="0.01" value={form.cleaningFee} onChange={set('cleaningFee')} placeholder="25.00" style={inputStyle} />
               </Field>
-              <Field label="Min trip days">
+              <Field label={t('becomeAHost.minTripDays')}>
                 <input type="number" value={form.minTripDays} onChange={set('minTripDays')} min="1" style={inputStyle} />
               </Field>
-              <Field label="Max trip days" hint="Leave blank for no limit">
+              <Field label={t('becomeAHost.maxTripDays')} hint={t('becomeAHost.maxTripDaysHint')}>
                 <input type="number" value={form.maxTripDays} onChange={set('maxTripDays')} placeholder="30" style={inputStyle} />
               </Field>
             </div>
@@ -729,8 +731,8 @@ function BecomeAHostPageInner() {
 
           {/* Delivery */}
           <div style={{ borderTop: '1px solid rgba(135,82,254,.1)', paddingTop: 24, display: 'grid', gap: 18 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Delivery</h3>
-            <Field label="Offer delivery to guests?">
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('becomeAHost.delivery')}</h3>
+            <Field label={t('becomeAHost.offerDelivery')}>
               <select
                 value={deliveryToggleValue(form.fulfillmentMode)}
                 onChange={(e) => setForm((cur) => ({
@@ -739,28 +741,28 @@ function BecomeAHostPageInner() {
                 }))}
                 style={inputStyle}
               >
-                <option value="NO">No — pickup only</option>
-                <option value="YES">Yes — offer delivery</option>
+                <option value="NO">{t('becomeAHost.noPickupOnly')}</option>
+                <option value="YES">{t('becomeAHost.yesOfferDelivery')}</option>
               </select>
             </Field>
 
             {deliveryEnabled(form.fulfillmentMode) ? (
               <>
-                <Field label="Delivery style">
+                <Field label={t('becomeAHost.deliveryStyle')}>
                   <select value={form.fulfillmentMode} onChange={set('fulfillmentMode')} style={inputStyle}>
-                    <option value="PICKUP_OR_DELIVERY">Pickup or delivery (guest chooses)</option>
-                    <option value="DELIVERY_ONLY">Delivery only</option>
+                    <option value="PICKUP_OR_DELIVERY">{t('becomeAHost.pickupOrDelivery')}</option>
+                    <option value="DELIVERY_ONLY">{t('becomeAHost.deliveryOnly')}</option>
                   </select>
                 </Field>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-                  <Field label="Delivery fee (USD)">
+                  <Field label={t('becomeAHost.deliveryFee')}>
                     <input type="number" step="0.01" value={form.deliveryFee} onChange={set('deliveryFee')} placeholder="20.00" style={inputStyle} />
                   </Field>
-                  <Field label="Delivery radius (miles)">
+                  <Field label={t('becomeAHost.deliveryRadius')}>
                     <input type="number" value={form.deliveryRadiusMiles} onChange={set('deliveryRadiusMiles')} placeholder="15" style={inputStyle} />
                   </Field>
                 </div>
-                <Field label="Delivery areas" hint="One area per line — guests will see these">
+                <Field label={t('becomeAHost.deliveryAreas')} hint={t('becomeAHost.deliveryAreasHint')}>
                   <textarea
                     rows={3}
                     value={form.deliveryAreasText}
@@ -783,21 +785,21 @@ function BecomeAHostPageInner() {
                 </Field>
                 <details>
                   <summary style={{ cursor: 'pointer', fontSize: '0.88rem', color: '#6d3df2', fontWeight: 700, userSelect: 'none' }}>
-                    Advanced delivery options
+                    {t('becomeAHost.advancedDeliveryOptions')}
                   </summary>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginTop: 16 }}>
-                    <Field label="Return pickup fee (USD)">
+                    <Field label={t('becomeAHost.returnPickupFee')}>
                       <input type="number" step="0.01" value={form.pickupFee} onChange={set('pickupFee')} style={inputStyle} />
                     </Field>
-                    <Field label="Delivery notes">
-                      <input value={form.deliveryNotes} onChange={set('deliveryNotes')} placeholder="Airport, hotel, neighborhood notes" style={inputStyle} />
+                    <Field label={t('becomeAHost.deliveryNotes')}>
+                      <input value={form.deliveryNotes} onChange={set('deliveryNotes')} placeholder={t('becomeAHost.deliveryNotesPlaceholder')} style={inputStyle} />
                     </Field>
                   </div>
                 </details>
               </>
             ) : (
               <div className="surface-note" style={{ fontSize: '0.88rem' }}>
-                Guests will pick up the vehicle at your configured pickup spot. You can enable delivery at any time after approval.
+                {t('becomeAHost.pickupOnlyNote')}
               </div>
             )}
           </div>
@@ -808,19 +810,19 @@ function BecomeAHostPageInner() {
       {step === 3 && (
         <div className="glass card-lg" style={{ display: 'grid', gap: 28, padding: 'clamp(24px, 4vw, 36px)' }}>
           <div>
-            <span className="eyebrow">Step 3 of 4</span>
+            <span className="eyebrow">{t('becomeAHost.step3of4')}</span>
             <h2 style={{ marginTop: 6, fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 850, color: '#1a1230' }}>
-              Where will guests pick up?
+              {t('becomeAHost.whereWillGuestsPickup')}
             </h2>
             <p style={{ color: '#6f668f', marginTop: 8, lineHeight: 1.65 }}>
-              Choose an approved hub or define your own handoff point. You can update this after approval.
+              {t('becomeAHost.whereWillGuestsPickupDesc')}
             </p>
           </div>
 
           {(bootstrap?.locations || []).length > 0 && (
-            <Field label="Approved pickup hub" hint="Optional — anchor your listing to an existing branch location">
+            <Field label={t('becomeAHost.approvedPickupHub')} hint={t('becomeAHost.approvedPickupHubHint')}>
               <select value={form.preferredLocationId} onChange={set('preferredLocationId')} style={inputStyle}>
-                <option value="">I&apos;ll set my own pickup spot below</option>
+                <option value="">{t('becomeAHost.setOwnPickupSpot')}</option>
                 {(bootstrap.locations || []).map((row) => (
                   <option key={row.id} value={row.id}>
                     {[row.name, row.city, row.state].filter(Boolean).join(', ')}
@@ -832,38 +834,38 @@ function BecomeAHostPageInner() {
 
           <div style={{ borderTop: '1px solid rgba(135,82,254,.1)', paddingTop: 24, display: 'grid', gap: 18 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>
-              Custom pickup spot <span style={{ fontWeight: 400, color: '#9990b0', fontSize: '0.88rem' }}>(optional)</span>
+              {t('becomeAHost.customPickupSpot')} <span style={{ fontWeight: 400, color: '#9990b0', fontSize: '0.88rem' }}>({t('becomeAHost.optional')})</span>
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-              <Field label="Spot label" hint='e.g. "Condado Guest Pickup"'>
-                <input value={form.pickupSpotLabel} onChange={set('pickupSpotLabel')} placeholder="Condado Guest Pickup" style={inputStyle} />
+              <Field label={t('becomeAHost.spotLabel')} hint={t('becomeAHost.spotLabelHint')}>
+                <input value={form.pickupSpotLabel} onChange={set('pickupSpotLabel')} placeholder={t('becomeAHost.spotLabelPlaceholder')} style={inputStyle} />
               </Field>
-              <Field label="Street address">
+              <Field label={t('becomeAHost.streetAddress')}>
                 <input value={form.pickupSpotAddress1} onChange={set('pickupSpotAddress1')} placeholder="123 Ashford Ave" style={inputStyle} />
               </Field>
-              <Field label="Apt / Unit / Suite">
+              <Field label={t('becomeAHost.aptUnitSuite')}>
                 <input value={form.pickupSpotAddress2} onChange={set('pickupSpotAddress2')} style={inputStyle} />
               </Field>
-              <Field label="City">
+              <Field label={t('becomeAHost.city')}>
                 <input value={form.pickupSpotCity} onChange={set('pickupSpotCity')} placeholder="San Juan" style={inputStyle} />
               </Field>
-              <Field label="State">
+              <Field label={t('becomeAHost.state')}>
                 <input value={form.pickupSpotState} onChange={set('pickupSpotState')} placeholder="PR" style={inputStyle} />
               </Field>
-              <Field label="Postal code">
+              <Field label={t('becomeAHost.postalCode')}>
                 <input value={form.pickupSpotPostalCode} onChange={set('pickupSpotPostalCode')} placeholder="00907" style={inputStyle} />
               </Field>
-              <Field label="Country">
+              <Field label={t('becomeAHost.country')}>
                 <input value={form.pickupSpotCountry} onChange={set('pickupSpotCountry')} style={inputStyle} />
               </Field>
-              <Field label="Pickup instructions" hint="Gate code, landmark, where to meet">
-                <input value={form.pickupSpotInstructions} onChange={set('pickupSpotInstructions')} placeholder="Meet at the lobby, call on arrival" style={inputStyle} />
+              <Field label={t('becomeAHost.pickupInstructions')} hint={t('becomeAHost.pickupInstructionsHint')}>
+                <input value={form.pickupSpotInstructions} onChange={set('pickupSpotInstructions')} placeholder={t('becomeAHost.pickupInstructionsPlaceholder')} style={inputStyle} />
               </Field>
             </div>
           </div>
 
           <div className="surface-note" style={{ fontSize: '0.87rem' }}>
-            💡 Your pickup spot is separate from tenant operational branches. Guests only see the guest-facing handoff location.
+            {t('becomeAHost.pickupSpotNote')}
           </div>
         </div>
       )}
@@ -872,19 +874,19 @@ function BecomeAHostPageInner() {
       {step === 4 && (
         <div className="glass card-lg" style={{ display: 'grid', gap: 28, padding: 'clamp(24px, 4vw, 36px)' }}>
           <div>
-            <span className="eyebrow">Step 4 of 4</span>
+            <span className="eyebrow">{t('becomeAHost.step4of4')}</span>
             <h2 style={{ marginTop: 6, fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 850, color: '#1a1230' }}>
-              Documents &amp; listing details
+              {t('becomeAHost.documentsAndListing')}
             </h2>
             <p style={{ color: '#6f668f', marginTop: 8, lineHeight: 1.65 }}>
-              Upload required documents and write your listing description. Photos and insurance are required to go live.
+              {t('becomeAHost.documentsAndListingDesc')}
             </p>
           </div>
 
           {/* Photos */}
           <div style={{ display: 'grid', gap: 12 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>
-              Vehicle photos <span style={{ color: '#8752FE', fontSize: '0.85rem' }}>*</span>
+              {t('becomeAHost.vehiclePhotos')} <span style={{ color: '#8752FE', fontSize: '0.85rem' }}>*</span>
             </h3>
             <div style={{
               border: '2px dashed rgba(135,82,254,.25)', borderRadius: 16, padding: '28px 24px', textAlign: 'center',
@@ -900,20 +902,20 @@ function BecomeAHostPageInner() {
               />
               <div style={{ fontSize: '2rem', marginBottom: 10 }}>📷</div>
               <div style={{ fontWeight: 700, color: '#1a1230', marginBottom: 6 }}>
-                {uploadingKey === 'photos' ? 'Processing photos...' : form.photos.length > 0 ? `${form.photos.length} photo(s) ready` : 'Click or drag to add photos'}
+                {uploadingKey === 'photos' ? t('becomeAHost.processingPhotos') : form.photos.length > 0 ? t('becomeAHost.photosReady', { count: form.photos.length }) : t('becomeAHost.clickOrDragPhotos')}
               </div>
-              <div style={{ fontSize: '0.84rem', color: '#9990b0' }}>Up to 6 photos — exterior, interior, and trunk recommended</div>
+              <div style={{ fontSize: '0.84rem', color: '#9990b0' }}>{t('becomeAHost.photosHint')}</div>
             </div>
           </div>
 
           {/* Documents */}
           <div style={{ display: 'grid', gap: 14 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Required documents</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('becomeAHost.requiredDocuments')}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
-                { key: 'insuranceDocumentUrl', label: 'Insurance', icon: '🛡️', hint: 'Current insurance card or policy' },
-                { key: 'registrationDocumentUrl', label: 'Registration', icon: '📋', hint: 'Vehicle registration certificate' },
-                { key: 'initialInspectionDocumentUrl', label: 'Inspection', icon: '🔍', hint: 'Photo or PDF of pre-listing inspection' },
+                { key: 'insuranceDocumentUrl', label: t('becomeAHost.docInsurance'), icon: '🛡️', hint: t('becomeAHost.docInsuranceHint') },
+                { key: 'registrationDocumentUrl', label: t('becomeAHost.docRegistration'), icon: '📋', hint: t('becomeAHost.docRegistrationHint') },
+                { key: 'initialInspectionDocumentUrl', label: t('becomeAHost.docInspection'), icon: '🔍', hint: t('becomeAHost.docInspectionHint') },
               ].map(({ key, label, icon, hint }) => (
                 <div key={key} style={{
                   padding: '16px 18px', borderRadius: 14, border: `1.5px solid ${form[key] ? 'rgba(31,199,170,.4)' : 'rgba(135,82,254,.18)'}`,
@@ -931,19 +933,19 @@ function BecomeAHostPageInner() {
                     <div>
                       <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#1a1230' }}>{label}</div>
                       <div style={{ fontSize: '0.8rem', color: uploadingKey === key ? '#8752FE' : form[key] ? '#1fc7aa' : '#9990b0', marginTop: 2 }}>
-                        {uploadingKey === key ? 'Uploading...' : form[key] ? '✓ Ready' : hint}
+                        {uploadingKey === key ? t('becomeAHost.uploading') : form[key] ? t('becomeAHost.ready') : hint}
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <Field label="Inspection notes" hint="Anything the review team should know before approval">
+            <Field label={t('becomeAHost.inspectionNotes')} hint={t('becomeAHost.inspectionNotesHint')}>
               <textarea
                 rows={3}
                 value={form.initialInspectionNotes}
                 onChange={set('initialInspectionNotes')}
-                placeholder="Scratch on rear bumper noted prior to listing. All systems functional."
+                placeholder={t('becomeAHost.inspectionNotesPlaceholder')}
                 style={{ ...inputStyle, resize: 'vertical' }}
               />
             </Field>
@@ -951,21 +953,21 @@ function BecomeAHostPageInner() {
 
           {/* Listing copy */}
           <div style={{ borderTop: '1px solid rgba(135,82,254,.1)', paddingTop: 24, display: 'grid', gap: 18 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>Listing details</h3>
-            <Field label="Short description" hint="One line shown in search results">
-              <input value={form.shortDescription} onChange={set('shortDescription')} placeholder="Clean SUV with airport-friendly pickup in Isla Verde" style={inputStyle} />
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1a1230', margin: 0 }}>{t('becomeAHost.listingDetails')}</h3>
+            <Field label={t('becomeAHost.shortDescription')} hint={t('becomeAHost.shortDescriptionHint')}>
+              <input value={form.shortDescription} onChange={set('shortDescription')} placeholder={t('becomeAHost.shortDescriptionPlaceholder')} style={inputStyle} />
             </Field>
-            <Field label="Full description" hint="Tell guests what makes your car a great choice">
+            <Field label={t('becomeAHost.fullDescription')} hint={t('becomeAHost.fullDescriptionHint')}>
               <textarea
                 rows={5}
                 value={form.description}
                 onChange={set('description')}
-                placeholder="My 2021 Toyota Camry is meticulously maintained and detailed before every trip. Perfect for business travelers and families..."
+                placeholder={t('becomeAHost.fullDescriptionPlaceholder')}
                 style={{ ...inputStyle, resize: 'vertical' }}
               />
             </Field>
-            <Field label="Trip rules" hint="What guests need to know">
-              <input value={form.tripRules} onChange={set('tripRules')} placeholder="No smoking · No pets · Return with full tank" style={inputStyle} />
+            <Field label={t('becomeAHost.tripRules')} hint={t('becomeAHost.tripRulesHint')}>
+              <input value={form.tripRules} onChange={set('tripRules')} placeholder={t('becomeAHost.tripRulesPlaceholder')} style={inputStyle} />
             </Field>
           </div>
         </div>
@@ -978,12 +980,12 @@ function BecomeAHostPageInner() {
           onClick={step === 1 ? () => setStep(0) : handleBack}
           style={ghostBtn}
         >
-          ← Back
+          ← {t('common.back')}
         </button>
 
         {step < 4 ? (
           <button type="button" onClick={handleNext} style={primaryBtn}>
-            Continue →
+            {t('becomeAHost.continue')}
           </button>
         ) : (
           <button
@@ -992,15 +994,15 @@ function BecomeAHostPageInner() {
             disabled={submitting}
             style={{ ...primaryBtn, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'not-allowed' : 'pointer', minWidth: 200 }}
           >
-            {submitting ? 'Submitting...' : 'Submit listing'}
+            {submitting ? t('common.submitting') : t('becomeAHost.submitListing')}
           </button>
         )}
       </div>
 
       <p style={{ textAlign: 'center', marginTop: 20, fontSize: '0.84rem', color: '#9990b0' }}>
-        Already approved?{' '}
+        {t('becomeAHost.alreadyApproved')}{' '}
         <Link href="/host-login" style={{ color: '#6d3df2', fontWeight: 700 }}>
-          Sign in to the host app →
+          {t('becomeAHost.signInToHostApp')}
         </Link>
       </p>
     </main>
@@ -1012,7 +1014,7 @@ export default function BecomeAHostPage() {
     <Suspense fallback={
       <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
         <div className="glass card-lg" style={{ padding: 40, textAlign: 'center' }}>
-          <p style={{ color: '#6f668f' }}>Loading host onboarding...</p>
+          <p style={{ color: '#6f668f' }}>Loading...</p>
         </div>
       </main>
     }>

@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import styles from '../sitePreviewPremium.module.css';
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -15,7 +17,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     if (!email.trim()) {
-      setError('Please enter your email address.');
+      setError(t('login.enterEmail'));
       return;
     }
     setLoading(true);
@@ -27,7 +29,7 @@ export default function LoginPage() {
       });
       setSent(true);
     } catch (err) {
-      setError(err?.message || 'Something went wrong. Please try again.');
+      setError(err?.message || t('errors.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -36,12 +38,12 @@ export default function LoginPage() {
   return (
     <div className="stack" style={{ gap: 24, maxWidth: 560, margin: '0 auto', padding: '48px 24px' }}>
       <section className={`glass card-lg ${styles.detailHero}`}>
-        <span className="eyebrow">Guest Account</span>
+        <span className="eyebrow">{t('login.guestAccount')}</span>
         <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.6rem, 3vw, 2.4rem)' }}>
-          Sign in to Ride
+          {t('login.signInToRide')}
         </h1>
         <p className={styles.detailLead} style={{ maxWidth: 480 }}>
-          We use a secure, password-free sign-in link. Enter your email and we will send you a link to access your trips instantly.
+          {t('login.passwordFreeExplanation')}
         </p>
       </section>
 
@@ -62,15 +64,15 @@ export default function LoginPage() {
               ✉
             </div>
             <div>
-              <h2 style={{ margin: '0 0 8px', fontSize: '1.25rem' }}>Check your email</h2>
+              <h2 style={{ margin: '0 0 8px', fontSize: '1.25rem' }}>{t('login.checkYourEmail')}</h2>
               <p className="ui-muted" style={{ margin: 0, lineHeight: 1.7 }}>
-                We sent a sign-in link to <strong>{email}</strong>. Click the link in that email to access your trips — no password needed.
+                {t('login.sentLinkTo', { email })}
               </p>
             </div>
             <div className="surface-note" style={{ marginTop: 4 }}>
-              <strong>Link expires in 15 minutes.</strong>
+              <strong>{t('login.linkExpiresIn15')}</strong>
               <div className="ui-muted" style={{ marginTop: 4 }}>
-                If you do not see the email, check your spam folder. The link works only once and expires shortly after it is sent.
+                {t('login.checkSpam')}
               </div>
             </div>
             <button
@@ -79,7 +81,7 @@ export default function LoginPage() {
               className={styles.checkoutGhostButton}
               style={{ textAlign: 'center', cursor: 'pointer', border: 'none', marginTop: 4 }}
             >
-              Use a different email
+              {t('login.useDifferentEmail')}
             </button>
           </div>
         </section>
@@ -88,13 +90,13 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
             <div style={{ display: 'grid', gap: 8 }}>
               <label htmlFor="guest-email" className="label">
-                Email address
+                {t('login.emailAddress')}
               </label>
               <input
                 id="guest-email"
                 type="email"
                 autoComplete="email"
-                placeholder="you@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -126,7 +128,7 @@ export default function LoginPage() {
               className={styles.checkoutPrimaryButton}
               style={{ cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, border: 'none' }}
             >
-              {loading ? 'Sending link...' : 'Send sign-in link'}
+              {loading ? t('login.sendingLink') : t('login.sendLink')}
             </button>
           </form>
         </section>
@@ -135,7 +137,7 @@ export default function LoginPage() {
       <div className="surface-note" style={{ borderRadius: 14, padding: '14px 18px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="ui-muted" style={{ fontSize: '0.88rem' }}>
-            Are you a fleet host or operator?
+            {t('login.hostQuestion')}
           </span>
           <Link
             href="/host-login"
@@ -147,7 +149,7 @@ export default function LoginPage() {
               whiteSpace: 'nowrap',
             }}
           >
-            Host login &rarr;
+            {t('login.hostLoginLink')}
           </Link>
         </div>
       </div>

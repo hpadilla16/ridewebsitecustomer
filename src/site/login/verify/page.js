@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import styles from '../../sitePreviewPremium.module.css';
 
 export default function VerifyPage({ params }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const token = params?.token;
   const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
@@ -13,7 +15,7 @@ export default function VerifyPage({ params }) {
 
   useEffect(() => {
     if (!token) {
-      setErrorMessage('No sign-in token found in this link. Please request a new sign-in link.');
+      setErrorMessage(t('login.noTokenFound'));
       setStatus('error');
       return;
     }
@@ -30,7 +32,7 @@ export default function VerifyPage({ params }) {
 
         const customer = data?.customer;
         if (!customer?.id) {
-          throw new Error('The sign-in link is invalid or has already been used.');
+          throw new Error(t('login.invalidOrUsed'));
         }
 
         try {
@@ -50,7 +52,7 @@ export default function VerifyPage({ params }) {
       } catch (err) {
         if (cancelled) return;
         setErrorMessage(
-          err?.message || 'This sign-in link is invalid or has expired. Please request a new one.'
+          err?.message || t('login.linkExpired')
         );
         setStatus('error');
       }
@@ -58,18 +60,18 @@ export default function VerifyPage({ params }) {
 
     verify();
     return () => { cancelled = true; };
-  }, [token, router]);
+  }, [token, router, t]);
 
   if (status === 'loading') {
     return (
       <div className="stack" style={{ gap: 24, maxWidth: 520, margin: '0 auto', padding: '64px 24px' }}>
         <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">Signing in</span>
+          <span className="eyebrow">{t('login.signingIn')}</span>
           <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.5rem, 3vw, 2.2rem)' }}>
-            Verifying your link...
+            {t('login.verifying')}
           </h1>
           <p className={styles.detailLead}>
-            Hold on while we confirm your identity. This only takes a moment.
+            {t('login.holdOn')}
           </p>
         </section>
         <div className="glass card-lg" style={{ padding: '28px 24px', borderRadius: 18 }}>
@@ -83,7 +85,7 @@ export default function VerifyPage({ params }) {
               animation: 'spin 0.8s linear infinite',
               flexShrink: 0,
             }} />
-            <span className="ui-muted">Verifying sign-in token with Ride...</span>
+            <span className="ui-muted">{t('login.verifyingToken')}</span>
           </div>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
@@ -95,12 +97,12 @@ export default function VerifyPage({ params }) {
     return (
       <div className="stack" style={{ gap: 24, maxWidth: 520, margin: '0 auto', padding: '64px 24px' }}>
         <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">Signed in</span>
+          <span className="eyebrow">{t('login.signedIn')}</span>
           <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.5rem, 3vw, 2.2rem)' }}>
-            Welcome back
+            {t('login.welcomeBack')}
           </h1>
           <p className={styles.detailLead}>
-            You are signed in. Redirecting you to your trips now...
+            {t('login.redirecting')}
           </p>
         </section>
       </div>
@@ -111,18 +113,18 @@ export default function VerifyPage({ params }) {
   return (
     <div className="stack" style={{ gap: 24, maxWidth: 520, margin: '0 auto', padding: '64px 24px' }}>
       <section className={`glass card-lg ${styles.detailHero}`}>
-        <span className="eyebrow">Sign-in failed</span>
+        <span className="eyebrow">{t('login.signInFailed')}</span>
         <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.5rem, 3vw, 2.2rem)' }}>
-          This link did not work
+          {t('login.linkDidNotWork')}
         </h1>
         <p className={styles.detailLead}>
-          Sign-in links are single-use and expire after 15 minutes. Please request a fresh one.
+          {t('login.linkExpired')}
         </p>
       </section>
 
       <section className="glass card-lg" style={{ padding: '28px 24px', borderRadius: 18 }}>
         <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)', marginBottom: 18 }}>
-          <strong style={{ color: '#ff6b6b' }}>Unable to sign in</strong>
+          <strong style={{ color: '#ff6b6b' }}>{t('login.unableToSignIn')}</strong>
           <div className="ui-muted" style={{ marginTop: 6 }}>{errorMessage}</div>
         </div>
         <a
@@ -130,7 +132,7 @@ export default function VerifyPage({ params }) {
           className={styles.checkoutPrimaryButton}
           style={{ textDecoration: 'none', textAlign: 'center', display: 'block' }}
         >
-          Request a new sign-in link
+          {t('login.requestNewLink')}
         </a>
       </section>
     </div>

@@ -4,11 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../../lib/client';
 import { addDays, backendLocationIdsForPublicOption, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fetchBookingBootstrap, fmtMoney, formatPublicDateTime, publicLocationLabel, rentalResultImageList, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 function RentalDetailPreviewContent() {
+  const { t } = useTranslation();
   const params = useParams();
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
@@ -35,7 +37,7 @@ function RentalDetailPreviewContent() {
         const pickupLocationIds = backendLocationIdsForPublicOption(publicLocationOptions, pickupLocationId || firstLocationId);
         const returnLocationIds = backendLocationIdsForPublicOption(publicLocationOptions, returnLocationId || pickupLocationId || firstLocationId);
         if (!pickupLocationIds.length) {
-          throw new Error('Pickup location not found');
+          throw new Error(t('rentDetail.pickupLocationNotFound'));
         }
         const payload = await api('/api/public/booking/rental-search', {
           method: 'POST',
@@ -51,13 +53,13 @@ function RentalDetailPreviewContent() {
         const match = (payload?.results || []).find((entry) => String(entry?.vehicleType?.id || '') === vehicleTypeId) || null;
         setResult(match);
         if (!match) {
-          setError('This vehicle type is not currently available for the selected trip window.');
+          setError(t('rentDetail.vehicleNotAvailable'));
         } else {
           setError('');
         }
       } catch (err) {
         setResult(null);
-        setError(String(err?.message || 'Unable to load rental detail.'));
+        setError(String(err?.message || t('rentDetail.unableToLoadDetail')));
       } finally {
         setLoading(false);
       }
@@ -80,24 +82,24 @@ function RentalDetailPreviewContent() {
     returnAt
   });
   const rentalExperience = [
-    { title: 'Airport-ready', body: 'Clear pickup instructions and location details before you arrive.' },
-    { title: 'Secure payments', body: 'Pay online with transparent pricing and no hidden fees.' },
-    { title: 'Real-time availability', body: 'Live pricing and availability updated in real time.' }
+    { title: t('rentDetail.experienceAirportReadyTitle'), body: t('rentDetail.experienceAirportReadyBody') },
+    { title: t('rentDetail.experienceSecurePaymentsTitle'), body: t('rentDetail.experienceSecurePaymentsBody') },
+    { title: t('rentDetail.experienceRealtimeTitle'), body: t('rentDetail.experienceRealtimeBody') }
   ];
   const rentalHighlights = [
-    'Priority airport pickup',
-    'Clear due-now pricing before checkout',
-    'Trip protection included'
+    t('rentDetail.highlightPriorityPickup'),
+    t('rentDetail.highlightDueNowPricing'),
+    t('rentDetail.highlightTripProtection')
   ];
   const rentalProofSignals = [
-    'Hosted payment confidence',
-    'Live class availability',
-    'Pickup details before checkout'
+    t('rentDetail.proofHostedPayment'),
+    t('rentDetail.proofLiveAvailability'),
+    t('rentDetail.proofPickupDetails')
   ];
   const nextSteps = [
-    'Review final pricing and due-now amount',
-    'Complete one trusted hosted checkout',
-    'Finish agreement and pickup readiness digitally'
+    t('rentDetail.stepReviewPricing'),
+    t('rentDetail.stepCompleteCheckout'),
+    t('rentDetail.stepFinishAgreement')
   ];
 
   return (
@@ -105,15 +107,15 @@ function RentalDetailPreviewContent() {
       <section className={`glass card-lg ${styles.detailHero}`}>
         <div className={styles.detailHeroGrid}>
           <div className="stack" style={{ gap: 12 }}>
-            <span className="eyebrow">Rental Detail</span>
-            <h1 className={styles.detailTitle}>{result ? vehicleTypeLabel(result.vehicleType) : 'Rental option'}</h1>
+            <span className="eyebrow">{t('rentDetail.eyebrow')}</span>
+            <h1 className={styles.detailTitle}>{result ? vehicleTypeLabel(result.vehicleType) : t('rentDetail.rentalOption')}</h1>
             <p className={styles.detailLead}>
-              A more refined product page between search and checkout, designed to make airport-ready rentals feel clearer, calmer, and easier to trust.
+              {t('rentDetail.leadDescription')}
             </p>
             <div className={styles.detailRibbon}>
-              <span className={styles.detailRibbonChip}>Airport pickup ready</span>
-              <span className={styles.detailRibbonChip}>Ops-backed availability</span>
-              <span className={styles.detailRibbonChip}>Digital checkout handoff</span>
+              <span className={styles.detailRibbonChip}>{t('rentDetail.ribbonAirportPickup')}</span>
+              <span className={styles.detailRibbonChip}>{t('rentDetail.ribbonOpsAvailability')}</span>
+              <span className={styles.detailRibbonChip}>{t('rentDetail.ribbonDigitalCheckout')}</span>
             </div>
             <div className={styles.highlightStrip}>
               {rentalHighlights.map((item) => (
@@ -122,13 +124,13 @@ function RentalDetailPreviewContent() {
             </div>
           </div>
           <div className={styles.detailSnapshot}>
-            <div className="label">Trip Snapshot</div>
+            <div className="label">{t('rentDetail.tripSnapshot')}</div>
             <div className={styles.detailSnapshotValue}>{formatPublicDateTime(pickupAt)}</div>
-            <div className="ui-muted" style={{ marginTop: 6 }}>Return {formatPublicDateTime(returnAt)}</div>
+            <div className="ui-muted" style={{ marginTop: 6 }}>{t('rentDetail.returnLabel')} {formatPublicDateTime(returnAt)}</div>
             <div className="ui-muted" style={{ marginTop: 16 }}>{publicLocationLabel(location)}</div>
             <div className={styles.snapshotAccent}>
-              <span className="label">Storefront posture</span>
-              <strong>Premium arrival story + trusted hosted payment</strong>
+              <span className="label">{t('rentDetail.storefrontPosture')}</span>
+              <strong>{t('rentDetail.storefrontPostureValue')}</strong>
             </div>
           </div>
         </div>
@@ -136,7 +138,7 @@ function RentalDetailPreviewContent() {
 
       <section className={styles.detailGrid}>
         <div className={`glass card ${styles.contentPanel}`}>
-          {loading ? <div className="ui-muted">Loading rental option...</div> : null}
+          {loading ? <div className="ui-muted">{t('rentDetail.loadingRentalOption')}</div> : null}
           {!loading && error ? <div className="label" style={{ color: '#b91c1c' }}>{error}</div> : null}
           {!loading && result ? (
             <div className="stack" style={{ gap: 16 }}>
@@ -155,42 +157,42 @@ function RentalDetailPreviewContent() {
                 </div>
               ) : null}
               <div className="surface-note">
-                <strong>Pickup hub</strong>
+                <strong>{t('rentDetail.pickupHub')}</strong>
                 <div className="ui-muted">{publicLocationLabel(location)}</div>
               </div>
               <div className={styles.storyCard}>
-                <div className="label">Guest fit</div>
-                <h3 style={{ margin: '8px 0 10px' }}>Built for airport arrivals and a more premium trip handoff</h3>
+                <div className="label">{t('rentDetail.guestFit')}</div>
+                <h3 style={{ margin: '8px 0 10px' }}>{t('rentDetail.guestFitHeading')}</h3>
                 <p className="ui-muted" style={{ margin: 0 }}>
-                  Clear pricing, detailed pickup instructions, and everything you need to know before you book.
+                  {t('rentDetail.guestFitDescription')}
                 </p>
               </div>
               <div className="metric-grid">
                 <div className="metric-card">
-                  <span className="label">Daily rate</span>
+                  <span className="label">{t('rentDetail.dailyRate')}</span>
                   <strong>{fmtMoney(result?.quote?.dailyRate)}</strong>
                 </div>
                 <div className="metric-card">
-                  <span className="label">Trip total</span>
+                  <span className="label">{t('rentDetail.tripTotal')}</span>
                   <strong>{fmtMoney(result?.quote?.estimatedTripTotal)}</strong>
                 </div>
                 <div className="metric-card">
-                  <span className="label">Due now</span>
+                  <span className="label">{t('rentDetail.dueNow')}</span>
                   <strong>{fmtMoney(result?.quote?.depositAmountDue)}</strong>
                 </div>
               </div>
               <div className="surface-note">
-                <strong>Trip window</strong>
+                <strong>{t('rentDetail.tripWindow')}</strong>
                 <div className="ui-muted">{formatPublicDateTime(pickupAt)} {'->'} {formatPublicDateTime(returnAt)}</div>
               </div>
               <div className="surface-note">
-                <strong>Availability snapshot</strong>
-                <div className="ui-muted">{Number(result?.availabilityCount || 0)} units available in this class for the selected trip window.</div>
+                <strong>{t('rentDetail.availabilitySnapshot')}</strong>
+                <div className="ui-muted">{t('rentDetail.unitsAvailable', { count: Number(result?.availabilityCount || 0) })}</div>
               </div>
               <div className="surface-note">
-                <strong>Why guests pick this class</strong>
+                <strong>{t('rentDetail.whyGuestsPick')}</strong>
                 <div className="ui-muted">
-                  Built for travelers who want a cleaner storefront story before checkout: clear daily pricing, calmer due-now expectations, and a more confident airport-ready pickup flow.
+                  {t('rentDetail.whyGuestsPickDescription')}
                 </div>
               </div>
               <div className={styles.highlightStrip}>
@@ -199,7 +201,7 @@ function RentalDetailPreviewContent() {
                 ))}
               </div>
               <div className={styles.experiencePanel}>
-                <div className="label">Signature Experience</div>
+                <div className="label">{t('rentDetail.signatureExperience')}</div>
                 <div className={styles.experienceGrid} style={{ marginTop: 12 }}>
                   {rentalExperience.map((item) => (
                     <div key={item.title} className={styles.experienceTile}>
@@ -210,14 +212,14 @@ function RentalDetailPreviewContent() {
                 </div>
               </div>
               <div className={styles.conciergePanel}>
-                <div className="label">Concierge framing</div>
-                <h3 style={{ margin: '8px 0 10px' }}>Position the class like a hospitality product, not just a booking result</h3>
+                <div className="label">{t('rentDetail.conciergeFraming')}</div>
+                <h3 style={{ margin: '8px 0 10px' }}>{t('rentDetail.conciergeHeading')}</h3>
                 <p className="ui-muted" style={{ margin: 0 }}>
-                  Help guests understand what they will pay now, how pickup works, and why this class fits an airport-first journey before they ever touch forms.
+                  {t('rentDetail.conciergeDescription')}
                 </p>
               </div>
               <div className={styles.reassurancePanel}>
-                <div className="label">What happens after reserve</div>
+                <div className="label">{t('rentDetail.whatHappensAfterReserve')}</div>
                 <div className={styles.reassuranceChecklist}>
                   {nextSteps.map((step) => (
                     <div key={step} className={styles.reassuranceItem}>
@@ -233,27 +235,27 @@ function RentalDetailPreviewContent() {
 
         <div className={`glass card ${styles.asidePanel}`}>
           <div className={styles.detailAsideHero}>
-            <span className="label">Premium trip summary</span>
-            <strong>Cleaner due-now language, stronger pickup confidence, and one trusted checkout handoff.</strong>
+            <span className="label">{t('rentDetail.premiumTripSummary')}</span>
+            <strong>{t('rentDetail.premiumTripSummaryValue')}</strong>
           </div>
-          <span className="eyebrow">Next Step</span>
+          <span className="eyebrow">{t('rentDetail.nextStep')}</span>
           <div className="surface-note">
-            <strong>Why this page matters</strong>
-            <div className="ui-muted">Guests get a cleaner product story before they hit fees, forms, and checkout.</div>
+            <strong>{t('rentDetail.whyThisPageMatters')}</strong>
+            <div className="ui-muted">{t('rentDetail.whyThisPageMattersDescription')}</div>
           </div>
           <div className="surface-note">
-            <strong>Website goal</strong>
-            <div className="ui-muted">Detailed vehicle information, transparent pricing, and clear pickup instructions to help you book with confidence.</div>
+            <strong>{t('rentDetail.websiteGoal')}</strong>
+            <div className="ui-muted">{t('rentDetail.websiteGoalDescription')}</div>
           </div>
           <div className={styles.detailCtaStack}>
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="ios-action-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              Reserve this class
+              {t('rentDetail.reserveThisClass')}
             </Link>
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              Open reservation flow
+              {t('rentDetail.openReservationFlow')}
             </Link>
             <Link href={`${withSiteBase(basePath, '/rent')}?${backQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              Back to rental results
+              {t('rentDetail.backToRentalResults')}
             </Link>
           </div>
         </div>
@@ -264,7 +266,7 @@ function RentalDetailPreviewContent() {
 
 export default function RentalDetailPreviewPage() {
   return (
-    <Suspense fallback={<div className="glass card" style={{ padding: 24 }}>Loading rental detail...</div>}>
+    <Suspense fallback={<div className="glass card" style={{ padding: 24 }}>Loading...</div>}>
       <RentalDetailPreviewContent />
     </Suspense>
   );
