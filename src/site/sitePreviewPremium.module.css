@@ -365,37 +365,59 @@
 
 .heroSearchPanel {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   align-content: start;
 }
 
 .heroSearchCard {
   display: grid;
-  gap: 12px;
-  padding: 22px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(114, 126, 170, 0.14);
-  box-shadow: 0 16px 40px rgba(31, 39, 97, 0.18);
-  backdrop-filter: blur(12px);
+  gap: 14px;
+  padding: 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(114, 126, 170, 0.12);
+  box-shadow:
+    0 20px 50px rgba(31, 39, 97, 0.16),
+    0 2px 8px rgba(31, 39, 97, 0.06);
+  backdrop-filter: blur(16px);
   color: #1e2847;
 }
 
 .heroSearchCard select,
-.heroSearchCard input {
+.heroSearchCard input[type="datetime-local"] {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(114, 126, 170, 0.18);
-  background: rgba(247, 246, 255, 0.6);
-  font-size: 0.88rem;
+  border: 1px solid rgba(114, 126, 170, 0.16);
+  background: rgba(247, 246, 255, 0.5);
+  font-size: 0.86rem;
   color: #1e2847;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+}
+
+.heroSearchCard select:focus,
+.heroSearchCard input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: rgba(110, 73, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(110, 73, 255, 0.08);
 }
 
 .heroSearchCard .label,
 .heroSearchCard :global(.label) {
   color: #4a5674;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.heroSearchCard :global(.grid2) {
+  gap: 10px;
+}
+
+.heroSearchCard :global(.ios-action-btn) {
+  margin-top: 2px;
 }
 
 .laneGrid {
