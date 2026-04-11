@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '../lib/client';
 import Link from 'next/link';
 import { addDays, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fmtMoney, listingVehicleLabel, normalizePublicLocationSelectionId, publicLocationLabel, resolveSiteBasePath, searchParamsToString, toLocalInputValue, vehicleTypeLabel, withSiteBase } from './sitePreviewShared';
@@ -10,237 +11,8 @@ import styles from './sitePreviewPremium.module.css';
 import { absoluteSiteUrl, siteConfig } from './siteConfig';
 import { saveSearch, getSavedSearches, clearSavedSearches } from '../lib/savedSearches';
 
-const heroStats = [
-  { value: '24/7', label: 'Guest-first booking access' },
-  { value: '2 lanes', label: 'Rentals plus car sharing' },
-  { value: '1 flow', label: 'Trusted payment and portal handoff' }
-];
-
-const heroFeatureCards = [
-  {
-    label: 'Airport-first arrival',
-    title: 'Know exactly where to go and what to expect before you land',
-    body: 'Pickup instructions, payment details, and digital readiness are all handled before your flight touches down.'
-  },
-  {
-    label: 'Two ways to ride',
-    title: 'Traditional rentals and car sharing, one seamless checkout',
-    body: 'Choose a rental class or browse locally hosted vehicles — both backed by the same trusted reservation system.'
-  }
-];
-
-
-const marketingMoments = [
-  {
-    title: 'Search your ride',
-    body: 'Explore vehicle classes, pickup hubs, and car sharing listings with real-time pricing and availability.'
-  },
-  {
-    title: 'Reserve with confidence',
-    body: 'Clear pricing, transparent fees, and trip protection give you confidence before you commit.'
-  },
-  {
-    title: 'Pick up and go',
-    body: 'Airport staging, complimentary shuttle pickup, and digital inspections make your first moment with the car seamless.'
-  }
-];
-
-const destinationStory = [
-  'Puerto Rico',
-  'Miami',
-  'Orlando',
-  'Fort Lauderdale',
-  'Los Angeles',
-  'Ecuador'
-];
-
-const marketingPillars = [
-  'Airport-ready pickup',
-  'Hosted payment trust',
-  'Rentals plus car sharing in one storefront'
-];
-
-const trustSignals = [
-  {
-    title: 'Airport-friendly pickup',
-    body: 'Pickup instructions, location details, and timing are confirmed before you arrive.'
-  },
-  {
-    title: 'Secure payments',
-    body: 'Pay securely online with saved cards, deposit holds, and transparent pricing — no surprises at pickup.'
-  },
-  {
-    title: 'Digital readiness',
-    body: 'Complete your customer info, sign your agreement, and handle inspections digitally before your trip.'
-  }
-];
-
-const guestJourneySignals = [
-  'Search a class or listing',
-  'Review pricing and pickup',
-  'Checkout in one trusted flow',
-  'Finish payment and documents online'
-];
-
-const premiumMoments = [
-  {
-    title: 'Designed for arrival',
-    body: 'Airport staging, pickup timing, and clear expectations from the moment you start searching.'
-  },
-  {
-    title: 'Built for trust',
-    body: 'Detailed vehicle pages, transparent due-now pricing, and trip protection on every booking.'
-  },
-  {
-    title: 'Powered by operations',
-    body: 'Real-time availability, professional fleet management, and a dedicated support team behind every trip.'
-  }
-];
-
-const reviewMoments = [
-  {
-    quote: 'Booking felt like a premium travel experience. Clear pricing, easy airport pickup, everything was ready when I landed.',
-    author: 'San Juan guest',
-    score: '5/5'
-  },
-  {
-    quote: 'I loved having both rental and car sharing options in one place. The checkout was fast and secure.',
-    author: 'Miami traveler',
-    score: '5/5'
-  },
-  {
-    quote: 'The pickup instructions were perfect. I knew exactly where to go and what to expect. No phone calls needed.',
-    author: 'Orlando visitor',
-    score: '5/5'
-  }
-];
-
-const airportJourney = [
-  {
-    title: 'Choose your trip',
-    body: 'Browse rentals or car sharing, compare pricing, and pick the vehicle that fits your plans.'
-  },
-  {
-    title: 'Confirm pickup',
-    body: 'Airport staging details, shuttle info, and pickup timing are confirmed before you check out.'
-  },
-  {
-    title: 'Start your trip',
-    body: 'Pay securely, complete your agreement digitally, and pick up your car with a quick inspection.'
-  }
-];
-
-const launchSignals = [
-  'Airport-first Puerto Rico flow',
-  'Hosted payments with transparent pricing',
-  'Marketplace visuals for car sharing',
-  'Verified hosts and trip protection'
-];
-
-const prestigeSignals = [
-  {
-    title: 'Hospitality-grade trust',
-    body: 'Every detail — from pricing clarity to pickup instructions — is designed to build confidence before you book.'
-  },
-  {
-    title: 'Curated experience',
-    body: 'Every vehicle, listing, and pickup location is presented with care, not just listed.'
-  },
-  {
-    title: 'Premium design',
-    body: 'Clean layout, smooth transitions, and thoughtful details create an elevated booking experience.'
-  }
-];
-
-const destinationPanels = [
-  { city: 'San Juan', note: 'Airport arrivals, fast handoff, high-volume guest flow' },
-  { city: 'Miami', note: 'Leisure travel and short-stay demand with premium first impression' },
-  { city: 'Orlando', note: 'Family travel, clearer class comparison, smoother booking reassurance' },
-  { city: 'Fort Lauderdale', note: 'Cruise and airport transitions with strong pickup storytelling' }
-];
-
-const signatureMoments = [
-  {
-    label: 'Curated search',
-    title: 'Find the perfect vehicle for your trip',
-    body: 'Browse featured listings, compare vehicle classes, and get clear pickup details so you feel confident choosing.'
-  },
-  {
-    label: 'Arrival confidence',
-    title: 'Airport-ready from the moment you book',
-    body: 'Arrival instructions, pickup timing, and pricing are confirmed upfront so your airport experience is smooth.'
-  },
-  {
-    label: 'One trusted system',
-    title: 'Premium experience backed by professional operations',
-    body: 'Every booking, payment, inspection, and follow-up is handled by our dedicated operations team.'
-  }
-];
-
-const testimonialRibbon = [
-  {
-    quote: 'The airport pickup was seamless. I knew exactly where to go.',
-    author: 'Recent guest'
-  },
-  {
-    quote: 'Clear pricing, easy checkout, and the car was ready when I arrived.',
-    author: 'Verified traveler'
-  },
-  {
-    quote: 'Having rentals and car sharing in one place made planning so much easier.',
-    author: 'Repeat customer'
-  }
-];
-
-const prestigeTicker = [
-  'Airport-first guest experience',
-  'Secure hosted payments',
-  'Puerto Rico to Miami coverage',
-  'Marketplace-style car sharing',
-  'Digital agreements and inspections',
-  'Verified hosts and trip protection'
-];
-
-const conciergeMoments = [
-  {
-    label: 'Arrival-first design',
-    title: 'Confidence before the search even starts',
-    body: 'From the first screen, you see exactly where to pick up, what to pay, and how the trip works.'
-  },
-  {
-    label: 'Concierge clarity',
-    title: 'Everything you need to know, upfront',
-    body: 'Pickup location, payment breakdown, and trip details are all clear before you ever need to call us.'
-  }
-];
-
-const prestigeEditorialMoments = [
-  {
-    label: 'Signature feel',
-    title: 'A calmer, richer first impression',
-    body: 'Premium design and thoughtful details create an experience that feels closer to luxury travel than a typical car rental.'
-  },
-  {
-    label: 'Operational clarity',
-    title: 'Airport-ready journeys with less guesswork',
-    body: 'Pickup details, payment transparency, and arrival expectations are woven into every step of your booking.'
-  }
-];
-
-const curatedPerks = [
-  'Guided airport arrival story',
-  'Hosted payment reassurance',
-  'Digital agreement and portal continuity',
-  'One storefront for rentals and car sharing'
-];
-
-const unifiedCheckoutSignals = [
-  'Real-time pricing and instant reservation',
-  'Secure hosted payments with transparent totals',
-  'Digital documents, agreements, and pickup confirmation'
-];
-
 export default function SitePreviewHomePage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
@@ -260,6 +32,134 @@ export default function SitePreviewHomePage() {
     returnAt: toLocalInputValue(addDays(new Date(), 2))
   });
 
+  const heroStats = [
+    { value: t('homePage.heroStats.0.value'), label: t('homePage.heroStats.0.label') },
+    { value: t('homePage.heroStats.1.value'), label: t('homePage.heroStats.1.label') },
+    { value: t('homePage.heroStats.2.value'), label: t('homePage.heroStats.2.label') }
+  ];
+
+  const heroFeatureCards = [
+    {
+      label: t('homePage.heroFeatureCards.0.label'),
+      title: t('homePage.heroFeatureCards.0.title'),
+      body: t('homePage.heroFeatureCards.0.body')
+    },
+    {
+      label: t('homePage.heroFeatureCards.1.label'),
+      title: t('homePage.heroFeatureCards.1.title'),
+      body: t('homePage.heroFeatureCards.1.body')
+    }
+  ];
+
+  const marketingMoments = [
+    { title: t('homePage.marketingMoments.0.title'), body: t('homePage.marketingMoments.0.body') },
+    { title: t('homePage.marketingMoments.1.title'), body: t('homePage.marketingMoments.1.body') },
+    { title: t('homePage.marketingMoments.2.title'), body: t('homePage.marketingMoments.2.body') }
+  ];
+
+  const destinationStory = t('homePage.destinationStory', { returnObjects: true });
+
+  const marketingPillars = [
+    t('homePage.marketingPillars.0'),
+    t('homePage.marketingPillars.1'),
+    t('homePage.marketingPillars.2')
+  ];
+
+  const trustSignals = [
+    { title: t('homePage.trustSignals.0.title'), body: t('homePage.trustSignals.0.body') },
+    { title: t('homePage.trustSignals.1.title'), body: t('homePage.trustSignals.1.body') },
+    { title: t('homePage.trustSignals.2.title'), body: t('homePage.trustSignals.2.body') }
+  ];
+
+  const guestJourneySignals = [
+    t('homePage.guestJourneySignals.0'),
+    t('homePage.guestJourneySignals.1'),
+    t('homePage.guestJourneySignals.2'),
+    t('homePage.guestJourneySignals.3')
+  ];
+
+  const premiumMoments = [
+    { title: t('homePage.premiumMoments.0.title'), body: t('homePage.premiumMoments.0.body') },
+    { title: t('homePage.premiumMoments.1.title'), body: t('homePage.premiumMoments.1.body') },
+    { title: t('homePage.premiumMoments.2.title'), body: t('homePage.premiumMoments.2.body') }
+  ];
+
+  const reviewMoments = [
+    { quote: t('homePage.reviewMoments.0.quote'), author: t('homePage.reviewMoments.0.author'), score: t('homePage.reviewMoments.0.score') },
+    { quote: t('homePage.reviewMoments.1.quote'), author: t('homePage.reviewMoments.1.author'), score: t('homePage.reviewMoments.1.score') },
+    { quote: t('homePage.reviewMoments.2.quote'), author: t('homePage.reviewMoments.2.author'), score: t('homePage.reviewMoments.2.score') }
+  ];
+
+  const airportJourney = [
+    { title: t('homePage.airportJourney.0.title'), body: t('homePage.airportJourney.0.body') },
+    { title: t('homePage.airportJourney.1.title'), body: t('homePage.airportJourney.1.body') },
+    { title: t('homePage.airportJourney.2.title'), body: t('homePage.airportJourney.2.body') }
+  ];
+
+  const launchSignals = [
+    t('homePage.launchSignals.0'),
+    t('homePage.launchSignals.1'),
+    t('homePage.launchSignals.2'),
+    t('homePage.launchSignals.3')
+  ];
+
+  const prestigeSignals = [
+    { title: t('homePage.prestigeSignals.0.title'), body: t('homePage.prestigeSignals.0.body') },
+    { title: t('homePage.prestigeSignals.1.title'), body: t('homePage.prestigeSignals.1.body') },
+    { title: t('homePage.prestigeSignals.2.title'), body: t('homePage.prestigeSignals.2.body') }
+  ];
+
+  const destinationPanels = [
+    { city: t('homePage.destinationPanels.0.city'), note: t('homePage.destinationPanels.0.note') },
+    { city: t('homePage.destinationPanels.1.city'), note: t('homePage.destinationPanels.1.note') },
+    { city: t('homePage.destinationPanels.2.city'), note: t('homePage.destinationPanels.2.note') },
+    { city: t('homePage.destinationPanels.3.city'), note: t('homePage.destinationPanels.3.note') }
+  ];
+
+  const signatureMoments = [
+    { label: t('homePage.signatureMoments.0.label'), title: t('homePage.signatureMoments.0.title'), body: t('homePage.signatureMoments.0.body') },
+    { label: t('homePage.signatureMoments.1.label'), title: t('homePage.signatureMoments.1.title'), body: t('homePage.signatureMoments.1.body') },
+    { label: t('homePage.signatureMoments.2.label'), title: t('homePage.signatureMoments.2.title'), body: t('homePage.signatureMoments.2.body') }
+  ];
+
+  const testimonialRibbon = [
+    { quote: t('homePage.testimonialRibbon.0.quote'), author: t('homePage.testimonialRibbon.0.author') },
+    { quote: t('homePage.testimonialRibbon.1.quote'), author: t('homePage.testimonialRibbon.1.author') },
+    { quote: t('homePage.testimonialRibbon.2.quote'), author: t('homePage.testimonialRibbon.2.author') }
+  ];
+
+  const prestigeTicker = [
+    t('homePage.prestigeTicker.0'),
+    t('homePage.prestigeTicker.1'),
+    t('homePage.prestigeTicker.2'),
+    t('homePage.prestigeTicker.3'),
+    t('homePage.prestigeTicker.4'),
+    t('homePage.prestigeTicker.5')
+  ];
+
+  const conciergeMoments = [
+    { label: t('homePage.conciergeMoments.0.label'), title: t('homePage.conciergeMoments.0.title'), body: t('homePage.conciergeMoments.0.body') },
+    { label: t('homePage.conciergeMoments.1.label'), title: t('homePage.conciergeMoments.1.title'), body: t('homePage.conciergeMoments.1.body') }
+  ];
+
+  const prestigeEditorialMoments = [
+    { label: t('homePage.prestigeEditorialMoments.0.label'), title: t('homePage.prestigeEditorialMoments.0.title'), body: t('homePage.prestigeEditorialMoments.0.body') },
+    { label: t('homePage.prestigeEditorialMoments.1.label'), title: t('homePage.prestigeEditorialMoments.1.title'), body: t('homePage.prestigeEditorialMoments.1.body') }
+  ];
+
+  const curatedPerks = [
+    t('homePage.curatedPerks.0'),
+    t('homePage.curatedPerks.1'),
+    t('homePage.curatedPerks.2'),
+    t('homePage.curatedPerks.3')
+  ];
+
+  const unifiedCheckoutSignals = [
+    t('homePage.unifiedCheckoutSignals.0'),
+    t('homePage.unifiedCheckoutSignals.1'),
+    t('homePage.unifiedCheckoutSignals.2')
+  ];
+
   useEffect(() => {
     setRecentSearches(getSavedSearches());
     (async () => {
@@ -267,7 +167,7 @@ export default function SitePreviewHomePage() {
         const payload = await api('/api/public/booking/bootstrap');
         setBootstrap(payload);
       } catch (err) {
-        setError(String(err?.message || 'Unable to load booking bootstrap'));
+        setError(String(err?.message || t('homePage.errorBootstrapFallback')));
       }
     })();
   }, []);
@@ -340,7 +240,7 @@ export default function SitePreviewHomePage() {
 
   const openRental = () => {
     if (!rentalSearch.pickupLocationId || !rentalSearch.returnLocationId) {
-      return setError('Choose pickup and return locations before searching rentals.');
+      return setError(t('homePage.errorChooseLocationsRental'));
     }
     setBusy('rental');
     setError('');
@@ -351,7 +251,7 @@ export default function SitePreviewHomePage() {
 
   const openCarSharing = () => {
     if (!carSharingSearch.locationId) {
-      return setError('Choose a location before searching car sharing.');
+      return setError(t('homePage.errorChooseLocationCarSharing'));
     }
     setBusy('carsharing');
     setError('');
@@ -383,12 +283,12 @@ export default function SitePreviewHomePage() {
                 priority
               />
             </div>
-            <span className="eyebrow">Ride Car Sharing</span>
+            <span className="eyebrow">{t('homePage.heroEyebrow')}</span>
             <h1 id="home-hero-title" className={styles.heroTitle}>
-              Affordable rentals, car sharing, and a seamless guest experience.
+              {t('homePage.heroTitle')}
             </h1>
             <p className={styles.heroLead}>
-              Book airport-ready rentals and browse locally hosted car sharing vehicles — all with transparent pricing, secure payments, and trip protection.
+              {t('homePage.heroLead')}
             </p>
             <div className={styles.heroPills}>
               {marketingPillars.map((pill) => (
@@ -396,9 +296,9 @@ export default function SitePreviewHomePage() {
               ))}
             </div>
             <div className={styles.heroNarrativeCard}>
-              <span className={styles.heroNarrativeLabel}>Guest-first storefront</span>
+              <span className={styles.heroNarrativeLabel}>{t('homePage.heroNarrativeLabel')}</span>
               <p className={styles.heroNarrativeBody}>
-                Replace the old booking-widget feel with a calmer arrival story: clearer pricing, clearer pickup expectations, and a more premium path into checkout.
+                {t('homePage.heroNarrativeBody')}
               </p>
             </div>
             <div className={styles.heroStatRow}>
@@ -412,33 +312,33 @@ export default function SitePreviewHomePage() {
             {error ? <div className="label" style={{ color: '#b91c1c' }}>{error}</div> : null}
             <div className={styles.heroActionRow}>
               <Link href={withSiteBase(basePath, '/rent')} className="ios-action-btn" style={{ textDecoration: 'none' }}>
-                Explore rentals
+                {t('homePage.exploreRentals')}
               </Link>
               <Link href={withSiteBase(basePath, '/car-sharing')} className={styles.heroSecondaryAction} style={{ textDecoration: 'none' }}>
-                Browse car sharing
+                {t('homePage.browseCarSharing')}
               </Link>
             </div>
             <div className={styles.heroDestinations}>
-              <span className={styles.heroDestinationsLabel}>Now serving</span>
+              <span className={styles.heroDestinationsLabel}>{t('homePage.nowServing')}</span>
               <div className={styles.heroDestinationList}>{destinationStory.join(' | ')}</div>
             </div>
           </div>
 
           <div className={styles.heroAside}>
             <div className={styles.heroShowcase}>
-              <div className={styles.heroShowcaseTopline}>Signature launch direction</div>
-              <h3 className={styles.heroShowcaseTitle}>Make the first screen feel like premium mobility hospitality.</h3>
+              <div className={styles.heroShowcaseTopline}>{t('homePage.signatureLaunchDirection')}</div>
+              <h3 className={styles.heroShowcaseTitle}>{t('homePage.heroShowcaseTitle')}</h3>
               <div className={styles.heroBannerFrame}>
                 <Image
                   src="/brand/ride-banner-facebook-cover.jpg"
-                  alt="Fast lane, bold ride."
+                  alt={t('homePage.fastLaneBoldRide')}
                   width={960}
                   height={540}
                   className={styles.heroBannerImage}
                 />
                 <div className={styles.heroBannerOverlay}>
-                  <span className={styles.heroBannerEyebrow}>Fast lane, bold ride.</span>
-                  <strong>Airport-ready rentals with a more guided digital handoff.</strong>
+                  <span className={styles.heroBannerEyebrow}>{t('homePage.fastLaneBoldRide')}</span>
+                  <strong>{t('homePage.heroBannerOverlay')}</strong>
                 </div>
               </div>
               <div className={styles.heroFeatureGrid}>
@@ -460,7 +360,7 @@ export default function SitePreviewHomePage() {
         </div>
       </section>
 
-      <section className={styles.motionRibbon} aria-label="Brand trust signals">
+      <section className={styles.motionRibbon} aria-label={t('homePage.brandTrustSignals')}>
         <div className={styles.motionTrack}>
           {[...prestigeTicker, ...prestigeTicker].map((item, index) => (
             <div key={`${item}-${index}`} className={styles.motionPill}>
@@ -475,10 +375,10 @@ export default function SitePreviewHomePage() {
         <article className={`glass card-lg ${styles.editorialFeatureCard}`}>
           <div className={styles.editorialFeatureGlow} />
           <div className={styles.editorialFeatureCopy}>
-            <span className="eyebrow">Prestige Positioning</span>
-            <h2 id="prestige-positioning-title" style={{ margin: 0 }}>Turn the storefront into part of the premium arrival experience.</h2>
+            <span className="eyebrow">{t('homePage.prestigePositioning')}</span>
+            <h2 id="prestige-positioning-title" style={{ margin: 0 }}>{t('homePage.prestigePositioningTitle')}</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Feel the difference before you even compare rates. Airport readiness, trust, and premium mobility from the first moment.
+              {t('homePage.prestigePositioningLead')}
             </p>
             <div className={styles.editorialMomentGrid}>
               {prestigeEditorialMoments.map((item) => (
@@ -491,7 +391,7 @@ export default function SitePreviewHomePage() {
             </div>
           </div>
           <div className={styles.editorialFeatureShowcase}>
-            <div className={styles.editorialShowTopline}>Curated guest cues</div>
+            <div className={styles.editorialShowTopline}>{t('homePage.curatedGuestCues')}</div>
             <div className={styles.editorialPerkGrid}>
               {curatedPerks.map((perk) => (
                 <div key={perk} className={styles.editorialPerkCard}>
@@ -501,8 +401,8 @@ export default function SitePreviewHomePage() {
               ))}
             </div>
             <div className={styles.editorialShowFooter}>
-              <span className="label">Website direction</span>
-              <strong>Luxury mobility aesthetic with professional operational confidence</strong>
+              <span className="label">{t('homePage.websiteDirection')}</span>
+              <strong>{t('homePage.websiteDirectionBody')}</strong>
             </div>
           </div>
         </article>
@@ -511,10 +411,10 @@ export default function SitePreviewHomePage() {
       <section className={styles.trustBand} aria-labelledby="trust-layer-title">
         <div className={`glass card-lg ${styles.trustPanel}`}>
           <div className={styles.editorialHeader}>
-            <span className="eyebrow">Trust Layer</span>
-            <h2 id="trust-layer-title" style={{ margin: 0 }}>Make the website feel confident before the guest even searches</h2>
+            <span className="eyebrow">{t('homePage.trustLayer')}</span>
+            <h2 id="trust-layer-title" style={{ margin: 0 }}>{t('homePage.trustLayerTitle')}</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Trust is built into every step — airport clarity, secure payments, and a smooth digital experience from search to pickup.
+              {t('homePage.trustLayerLead')}
             </p>
           </div>
           <div className={styles.trustGrid}>
@@ -530,8 +430,8 @@ export default function SitePreviewHomePage() {
         <div className={`glass card ${styles.showcasePanel}`}>
           <div className={styles.showcaseStack}>
             <div className={styles.showcaseCardPrimary}>
-              <div className="label" style={{ color: 'rgba(246,248,255,0.76)' }}>Guest Journey</div>
-              <h3 style={{ margin: '8px 0 10px', fontSize: '1.55rem' }}>Modern booking flow</h3>
+              <div className="label" style={{ color: 'rgba(246,248,255,0.76)' }}>{t('homePage.guestJourney')}</div>
+              <h3 style={{ margin: '8px 0 10px', fontSize: '1.55rem' }}>{t('homePage.modernBookingFlow')}</h3>
               <div className={styles.showcaseRow}>
                 {guestJourneySignals.map((item) => (
                   <span key={item} className={styles.showcaseChip}>{item}</span>
@@ -539,10 +439,10 @@ export default function SitePreviewHomePage() {
               </div>
             </div>
             <div className={styles.showcaseCardSecondary}>
-              <div className="label">Guest promise</div>
-              <h3 style={{ margin: '8px 0 10px' }}>Search, checkout, and pickup — one calm experience</h3>
+              <div className="label">{t('homePage.guestPromise')}</div>
+              <h3 style={{ margin: '8px 0 10px' }}>{t('homePage.guestPromiseTitle')}</h3>
               <p className="ui-muted" style={{ margin: 0 }}>
-                Pricing, pickup expectations, and next steps are clear before you ever reach the payment screen.
+                {t('homePage.guestPromiseBody')}
               </p>
             </div>
           </div>
@@ -561,10 +461,10 @@ export default function SitePreviewHomePage() {
 
       <section className={`glass card-lg ${styles.prestigeBand}`}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">Prestige Layer</span>
-          <h2 style={{ margin: 0 }}>Make the storefront feel like a premium travel brand, not just a booking page</h2>
+          <span className="eyebrow">{t('homePage.prestigeLayer')}</span>
+          <h2 style={{ margin: 0 }}>{t('homePage.prestigeLayerTitle')}</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            Modern hospitality meets premium mobility: clean design, rich details, and subtle confidence in every interaction.
+            {t('homePage.prestigeLayerLead')}
           </p>
         </div>
         <div className={styles.prestigeGrid}>
@@ -581,62 +481,62 @@ export default function SitePreviewHomePage() {
       <section className={styles.laneGrid}>
         <div className={`glass card ${styles.laneCard}`}>
           <div className={styles.laneHeader}>
-            <span className={styles.laneBadge}>Guest Lane</span>
-            <h2 className={styles.laneTitle}>Traditional Rentals</h2>
+            <span className={styles.laneBadge}>{t('homePage.guestLane')}</span>
+            <h2 className={styles.laneTitle}>{t('homePage.traditionalRentals')}</h2>
             <p className={styles.laneLead}>
-              Search real locations and send guests into live rental availability, pricing, and checkout.
+              {t('homePage.traditionalRentalsLead')}
             </p>
           </div>
-          <label className="label">Pickup location</label>
+          <label className="label">{t('homePage.pickupLocation')}</label>
           <select value={rentalSearch.pickupLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupLocationId: e.target.value }))}>
-            <option value="">Select location</option>
+            <option value="">{t('homePage.selectLocation')}</option>
             {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
-          <label className="label">Return location</label>
+          <label className="label">{t('homePage.returnLocation')}</label>
           <select value={rentalSearch.returnLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, returnLocationId: e.target.value }))}>
-            <option value="">Select location</option>
+            <option value="">{t('homePage.selectLocation')}</option>
             {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
           <div className="grid2">
             <div className="stack">
-              <label className="label">Pickup</label>
+              <label className="label">{t('homePage.pickup')}</label>
               <input type="datetime-local" value={rentalSearch.pickupAt} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
             </div>
             <div className="stack">
-              <label className="label">Return</label>
+              <label className="label">{t('homePage.return')}</label>
               <input type="datetime-local" value={rentalSearch.returnAt} onChange={(e) => setRentalSearch((current) => ({ ...current, returnAt: e.target.value }))} />
             </div>
           </div>
           <button type="button" className="ios-action-btn" onClick={openRental} disabled={busy === 'rental'}>
-            {busy === 'rental' ? 'Opening...' : 'Search Rentals'}
+            {busy === 'rental' ? t('homePage.opening') : t('homePage.searchRentals')}
           </button>
         </div>
 
         <div className={`glass card ${styles.laneCard}`}>
           <div className={styles.laneHeader}>
-            <span className={styles.laneBadge}>Guest Lane</span>
-            <h2 className={styles.laneTitle}>Car Sharing</h2>
+            <span className={styles.laneBadge}>{t('homePage.guestLane')}</span>
+            <h2 className={styles.laneTitle}>{t('homePage.carSharing')}</h2>
             <p className={styles.laneLead}>
-              Browse the car sharing marketplace with curated listings, verified hosts, and trip protection on every booking.
+              {t('homePage.carSharingLead')}
             </p>
           </div>
-          <label className="label">Location</label>
+          <label className="label">{t('homePage.location')}</label>
           <select value={carSharingSearch.locationId} onChange={(e) => setCarSharingSearch((current) => ({ ...current, locationId: e.target.value }))}>
-            <option value="">Select location</option>
+            <option value="">{t('homePage.selectLocation')}</option>
             {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
           </select>
           <div className="grid2">
             <div className="stack">
-              <label className="label">Pickup</label>
+              <label className="label">{t('homePage.pickup')}</label>
               <input type="datetime-local" value={carSharingSearch.pickupAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
             </div>
             <div className="stack">
-              <label className="label">Return</label>
+              <label className="label">{t('homePage.return')}</label>
               <input type="datetime-local" value={carSharingSearch.returnAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, returnAt: e.target.value }))} />
             </div>
           </div>
           <button type="button" className="ios-action-btn" onClick={openCarSharing} disabled={busy === 'carsharing'}>
-            {busy === 'carsharing' ? 'Opening...' : 'Search Car Sharing'}
+            {busy === 'carsharing' ? t('homePage.opening') : t('homePage.searchCarSharing')}
           </button>
         </div>
       </section>
@@ -645,8 +545,8 @@ export default function SitePreviewHomePage() {
       {recentSearches.length > 0 && (
         <section className="glass card-lg" style={{ padding: '20px 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Recent Searches</h2>
-            <button onClick={() => { clearSavedSearches(); setRecentSearches([]); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7a9a', fontSize: '0.78rem', fontWeight: 600 }}>Clear all</button>
+            <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('homePage.recentSearches')}</h2>
+            <button onClick={() => { clearSavedSearches(); setRecentSearches([]); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7a9a', fontSize: '0.78rem', fontWeight: 600 }}>{t('homePage.clearAll')}</button>
           </div>
           <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
             {recentSearches.map((s) => (
@@ -655,8 +555,8 @@ export default function SitePreviewHomePage() {
                 href={withSiteBase(basePath, s.mode === 'CAR_SHARING' ? `/car-sharing?locationId=${encodeURIComponent(s.locationId)}&pickupAt=${encodeURIComponent(s.pickupAt)}&returnAt=${encodeURIComponent(s.returnAt)}` : `/rent?pickupLocationId=${encodeURIComponent(s.locationId)}&returnLocationId=${encodeURIComponent(s.locationId)}&pickupAt=${encodeURIComponent(s.pickupAt)}&returnAt=${encodeURIComponent(s.returnAt)}`)}
                 style={{ flex: '0 0 auto', padding: '10px 16px', borderRadius: 12, border: '1px solid rgba(135,82,254,.1)', background: 'rgba(135,82,254,.03)', textDecoration: 'none', display: 'grid', gap: 2, minWidth: 180 }}
               >
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#6e49ff', textTransform: 'uppercase' }}>{s.mode === 'CAR_SHARING' ? 'Car Sharing' : 'Rental'}</span>
-                <span style={{ fontWeight: 600, color: '#1e2847', fontSize: '0.88rem' }}>{s.locationLabel || 'Search'}</span>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#6e49ff', textTransform: 'uppercase' }}>{s.mode === 'CAR_SHARING' ? t('homePage.carSharing') : t('homePage.rental')}</span>
+                <span style={{ fontWeight: 600, color: '#1e2847', fontSize: '0.88rem' }}>{s.locationLabel || t('homePage.search')}</span>
                 {s.pickupAt && <span style={{ fontSize: '0.76rem', color: '#6b7a9a' }}>{new Date(s.pickupAt).toLocaleDateString()}</span>}
               </Link>
             ))}
@@ -667,7 +567,7 @@ export default function SitePreviewHomePage() {
       <section className={styles.destinationRail}>
         {destinationPanels.map((panel, index) => (
           <article key={panel.city} className={`glass card ${styles.destinationCard}`} style={{ animationDelay: `${index * 0.15}s` }}>
-            <div className="label">Destination</div>
+            <div className="label">{t('homePage.destination')}</div>
             <h3 style={{ margin: '8px 0 8px' }}>{panel.city}</h3>
             <p className="ui-muted" style={{ margin: 0 }}>{panel.note}</p>
           </article>
@@ -678,10 +578,10 @@ export default function SitePreviewHomePage() {
         <div className={`glass card-lg ${styles.conciergeStage}`}>
           <div className={styles.conciergeVisualGlow} />
           <div className={styles.conciergeCopy}>
-            <span className="eyebrow">Concierge Positioning</span>
-            <h2 style={{ margin: 0 }}>Premium mobility hospitality — not just another booking page.</h2>
+            <span className="eyebrow">{t('homePage.conciergePositioning')}</span>
+            <h2 style={{ margin: 0 }}>{t('homePage.conciergeTitle')}</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              The website needs to look advanced enough that the guest trusts the trip before they compare prices. Strong visuals, subtle motion, and clearer journey cues are what make the storefront feel prestigious.
+              {t('homePage.conciergeLead')}
             </p>
             <div className={styles.conciergeMomentGrid}>
               {conciergeMoments.map((item) => (
@@ -694,15 +594,15 @@ export default function SitePreviewHomePage() {
             </div>
           </div>
           <div className={styles.conciergeShowcard}>
-            <div className={styles.conciergeShowTopline}>Signature storefront direction</div>
+            <div className={styles.conciergeShowTopline}>{t('homePage.signatureStorefrontDirection')}</div>
             <div className={styles.conciergeShowStats}>
               <div className={styles.conciergeStatCard}>
-                <span className="label">Guest feel</span>
-                <strong>Premium, calm, guided</strong>
+                <span className="label">{t('homePage.guestFeel')}</span>
+                <strong>{t('homePage.guestFeelValue')}</strong>
               </div>
               <div className={styles.conciergeStatCard}>
-                <span className="label">Operational truth</span>
-                <strong>Professional operations behind every trip</strong>
+                <span className="label">{t('homePage.operationalTruth')}</span>
+                <strong>{t('homePage.operationalTruthValue')}</strong>
               </div>
             </div>
             <div className={styles.conciergeBannerWrap}>
@@ -720,10 +620,10 @@ export default function SitePreviewHomePage() {
 
       <section className={`glass card-lg ${styles.signatureSection}`}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">Signature Experience</span>
-          <h2 style={{ margin: 0 }}>Make the website feel like concierge-grade mobility retail</h2>
+          <span className="eyebrow">{t('homePage.signatureExperience')}</span>
+          <h2 style={{ margin: 0 }}>{t('homePage.signatureExperienceTitle')}</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            Blend premium travel cues, calmer hierarchy, and stronger checkout trust so the brand feels elevated before the guest even compares rates.
+            {t('homePage.signatureExperienceLead')}
           </p>
         </div>
         <div className={styles.signatureGrid}>
@@ -740,10 +640,10 @@ export default function SitePreviewHomePage() {
       <section className={`glass card-lg ${styles.testimonialSection}`}>
         <div className={styles.testimonialHeader}>
           <div className={styles.editorialHeader}>
-            <span className="eyebrow">Social Proof Direction</span>
-            <h2 style={{ margin: 0 }}>A premium experience you can trust</h2>
+            <span className="eyebrow">{t('homePage.socialProofDirection')}</span>
+            <h2 style={{ margin: 0 }}>{t('homePage.socialProofTitle')}</h2>
           </div>
-          <div className={styles.testimonialBadge}>Premium travel + trusted operations</div>
+          <div className={styles.testimonialBadge}>{t('homePage.socialProofBadge')}</div>
         </div>
         <div className={styles.testimonialGrid}>
           {testimonialRibbon.map((item) => (
@@ -757,10 +657,10 @@ export default function SitePreviewHomePage() {
 
       <section className={`glass card-lg ${styles.journeyPanel}`}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">Airport Pickup Story</span>
-          <h2 style={{ margin: 0 }}>Show what happens next before the guest ever asks</h2>
+          <span className="eyebrow">{t('homePage.airportPickupStory')}</span>
+          <h2 style={{ margin: 0 }}>{t('homePage.airportPickupStoryTitle')}</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            The strongest storefront explains pickup, payment trust, and digital readiness as part of the experience, not as support copy the guest has to go hunt for.
+            {t('homePage.airportPickupStoryLead')}
           </p>
         </div>
         <div className={styles.journeyGrid}>
@@ -769,7 +669,7 @@ export default function SitePreviewHomePage() {
               <div key={step.title} className={styles.timelineItem}>
                 <div className={styles.timelineMarker}>{index + 1}</div>
                 <div className={styles.timelineContent}>
-                  <div className="label">Step {index + 1}</div>
+                  <div className="label">{t('homePage.step', { number: index + 1 })}</div>
                   <h3 style={{ margin: '6px 0 8px' }}>{step.title}</h3>
                   <p className="ui-muted" style={{ margin: 0 }}>{step.body}</p>
                 </div>
@@ -779,21 +679,21 @@ export default function SitePreviewHomePage() {
           <div className={styles.airportCanvas}>
             <div className={styles.airportGlow} />
             <div className={styles.airportBoard}>
-              <div className={styles.boardTopline}>Ride Car Sharing Arrival Flow</div>
+              <div className={styles.boardTopline}>{t('homePage.arrivalFlow')}</div>
               <div className={styles.boardStage}>
-                <span className={styles.boardLabel}>Pickup mode</span>
-                <strong>Airport staging + digital handoff</strong>
+                <span className={styles.boardLabel}>{t('homePage.pickupMode')}</span>
+                <strong>{t('homePage.pickupModeValue')}</strong>
               </div>
               <div className={styles.boardRow}>
                 <div className={styles.boardCard}>
-                  <span className="label">Due now</span>
+                  <span className="label">{t('homePage.dueNow')}</span>
                   <strong>{fmtMoney(bootstrap?.featuredCarSharingListings?.[0]?.baseDailyRate || 49)}</strong>
-                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>Secure payment details and pricing clarity before you confirm your booking.</p>
+                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>{t('homePage.dueNowBody')}</p>
                 </div>
                 <div className={styles.boardCard}>
-                  <span className="label">Pickup promise</span>
-                  <strong>Digital instructions</strong>
-                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>Show branch timing, required docs, and where to go on arrival.</p>
+                  <span className="label">{t('homePage.pickupPromise')}</span>
+                  <strong>{t('homePage.pickupPromiseValue')}</strong>
+                  <p className="ui-muted" style={{ margin: '8px 0 0' }}>{t('homePage.pickupPromiseBody')}</p>
                 </div>
               </div>
               <div className={styles.boardRoute}>
@@ -808,10 +708,10 @@ export default function SitePreviewHomePage() {
 
       <section className={`glass card-lg ${styles.editorialPanel}`}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">Premium Moments</span>
-          <h2 style={{ margin: 0 }}>Turn the storefront into part of the product</h2>
+          <span className="eyebrow">{t('homePage.premiumMomentsEyebrow')}</span>
+          <h2 style={{ margin: 0 }}>{t('homePage.premiumMomentsTitle')}</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            Every detail is polished so you feel confident before you ever reach the payment screen.
+            {t('homePage.premiumMomentsLead')}
           </p>
         </div>
         <div className="metric-grid">
@@ -827,20 +727,20 @@ export default function SitePreviewHomePage() {
       <section className={`glass card-lg ${styles.editorialPanel}`}>
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 18, marginBottom: 18, flexWrap: 'wrap' }}>
           <div className={styles.editorialHeader}>
-            <span className="eyebrow">How It Works</span>
-            <h2 style={{ margin: 0 }}>A simple guest journey from search to pickup</h2>
+            <span className="eyebrow">{t('homePage.howItWorks')}</span>
+            <h2 style={{ margin: 0 }}>{t('homePage.howItWorksTitle')}</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Real-time availability, detailed vehicle pages, and one clean checkout path from search to confirmation.
+              {t('homePage.howItWorksLead')}
             </p>
           </div>
             <Link href={withSiteBase(basePath, '/checkout')} className="button-subtle" style={{ textDecoration: 'none' }}>
-              See checkout flow
+              {t('homePage.seeCheckoutFlow')}
             </Link>
         </div>
         <div className="metric-grid">
           {marketingMoments.map((item, index) => (
             <div key={item.title} className={styles.processCard}>
-              <div className="label">Step {index + 1}</div>
+              <div className="label">{t('homePage.step', { number: index + 1 })}</div>
               <h3 style={{ margin: '8px 0 6px' }}>{item.title}</h3>
               <p className="ui-muted" style={{ margin: 0 }}>{item.body}</p>
             </div>
@@ -851,10 +751,10 @@ export default function SitePreviewHomePage() {
       <section className={`glass card-lg ${styles.checkoutSection}`}>
         <div className="row-between" style={{ alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
           <div className="stack" style={{ gap: 8, maxWidth: 780 }}>
-            <span className="eyebrow">Guided Reservation Flow</span>
-            <h2 style={{ margin: 0 }}>One premium reservation flow, two distinct guest journeys</h2>
+            <span className="eyebrow">{t('homePage.guidedReservationFlow')}</span>
+            <h2 style={{ margin: 0 }}>{t('homePage.guidedReservationFlowTitle')}</h2>
             <p className="ui-muted" style={{ margin: 0 }}>
-              Rentals and car sharing each have their own experience, but both run through the same trusted reservation and payment system.
+              {t('homePage.guidedReservationFlowLead')}
             </p>
           </div>
           <Link
@@ -867,21 +767,21 @@ export default function SitePreviewHomePage() {
             className={`ios-action-btn ${styles.glowButton}`}
             style={{ textDecoration: 'none' }}
             >
-              Preview reservation flow
+              {t('homePage.previewReservationFlow')}
             </Link>
         </div>
         <div className={styles.checkoutGrid}>
           <div className={styles.checkoutCard}>
-            <span className="label">Rental lane</span>
-            <strong>Search {'->'} detail {'->'} reserve</strong>
+            <span className="label">{t('homePage.rentalLane')}</span>
+            <strong>{t('homePage.rentalLaneValue')}</strong>
           </div>
           <div className={styles.checkoutCard}>
-            <span className="label">Car sharing lane</span>
-            <strong>Catalog {'->'} listing {'->'} reserve</strong>
+            <span className="label">{t('homePage.carSharingLane')}</span>
+            <strong>{t('homePage.carSharingLaneValue')}</strong>
           </div>
           <div className={styles.checkoutCard}>
-            <span className="label">Trusted system</span>
-            <strong>Professional reservation management</strong>
+            <span className="label">{t('homePage.trustedSystem')}</span>
+            <strong>{t('homePage.trustedSystemValue')}</strong>
           </div>
         </div>
         <div className={styles.checkoutSignalRow}>
@@ -893,41 +793,41 @@ export default function SitePreviewHomePage() {
 
       <section className={styles.launchFinale}>
         <div className={styles.launchFinaleCopy}>
-          <span className="eyebrow">Launch-ready direction</span>
-          <h2 style={{ margin: 0 }}>A premium booking experience that matches the quality of the ride.</h2>
+          <span className="eyebrow">{t('homePage.launchReadyDirection')}</span>
+          <h2 style={{ margin: 0 }}>{t('homePage.launchReadyTitle')}</h2>
           <p className="ui-muted" style={{ margin: 0 }}>
-            The goal is to make the public booking experience polished enough that moving the main domain feels like an infrastructure switch, not a redesign under pressure.
+            {t('homePage.launchReadyLead')}
           </p>
         </div>
         <div className={styles.launchFinaleActions}>
           <Link href={withSiteBase(basePath, '/rent')} className="ios-action-btn" style={{ textDecoration: 'none' }}>
-            Explore rental journey
+            {t('homePage.exploreRentalJourney')}
           </Link>
           <Link href={withSiteBase(basePath, '/car-sharing')} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-            Explore car sharing journey
+            {t('homePage.exploreCarSharingJourney')}
           </Link>
         </div>
       </section>
 
       <section className={styles.splitFeature}>
         <div className={`glass card ${styles.editorialPanel}`}>
-          <span className="eyebrow">Learn More About Us</span>
-          <h2 style={{ margin: '8px 0 10px' }}>Reframe the current marketing around trust, clarity, and convenience</h2>
+          <span className="eyebrow">{t('homePage.learnMoreAboutUs')}</span>
+          <h2 style={{ margin: '8px 0 10px' }}>{t('homePage.learnMoreTitle')}</h2>
           <p className="ui-muted">
-            Keep the core story of affordability, airport access, and contactless convenience, but package it in a cleaner visual system with a more modern booking flow.
+            {t('homePage.learnMoreLead')}
           </p>
           <div className="stack" style={{ gap: 12 }}>
             <div className="surface-note">
-              <strong>Browse &amp; Book</strong>
-              <div className="ui-muted">Browse real vehicle classes and featured car sharing listings with live availability.</div>
+              <strong>{t('homePage.browseAndBook')}</strong>
+              <div className="ui-muted">{t('homePage.browseAndBookBody')}</div>
             </div>
             <div className="surface-note">
-              <strong>Pickup &amp; Go</strong>
-              <div className="ui-muted">Spotlight airport staging, digital agreements, and quick inspections without adding friction to checkout.</div>
+              <strong>{t('homePage.pickupAndGo')}</strong>
+              <div className="ui-muted">{t('homePage.pickupAndGoBody')}</div>
             </div>
             <div className="surface-note">
-              <strong>Explore &amp; Return</strong>
-              <div className="ui-muted">Professional workflow for returns, receipts, and customer follow-up.</div>
+              <strong>{t('homePage.exploreAndReturn')}</strong>
+              <div className="ui-muted">{t('homePage.exploreAndReturnBody')}</div>
             </div>
           </div>
         </div>
@@ -938,10 +838,10 @@ export default function SitePreviewHomePage() {
         <div className={`glass card ${styles.spotlightCard}`}>
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
-              <span className="eyebrow">Live Locations</span>
-              <h3 style={{ margin: '6px 0 0' }}>Airport and city pickup hubs</h3>
+              <span className="eyebrow">{t('homePage.liveLocations')}</span>
+              <h3 style={{ margin: '6px 0 0' }}>{t('homePage.airportAndCityHubs')}</h3>
             </div>
-            <Link href={withSiteBase(basePath, '/fleet')} className="button-subtle" style={{ textDecoration: 'none' }}>View fleet</Link>
+            <Link href={withSiteBase(basePath, '/fleet')} className="button-subtle" style={{ textDecoration: 'none' }}>{t('homePage.viewFleet')}</Link>
           </div>
           <div className="stack" style={{ gap: 12 }}>
             {highlightedLocations.length ? highlightedLocations.map((location) => (
@@ -949,45 +849,45 @@ export default function SitePreviewHomePage() {
                 <strong>{location.name}</strong>
                 <div className="ui-muted">{publicLocationLabel(location)}</div>
               </div>
-            )) : <div className="ui-muted">No pickup locations available right now.</div>}
+            )) : <div className="ui-muted">{t('homePage.noPickupLocations')}</div>}
           </div>
         </div>
 
         <div className={`glass card ${styles.spotlightCard}`}>
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
-              <span className="eyebrow">Rental Classes</span>
-              <h3 style={{ margin: '6px 0 0' }}>Available vehicle classes</h3>
+              <span className="eyebrow">{t('homePage.rentalClasses')}</span>
+              <h3 style={{ margin: '6px 0 0' }}>{t('homePage.availableVehicleClasses')}</h3>
             </div>
-            <Link href={withSiteBase(basePath, '/rent')} className="button-subtle" style={{ textDecoration: 'none' }}>Search rentals</Link>
+            <Link href={withSiteBase(basePath, '/rent')} className="button-subtle" style={{ textDecoration: 'none' }}>{t('homePage.searchRentals')}</Link>
           </div>
           <div className="stack" style={{ gap: 12 }}>
             {highlightedVehicleTypes.length ? highlightedVehicleTypes.map((vehicleType) => (
               <div key={vehicleType.id} className="surface-note">
                 <strong>{vehicleTypeLabel(vehicleType)}</strong>
-                <div className="ui-muted">{vehicleType.code || 'Rental class'}</div>
+                <div className="ui-muted">{vehicleType.code || t('homePage.rentalClass')}</div>
               </div>
-            )) : <div className="ui-muted">No vehicle classes available right now.</div>}
+            )) : <div className="ui-muted">{t('homePage.noVehicleClasses')}</div>}
           </div>
         </div>
 
         <div className={`glass card ${styles.spotlightCard}`}>
           <div className="row-between" style={{ alignItems: 'center', marginBottom: 14 }}>
             <div>
-              <span className="eyebrow">Car Sharing Catalog</span>
-              <h3 style={{ margin: '6px 0 0' }}>Featured car sharing vehicles</h3>
+              <span className="eyebrow">{t('homePage.carSharingCatalog')}</span>
+              <h3 style={{ margin: '6px 0 0' }}>{t('homePage.featuredCarSharingVehicles')}</h3>
             </div>
-            <Link href={withSiteBase(basePath, '/car-sharing')} className="button-subtle" style={{ textDecoration: 'none' }}>Open catalog</Link>
+            <Link href={withSiteBase(basePath, '/car-sharing')} className="button-subtle" style={{ textDecoration: 'none' }}>{t('homePage.openCatalog')}</Link>
           </div>
           <div className="stack" style={{ gap: 12 }}>
             {highlightedListings.length ? highlightedListings.map((listing) => (
               <div key={listing.id} className="surface-note">
                 <strong>{listing.title || listingVehicleLabel(listing)}</strong>
                 <div className="ui-muted">
-                  {publicLocationLabel(listing.location)}{Number(listing.baseDailyRate || 0) ? ` | From ${fmtMoney(listing.baseDailyRate)}/day` : ''}
+                  {publicLocationLabel(listing.location)}{Number(listing.baseDailyRate || 0) ? ` | ${t('homePage.fromPerDay', { price: fmtMoney(listing.baseDailyRate) })}` : ''}
                 </div>
               </div>
-            )) : <div className="ui-muted">No featured listings available right now.</div>}
+            )) : <div className="ui-muted">{t('homePage.noFeaturedListings')}</div>}
           </div>
         </div>
       </section>

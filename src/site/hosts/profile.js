@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import { fmtMoney, formatPublicDateTime, normalizeImageList, withSiteBase, resolveSiteBasePath } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
@@ -19,6 +20,7 @@ function StarDisplay({ rating, count }) {
 }
 
 export default function PublicHostProfilePage() {
+  const { t } = useTranslation();
   const params = useParams();
   const hostId = params?.id;
   const [profile, setProfile] = useState(null);
@@ -33,7 +35,7 @@ export default function PublicHostProfilePage() {
         const data = await api(`/api/public/booking/hosts/${encodeURIComponent(hostId)}`);
         if (!cancelled) setProfile(data);
       } catch (err) {
-        if (!cancelled) setError(err?.message || 'Unable to load host profile');
+        if (!cancelled) setError(err?.message || t('errors.unableToLoad'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -44,7 +46,7 @@ export default function PublicHostProfilePage() {
   if (loading) {
     return (
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-        <div className="surface-note" style={{ color: '#6b7a9a' }}>Loading host profile...</div>
+        <div className="surface-note" style={{ color: '#6b7a9a' }}>{t('common.loading')}</div>
       </div>
     );
   }
@@ -53,7 +55,7 @@ export default function PublicHostProfilePage() {
     return (
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '64px 24px' }}>
         <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)' }}>
-          {error || 'Host not found'}
+          {error || t('hostProfile.hostNotFound')}
         </div>
       </div>
     );
@@ -75,8 +77,8 @@ export default function PublicHostProfilePage() {
             <h1 style={{ margin: 0, fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>{host.displayName}</h1>
             <div style={{ display: 'flex', gap: 14, marginTop: 6, fontSize: '0.88rem', color: '#6b7a9a', flexWrap: 'wrap' }}>
               {host.averageRating > 0 && <StarDisplay rating={host.averageRating} count={host.reviewCount} />}
-              {host.completedTrips > 0 && <span>{host.completedTrips} completed trips</span>}
-              {host.activeListings > 0 && <span>{host.activeListings} active listings</span>}
+              {host.completedTrips > 0 && <span>{host.completedTrips} {t('hostProfile.completedTrips')}</span>}
+              {host.activeListings > 0 && <span>{host.activeListings} {t('hostProfile.activeListings')}</span>}
             </div>
           </div>
         </div>
@@ -85,7 +87,7 @@ export default function PublicHostProfilePage() {
       {/* Listings */}
       {listings.length > 0 && (
         <section className="glass card-lg" style={{ padding: '24px 22px', marginBottom: 24 }}>
-          <h2 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>Vehicles</h2>
+          <h2 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>{t('hostProfile.vehicles')}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
             {listings.map((listing) => {
               const images = normalizeImageList(listing.imageUrls?.length ? listing.imageUrls : listing.primaryImageUrl ? [listing.primaryImageUrl] : []);
@@ -101,7 +103,7 @@ export default function PublicHostProfilePage() {
                     </div>
                   )}
                   <div style={{ padding: '14px 16px' }}>
-                    <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.95rem' }}>{listing.title || 'Car Sharing Listing'}</div>
+                    <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.95rem' }}>{listing.title || t('hostProfile.carSharingListing')}</div>
                     {listing.vehicle && <div style={{ fontSize: '0.82rem', color: '#6b7a9a', marginTop: 2 }}>{[listing.vehicle.year, listing.vehicle.make, listing.vehicle.model].filter(Boolean).join(' ')}</div>}
                     {listing.baseDailyRate?.amount && <div style={{ fontWeight: 800, color: '#6e49ff', marginTop: 6 }}>{fmtMoney(listing.baseDailyRate.amount || listing.baseDailyRate)}/day</div>}
                   </div>
@@ -116,7 +118,7 @@ export default function PublicHostProfilePage() {
       {reviews.length > 0 && (
         <section className="glass card-lg" style={{ padding: '24px 22px' }}>
           <h2 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: 700, color: '#1e2847' }}>
-            Guest Reviews ({host.reviewCount || reviews.length})
+            {t('hostProfile.guestReviews')} ({host.reviewCount || reviews.length})
           </h2>
           <div style={{ display: 'grid', gap: 12 }}>
             {reviews.map((review) => (
@@ -124,14 +126,14 @@ export default function PublicHostProfilePage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
                     <StarDisplay rating={review.rating} />
-                    <span style={{ marginLeft: 8, fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{review.reviewerName || 'Guest'}</span>
+                    <span style={{ marginLeft: 8, fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{review.reviewerName || t('host.guest')}</span>
                   </div>
                   {review.submittedAt && <span style={{ fontSize: '0.76rem', color: '#9ca3af' }}>{formatPublicDateTime(review.submittedAt)}</span>}
                 </div>
                 {review.comments ? (
                   <p style={{ margin: 0, color: '#53607b', fontSize: '0.88rem', lineHeight: 1.6 }}>{review.comments}</p>
                 ) : (
-                  <p style={{ margin: 0, color: '#9ca3af', fontSize: '0.86rem', fontStyle: 'italic' }}>No written review</p>
+                  <p style={{ margin: 0, color: '#9ca3af', fontSize: '0.86rem', fontStyle: 'italic' }}>{t('hostReviews.noWrittenReview')}</p>
                 )}
               </div>
             ))}
@@ -140,7 +142,7 @@ export default function PublicHostProfilePage() {
       )}
 
       {!reviews.length && (
-        <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>No reviews yet for this host.</div>
+        <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>{t('hostProfile.noReviews')}</div>
       )}
     </div>
   );

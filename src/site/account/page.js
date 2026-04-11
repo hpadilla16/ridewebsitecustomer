@@ -3,18 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import { formatPublicDateTime, fmtMoney } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
-
-const STATUS_LABELS = {
-  CONFIRMED: 'Confirmed',
-  ACTIVE: 'Active',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-  PENDING: 'Pending',
-  PENDING_APPROVAL: 'Pending Approval',
-};
 
 const STATUS_COLORS = {
   CONFIRMED: 'rgba(15, 176, 216, 0.18)',
@@ -25,9 +17,14 @@ const STATUS_COLORS = {
   PENDING_APPROVAL: 'rgba(255, 194, 88, 0.18)',
 };
 
-function statusLabel(status) {
-  return STATUS_LABELS[status] || (status ? String(status).replace(/_/g, ' ') : 'Unknown');
-}
+const STATUS_KEYS = {
+  CONFIRMED: 'status.confirmed',
+  ACTIVE: 'status.active',
+  COMPLETED: 'status.completed',
+  CANCELLED: 'status.cancelled',
+  PENDING: 'status.pending',
+  PENDING_APPROVAL: 'status.pendingApproval',
+};
 
 function statusColor(status) {
   return STATUS_COLORS[status] || 'rgba(136, 151, 211, 0.14)';
@@ -63,6 +60,7 @@ function bookingReference(booking) {
 }
 
 export default function AccountPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [token, setToken] = useState(null);
@@ -107,7 +105,7 @@ export default function AccountPage() {
         setBookings(Array.isArray(data?.bookings) ? data.bookings : []);
       } catch (err) {
         if (cancelled) return;
-        setError(err?.message || 'Unable to load your trips. Your session may have expired.');
+        setError(err?.message || t('account.loadError'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -122,15 +120,21 @@ export default function AccountPage() {
     router.replace('/login');
   }
 
+  function statusLabel(status) {
+    const key = STATUS_KEYS[status];
+    if (key) return t(key);
+    return status ? String(status).replace(/_/g, ' ') : t('account.unknown');
+  }
+
   if (!mounted || loading) {
     return (
       <div className="stack" style={{ gap: 24, maxWidth: 860, margin: '0 auto', padding: '48px 24px' }}>
         <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">My Trips</span>
+          <span className="eyebrow">{t('account.title')}</span>
           <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.6rem, 3vw, 2.4rem)' }}>
-            Loading your trips...
+            {t('account.loadingTrips')}
           </h1>
-          <p className={styles.detailLead}>Fetching your booking history.</p>
+          <p className={styles.detailLead}>{t('account.fetchingHistory')}</p>
         </section>
       </div>
     );
@@ -140,25 +144,25 @@ export default function AccountPage() {
     return (
       <div className="stack" style={{ gap: 24, maxWidth: 560, margin: '0 auto', padding: '64px 24px' }}>
         <section className={`glass card-lg ${styles.detailHero}`}>
-          <span className="eyebrow">My Trips</span>
+          <span className="eyebrow">{t('account.title')}</span>
           <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.6rem, 3vw, 2.4rem)' }}>
-            Sign in to view your trips
+            {t('account.signInToViewTrips')}
           </h1>
           <p className={styles.detailLead}>
-            Access your booking history, trip status, and support by signing in with your email.
+            {t('account.accessHistory')}
           </p>
         </section>
         <section className="glass card-lg" style={{ padding: '28px 24px', borderRadius: 18 }}>
           <div style={{ display: 'grid', gap: 12 }}>
             <p className="ui-muted" style={{ margin: 0, lineHeight: 1.7 }}>
-              We use secure, password-free sign-in links. Enter your email and we will send you access instantly.
+              {t('account.passwordFreeExplanation')}
             </p>
             <Link
               href="/login"
               className={styles.checkoutPrimaryButton}
               style={{ textDecoration: 'none', textAlign: 'center' }}
             >
-              Sign in to view trips
+              {t('account.signInToViewTripsButton')}
             </Link>
           </div>
         </section>
@@ -174,21 +178,21 @@ export default function AccountPage() {
   return (
     <div className="stack" style={{ gap: 24, maxWidth: 860, margin: '0 auto', padding: '48px 24px' }}>
       <section className={`glass card-lg ${styles.detailHero}`}>
-        <span className="eyebrow">My Trips</span>
+        <span className="eyebrow">{t('account.title')}</span>
         <h1 style={{ marginTop: 8, marginBottom: 8, fontSize: 'clamp(1.6rem, 3vw, 2.4rem)' }}>
-          {guestName ? `Welcome back, ${firstName || guestName}` : 'Your trips'}
+          {guestName ? t('account.welcome', { name: firstName || guestName }) : t('account.yourTrips')}
         </h1>
         {guestEmail && (
           <p className={styles.detailLead} style={{ maxWidth: 480 }}>
-            Signed in as <strong>{guestEmail}</strong>
+            {t('account.signedInAs', { email: guestEmail })}
           </p>
         )}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 16 }}>
           <Link href="/account/messages" className={styles.heroSecondaryAction} style={{ textDecoration: 'none', border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.07)', fontSize: '0.88rem' }}>
-            Messages
+            {t('common.messages')}
           </Link>
           <Link href="/account/reviews" className={styles.heroSecondaryAction} style={{ textDecoration: 'none', border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.07)', fontSize: '0.88rem' }}>
-            Leave a Review
+            {t('common.leaveReview')}
           </Link>
           <button
             type="button"
@@ -201,17 +205,17 @@ export default function AccountPage() {
               fontSize: '0.88rem',
             }}
           >
-            Sign out
+            {t('common.signOut')}
           </button>
         </div>
       </section>
 
       {error && (
         <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)', borderRadius: 14, padding: '14px 18px' }}>
-          <strong style={{ color: '#ff6b6b' }}>Could not load trips</strong>
+          <strong style={{ color: '#ff6b6b' }}>{t('account.couldNotLoadTrips')}</strong>
           <div className="ui-muted" style={{ marginTop: 6 }}>{error}</div>
           <Link href="/login" style={{ fontSize: '0.88rem', fontWeight: 700, color: 'rgba(15,176,216,0.9)', marginTop: 8, display: 'inline-block', textDecoration: 'none' }}>
-            Sign in again &rarr;
+            {t('account.signInAgain')}
           </Link>
         </div>
       )}
@@ -219,17 +223,17 @@ export default function AccountPage() {
       {!error && bookings.length === 0 && (
         <section className="glass card-lg" style={{ padding: '32px 28px', borderRadius: 20 }}>
           <div className="surface-note">
-            <strong>No trips found</strong>
+            <strong>{t('account.noTrips')}</strong>
             <div className="ui-muted" style={{ marginTop: 6 }}>
-              No bookings are linked to this account yet. If you recently booked, make sure you signed in with the same email used at checkout.
+              {t('account.noTripsHint')}
             </div>
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 16 }}>
             <Link href="/rent" className={styles.resultPrimaryAction} style={{ textDecoration: 'none' }}>
-              Browse vehicles
+              {t('account.browseVehicles')}
             </Link>
             <Link href="/car-sharing" className={styles.resultSecondaryAction} style={{ textDecoration: 'none' }}>
-              Car sharing
+              {t('common.carSharing')}
             </Link>
           </div>
         </section>
@@ -238,7 +242,7 @@ export default function AccountPage() {
       {bookings.length > 0 && (
         <section className="glass card-lg" style={{ padding: '28px 24px', borderRadius: 20 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>
-            {bookings.length === 1 ? '1 Trip' : `${bookings.length} Trips`}
+            {bookings.length === 1 ? t('account.oneTrip') : t('account.trips', { count: bookings.length })}
           </div>
           <div style={{ display: 'grid', gap: 14 }}>
             {bookings.map((booking, idx) => {
@@ -283,19 +287,19 @@ export default function AccountPage() {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
                     {booking?.pickupAt && (
                       <div style={{ display: 'grid', gap: 2 }}>
-                        <span className="label" style={{ fontSize: '0.72rem' }}>Pickup</span>
+                        <span className="label" style={{ fontSize: '0.72rem' }}>{t('account.pickup')}</span>
                         <span style={{ fontSize: '0.9rem' }}>{formatPublicDateTime(booking.pickupAt)}</span>
                       </div>
                     )}
                     {booking?.returnAt && (
                       <div style={{ display: 'grid', gap: 2 }}>
-                        <span className="label" style={{ fontSize: '0.72rem' }}>Return</span>
+                        <span className="label" style={{ fontSize: '0.72rem' }}>{t('account.return')}</span>
                         <span style={{ fontSize: '0.9rem' }}>{formatPublicDateTime(booking.returnAt)}</span>
                       </div>
                     )}
                     {total !== null && total !== undefined && (
                       <div style={{ display: 'grid', gap: 2 }}>
-                        <span className="label" style={{ fontSize: '0.72rem' }}>Total</span>
+                        <span className="label" style={{ fontSize: '0.72rem' }}>{t('checkout.total')}</span>
                         <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{fmtMoney(total)}</span>
                       </div>
                     )}
@@ -307,14 +311,14 @@ export default function AccountPage() {
                       className={styles.resultSecondaryAction}
                       style={{ textDecoration: 'none', fontSize: '0.84rem', padding: '8px 16px' }}
                     >
-                      View Details
+                      {t('common.viewDetails')}
                     </Link>
                     <Link
                       href={issueHref}
                       className={styles.resultSecondaryAction}
                       style={{ textDecoration: 'none', fontSize: '0.84rem', padding: '8px 16px' }}
                     >
-                      Report an Issue
+                      {t('common.reportIssue')}
                     </Link>
                   </div>
                 </div>
@@ -327,7 +331,7 @@ export default function AccountPage() {
       <div className="surface-note" style={{ borderRadius: 14, padding: '14px 18px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="ui-muted" style={{ fontSize: '0.88rem' }}>
-            Not seeing the right trips? Make sure you used the correct email at checkout.
+            {t('account.notSeeingTrips')}
           </span>
           <button
             type="button"
@@ -343,7 +347,7 @@ export default function AccountPage() {
               whiteSpace: 'nowrap',
             }}
           >
-            Switch account &rarr;
+            {t('account.switchAccount')}
           </button>
         </div>
       </div>

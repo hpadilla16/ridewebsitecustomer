@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/client';
 import { formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
@@ -17,7 +18,7 @@ function readCustomer() {
   try { return JSON.parse(window.localStorage.getItem('ride_guest_customer') || 'null'); } catch { return null; }
 }
 
-function StarSelector({ value, onChange }) {
+function StarSelector({ value, onChange, t }) {
   return (
     <div style={{ display: 'flex', gap: 6 }}>
       {[1, 2, 3, 4, 5].map((star) => (
@@ -30,7 +31,7 @@ function StarSelector({ value, onChange }) {
             fontSize: '2rem', color: star <= value ? '#f5a623' : '#d1d5db',
             transition: 'color 0.15s',
           }}
-          aria-label={`${star} star${star > 1 ? 's' : ''}`}
+          aria-label={`${star} ${star > 1 ? t('accountReviews.stars') : t('accountReviews.star')}`}
         >
           ★
         </button>
@@ -45,6 +46,7 @@ function StarDisplay({ rating }) {
 }
 
 export default function GuestReviewsPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tokenParam = searchParams.get('token') || '';
@@ -75,7 +77,7 @@ export default function GuestReviewsPage() {
           setActiveToken(data.pendingReviews[0].token);
         }
       } catch (err) {
-        if (!cancelled) setError(err?.message || 'Unable to load reviews');
+        if (!cancelled) setError(err?.message || t('accountReviews.loadError'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -98,7 +100,7 @@ export default function GuestReviewsPage() {
           }
         }
       } catch (err) {
-        if (!cancelled) setError(err?.message || 'Unable to load review details');
+        if (!cancelled) setError(err?.message || t('accountReviews.loadError'));
       }
     })();
     return () => { cancelled = true; };
@@ -106,7 +108,7 @@ export default function GuestReviewsPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (rating < 1 || rating > 5) { setError('Please select a rating (1-5 stars)'); return; }
+    if (rating < 1 || rating > 5) { setError(t('accountReviews.selectRating')); return; }
     setSubmitting(true);
     setError('');
     setSuccess('');
@@ -115,12 +117,12 @@ export default function GuestReviewsPage() {
         method: 'POST',
         body: JSON.stringify({ rating, comments: comments.trim() || null }),
       });
-      setSuccess('Thank you! Your review has been submitted.');
+      setSuccess(t('accountReviews.thankYou'));
       setReviewPrompt((prev) => prev ? { ...prev, review: { ...prev.review, status: 'SUBMITTED', rating, comments }, host: result?.host || prev?.host } : prev);
       // Remove from pending list
       setPendingReviews((prev) => prev.filter((r) => r.token !== activeToken));
     } catch (err) {
-      setError(err?.message || 'Unable to submit review');
+      setError(err?.message || t('accountReviews.submitError'));
     } finally {
       setSubmitting(false);
     }
@@ -129,7 +131,7 @@ export default function GuestReviewsPage() {
   if (loading) {
     return (
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-        <div className="surface-note" style={{ color: '#6b7a9a' }}>Loading your reviews...</div>
+        <div className="surface-note" style={{ color: '#6b7a9a' }}>{t('accountReviews.loadingReviews')}</div>
       </div>
     );
   }
@@ -140,8 +142,8 @@ export default function GuestReviewsPage() {
 
   return (
     <div style={{ maxWidth: 700, margin: '0 auto', padding: '32px 24px' }}>
-      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← My Trips</Link>
-      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>Reviews</h1>
+      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>{t('accountReviews.backToTrips')}</Link>
+      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>{t('accountReviews.title')}</h1>
 
       {error && <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)', marginBottom: 14 }}>{error}</div>}
       {success && <div className="surface-note" style={{ borderColor: 'rgba(80,200,120,0.28)', background: 'rgba(80,200,120,0.07)', color: '#047857', marginBottom: 14 }}>{success}</div>}
@@ -149,7 +151,7 @@ export default function GuestReviewsPage() {
       {/* Pending reviews list */}
       {pendingReviews.length > 0 && (
         <section className="glass card-lg" style={{ padding: '20px', marginBottom: 20 }}>
-          <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>Trips awaiting your review</h2>
+          <h2 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#1e2847' }}>{t('accountReviews.pendingReviews')}</h2>
           <div style={{ display: 'grid', gap: 8 }}>
             {pendingReviews.map((pr) => (
               <button
@@ -171,7 +173,7 @@ export default function GuestReviewsPage() {
 
       {!pendingReviews.length && !activeToken && (
         <div className="surface-note" style={{ color: '#6b7a9a', textAlign: 'center' }}>
-          No pending reviews. After completing a trip, you'll receive an email with a review link.
+          {t('accountReviews.noPending')}
         </div>
       )}
 
@@ -181,10 +183,10 @@ export default function GuestReviewsPage() {
           {/* Trip context */}
           {trip && (
             <div style={{ marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid rgba(135,82,254,.08)' }}>
-              <span className="eyebrow">Review for</span>
+              <span className="eyebrow">{t('accountReviews.reviewFor')}</span>
               <h2 style={{ margin: '4px 0 0', fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{trip.listingTitle || trip.vehicleLabel || trip.tripCode}</h2>
               <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 4 }}>
-                Trip {trip.tripCode}
+                {t('accountReviews.tripLabel')} {trip.tripCode}
                 {trip.scheduledPickupAt ? ` · ${formatPublicDateTime(trip.scheduledPickupAt)}` : ''}
                 {trip.locationName ? ` · ${trip.locationName}` : ''}
               </div>
@@ -199,7 +201,7 @@ export default function GuestReviewsPage() {
               </div>
               <div>
                 <div style={{ fontWeight: 700, color: '#1e2847' }}>{host.displayName}</div>
-                {host.averageRating > 0 && <div style={{ fontSize: '0.84rem', color: '#6b7a9a' }}><StarDisplay rating={host.averageRating} /> ({host.reviewCount} reviews)</div>}
+                {host.averageRating > 0 && <div style={{ fontSize: '0.84rem', color: '#6b7a9a' }}><StarDisplay rating={host.averageRating} /> ({host.reviewCount} {t('common.reviews').toLowerCase()})</div>}
               </div>
             </div>
           )}
@@ -207,22 +209,22 @@ export default function GuestReviewsPage() {
           {isSubmitted ? (
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
               <StarDisplay rating={reviewPrompt.review.rating} />
-              <p style={{ marginTop: 12, fontSize: '1rem', fontWeight: 600, color: '#1e2847' }}>Review submitted</p>
+              <p style={{ marginTop: 12, fontSize: '1rem', fontWeight: 600, color: '#1e2847' }}>{t('accountReviews.reviewSubmitted')}</p>
               {reviewPrompt.review.comments && <p style={{ color: '#53607b', fontSize: '0.9rem', lineHeight: 1.6 }}>"{reviewPrompt.review.comments}"</p>}
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 18 }}>
               <div>
-                <div className="label" style={{ marginBottom: 8 }}>How was your experience?</div>
-                <StarSelector value={rating} onChange={setRating} />
+                <div className="label" style={{ marginBottom: 8 }}>{t('accountReviews.howWasExperience')}</div>
+                <StarSelector value={rating} onChange={setRating} t={t} />
               </div>
               <div>
-                <div className="label" style={{ marginBottom: 6 }}>Comments (optional)</div>
+                <div className="label" style={{ marginBottom: 6 }}>{t('accountReviews.commentsOptional')}</div>
                 <textarea
                   rows={4}
                   value={comments}
                   onChange={(e) => setComments(e.target.value)}
-                  placeholder="Tell others about your experience with this host and vehicle..."
+                  placeholder={t('accountReviews.commentsPlaceholder')}
                   style={{ width: '100%', resize: 'vertical' }}
                 />
               </div>
@@ -232,7 +234,7 @@ export default function GuestReviewsPage() {
                 disabled={submitting || rating < 1}
                 style={{ justifySelf: 'start', fontSize: '0.9rem', padding: '12px 28px' }}
               >
-                {submitting ? 'Submitting...' : 'Submit Review'}
+                {submitting ? t('common.submitting') : t('accountReviews.submitReview')}
               </button>
             </form>
           )}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useHostAuth, hostApi } from '@/lib/useHostAuth';
 import { fmtMoney, formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
@@ -19,6 +20,7 @@ const STATUS_COLORS = {
 function statusLabel(s) { return s ? String(s).replace(/_/g, ' ') : 'Unknown'; }
 
 export default function HostTripsPage() {
+  const { t } = useTranslation();
   const { token, ready } = useHostAuth();
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,7 @@ export default function HostTripsPage() {
       const data = await hostApi(`/dashboard${qs}`, { bypassCache: true }, token);
       setTrips(data?.trips || []);
     } catch (err) {
-      setError(err?.message || 'Unable to load trips');
+      setError(err?.message || t('errors.unableToLoad'));
     } finally {
       setLoading(false);
     }
@@ -51,10 +53,10 @@ export default function HostTripsPage() {
         method: 'PATCH',
         body: JSON.stringify({ status }),
       }, token);
-      setMsg(`Trip updated to ${statusLabel(status)}`);
+      setMsg(t('hostTrips.tripUpdated', { status: statusLabel(status) }));
       load(filter);
     } catch (err) {
-      setMsg(err?.message || 'Unable to update');
+      setMsg(err?.message || t('errors.unableToLoad'));
     }
   }
 
@@ -64,8 +66,8 @@ export default function HostTripsPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
-      <Link href="/host/dashboard" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← Dashboard</Link>
-      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>My Trips</h1>
+      <Link href="/host/dashboard" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← {t('host.dashboard')}</Link>
+      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>{t('hostTrips.title')}</h1>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
@@ -79,13 +81,13 @@ export default function HostTripsPage() {
               color: filter === f ? '#6e49ff' : '#6b7a9a', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer'
             }}
           >
-            {f ? statusLabel(f) : 'All'}
+            {f ? statusLabel(f) : t('hostTrips.all')}
           </button>
         ))}
       </div>
 
       {msg && <div className="surface-note" style={{ marginBottom: 14, color: msg.includes('updated') ? '#047857' : '#991b1b' }}>{msg}</div>}
-      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>Loading trips...</div>}
+      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>{t('common.loading')}</div>}
       {!loading && error && <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)' }}>{error}</div>}
 
       {!loading && trips.map((trip) => (
@@ -96,16 +98,16 @@ export default function HostTripsPage() {
                 {trip.tripCode || trip.id?.slice(0, 8)}
               </div>
               <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 2 }}>
-                {trip.guest ? `${trip.guest.firstName || ''} ${trip.guest.lastName || ''}`.trim() : 'No guest info'}
+                {trip.guest ? `${trip.guest.firstName || ''} ${trip.guest.lastName || ''}`.trim() : t('hostTrips.noGuestInfo')}
                 {trip.listing?.title ? ` · ${trip.listing.title}` : ''}
               </div>
               <div style={{ fontSize: '0.82rem', color: '#53607b', marginTop: 4 }}>
-                {trip.scheduledPickupAt && <>Pickup: {formatPublicDateTime(trip.scheduledPickupAt)}</>}
-                {trip.scheduledReturnAt && <> · Return: {formatPublicDateTime(trip.scheduledReturnAt)}</>}
+                {trip.scheduledPickupAt && <>{t('hostTrips.pickup')}: {formatPublicDateTime(trip.scheduledPickupAt)}</>}
+                {trip.scheduledReturnAt && <> · {t('hostTrips.return')}: {formatPublicDateTime(trip.scheduledReturnAt)}</>}
               </div>
               {trip.totalPrice != null && (
                 <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#1e2847', marginTop: 4 }}>
-                  Total: {fmtMoney(trip.totalPrice)}
+                  {t('hostTrips.total')}: {fmtMoney(trip.totalPrice)}
                 </div>
               )}
             </div>
@@ -115,8 +117,8 @@ export default function HostTripsPage() {
               </span>
               {trip.status === 'PENDING_APPROVAL' && (
                 <div style={{ display: 'flex', gap: 6 }}>
-                  <button onClick={() => updateStatus(trip.id, 'CONFIRMED')} style={{ padding: '5px 12px', borderRadius: 8, border: 'none', background: 'rgba(80,200,120,.18)', color: '#047857', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}>Approve</button>
-                  <button onClick={() => updateStatus(trip.id, 'CANCELLED')} style={{ padding: '5px 12px', borderRadius: 8, border: 'none', background: 'rgba(255,80,80,.14)', color: '#991b1b', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}>Decline</button>
+                  <button onClick={() => updateStatus(trip.id, 'CONFIRMED')} style={{ padding: '5px 12px', borderRadius: 8, border: 'none', background: 'rgba(80,200,120,.18)', color: '#047857', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}>{t('hostTrips.approve')}</button>
+                  <button onClick={() => updateStatus(trip.id, 'CANCELLED')} style={{ padding: '5px 12px', borderRadius: 8, border: 'none', background: 'rgba(255,80,80,.14)', color: '#991b1b', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}>{t('hostTrips.decline')}</button>
                 </div>
               )}
             </div>
@@ -125,7 +127,7 @@ export default function HostTripsPage() {
       ))}
 
       {!loading && !trips.length && !error && (
-        <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>No trips found{filter ? ` with status "${statusLabel(filter)}"` : ''}.</div>
+        <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>{t('hostTrips.noTrips')}</div>
       )}
     </div>
   );

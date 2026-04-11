@@ -51,10 +51,10 @@ function computeSelectedServices(result, selectedServices, searchMode) {
     });
 }
 
-function CheckoutStepBar({ step, searchMode }) {
+function CheckoutStepBar({ step, searchMode, t }) {
   const labels = searchMode === 'RENTAL'
-    ? ['Your info', 'Coverage', 'Review']
-    : ['Your info', 'Add-ons', 'Review'];
+    ? [t('checkout.stepYourInfo'), t('checkout.stepCoverage'), t('checkout.stepReview')]
+    : [t('checkout.stepYourInfo'), t('checkout.stepAddOns'), t('checkout.stepReview')];
   return (
     <div style={{ display: 'flex', alignItems: 'center', marginBottom: 28 }}>
       {labels.map((label, i) => (
@@ -187,7 +187,7 @@ function CheckoutInner() {
     if (step === 1) {
       const { success, errors } = validateGuestInfo(customer);
       setFieldErrors(errors);
-      if (!success) { setError('Please fix the highlighted fields.'); return; }
+      if (!success) { setError(t('checkout.fixFields')); return; }
     }
     setError('');
     setStep(nextStep);
@@ -203,9 +203,9 @@ function CheckoutInner() {
 
   async function handleSubmit() {
     const { success, errors } = validateGuestInfo(customer);
-    if (!success) { setFieldErrors(errors); setError('Please fix the highlighted fields.'); return; }
+    if (!success) { setFieldErrors(errors); setError(t('checkout.fixFields')); return; }
     setFieldErrors({});
-    if (!insuranceComplete) return setError('Please choose a protection option or confirm the guest is using their own insurance.');
+    if (!insuranceComplete) return setError(t('checkout.chooseCoverage'));
     setSubmitting(true);
     setError('');
     try {
@@ -255,18 +255,18 @@ function CheckoutInner() {
             <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '1.02rem' }}>{vehicleName}</div>
             {selectedResult?.instantBook && (
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 6, padding: '4px 10px', borderRadius: 999, background: 'linear-gradient(135deg,#16a34a,#15803d)', color: '#fff', fontSize: '0.76rem', fontWeight: 800 }}>
-                ⚡ Instant Book
+                ⚡ {t('home.instantBook')}
               </span>
             )}
           </div>
           <div style={{ display: 'grid', gap: 8, padding: '12px 14px', borderRadius: 14, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
-              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Pickup</span>
+              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>{t('account.pickup')}</span>
               <span>{formatPublicDateTime(pickupAt)}</span>
             </div>
             <div style={{ borderTop: '1px solid rgba(110,73,255,.1)' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
-              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Return</span>
+              <span style={{ color: '#6b7a9a', fontWeight: 600 }}>{t('account.return')}</span>
               <span>{formatPublicDateTime(returnAt)}</span>
             </div>
           </div>
@@ -277,30 +277,30 @@ function CheckoutInner() {
           )}
           <div style={{ borderTop: '1px solid rgba(110,73,255,.1)', paddingTop: 14, display: 'grid', gap: 8 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
-              <span>Base trip</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
+              <span>{t('checkout.baseTrip')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
             </div>
             {addOnsTotal > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
-                <span>Add-ons</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
+                <span>{t('checkout.addOns')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
               </div>
             )}
             {insuranceTotal > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
-                <span>Coverage</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
+                <span>{t('checkout.coverage')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(insuranceTotal)}</strong>
               </div>
             )}
             <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: 800, color: '#1e2847' }}>Total</span>
+              <span style={{ fontWeight: 800, color: '#1e2847' }}>{t('checkout.total')}</span>
               <span style={{ fontWeight: 900, fontSize: '1.15rem', color: '#1e2847' }}>{fmtMoney(estimatedTotal)}</span>
             </div>
             {estimatedDueNow > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.87rem', color: '#53607b' }}>
-                <span>Due now</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
+                <span>{t('checkout.dueNow')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(estimatedDueNow)}</strong>
               </div>
             )}
           </div>
           <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
-            🛡 Trip protection included · No hidden fees
+            🛡 {t('checkout.tripProtection')}
           </div>
         </div>
       </div>
@@ -310,9 +310,9 @@ function CheckoutInner() {
   return (
     <div style={{ maxWidth: 960, margin: '0 auto', padding: '28px 18px 60px', display: 'grid', gap: 20 }}>
       <Breadcrumbs items={[
-        { label: 'Home', href: '/' },
-        { label: searchMode === 'CAR_SHARING' ? 'Car Sharing' : 'Rent', href: searchMode === 'CAR_SHARING' ? '/car-sharing' : '/rent' },
-        { label: 'Checkout' }
+        { label: t('common.home'), href: '/' },
+        { label: searchMode === 'CAR_SHARING' ? t('common.carSharing') : t('common.rent'), href: searchMode === 'CAR_SHARING' ? '/car-sharing' : '/rent' },
+        { label: t('checkout.title') }
       ]} />
       <div>
         <Link href={backHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.88rem', fontWeight: 700, color: '#4a38be', textDecoration: 'none' }}>
@@ -320,7 +320,7 @@ function CheckoutInner() {
         </Link>
       </div>
 
-      <CheckoutStepBar step={step} searchMode={searchMode} />
+      <CheckoutStepBar step={step} searchMode={searchMode} t={t} />
 
       {error && !loading && (
         <div style={{ padding: '14px 18px', borderRadius: 14, background: 'rgba(220,38,38,.07)', border: '1px solid rgba(220,38,38,.2)', color: '#991b1b', fontWeight: 600, fontSize: '0.93rem' }}>
@@ -331,7 +331,7 @@ function CheckoutInner() {
       <div className={styles.detailGrid}>
         <div className={`glass card ${styles.contentPanel}`} style={{ gap: 24 }}>
           {loading && (
-            <div style={{ color: '#6b7a9a', fontWeight: 600 }}>Preparing your booking...</div>
+            <div style={{ color: '#6b7a9a', fontWeight: 600 }}>{t('checkout.preparingBooking')}</div>
           )}
           {!loading && selectedResult && (
             <div style={{ display: 'grid', gap: 24 }}>
@@ -350,9 +350,9 @@ function CheckoutInner() {
                     <div><div className="label">{t('checkout.phone')}</div><input value={customer.phone} onChange={(e) => { setCustomer((c) => ({ ...c, phone: e.target.value })); setFieldErrors((f) => ({ ...f, phone: undefined })); }} placeholder="(800) 676-5764" style={fieldErrors.phone ? { borderColor: '#ff6b6b' } : undefined} />{fieldErrors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.78rem', marginTop: 4 }} role="alert">{fieldErrors.phone}</div>}</div>
                   </div>
                   <div className="form-grid-3">
-                    <div><div className="label">Date of birth</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((c) => ({ ...c, dateOfBirth: e.target.value }))} /></div>
-                    <div><div className="label">License number</div><input value={customer.licenseNumber} onChange={(e) => setCustomer((c) => ({ ...c, licenseNumber: e.target.value }))} /></div>
-                    <div><div className="label">License state</div><input value={customer.licenseState} onChange={(e) => setCustomer((c) => ({ ...c, licenseState: e.target.value }))} placeholder="PR" /></div>
+                    <div><div className="label">{t('checkout.dateOfBirth')}</div><input type="date" value={customer.dateOfBirth} onChange={(e) => setCustomer((c) => ({ ...c, dateOfBirth: e.target.value }))} /></div>
+                    <div><div className="label">{t('checkout.licenseNumber')}</div><input value={customer.licenseNumber} onChange={(e) => setCustomer((c) => ({ ...c, licenseNumber: e.target.value }))} /></div>
+                    <div><div className="label">{t('checkout.licenseState')}</div><input value={customer.licenseState} onChange={(e) => setCustomer((c) => ({ ...c, licenseState: e.target.value }))} placeholder="PR" /></div>
                   </div>
                   <div style={{ padding: '12px 16px', borderRadius: 14, background: 'rgba(110,73,255,.05)', border: '1px solid rgba(110,73,255,.1)', fontSize: '0.84rem', color: '#53607b', lineHeight: 1.6 }}>
                     🔒 {t('checkout.encrypted')}
@@ -361,8 +361,8 @@ function CheckoutInner() {
                   <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '14px 16px', borderRadius: 14, border: '1px solid rgba(110,73,255,.08)', background: 'rgba(110,73,255,.02)', cursor: 'pointer' }}>
                     <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} style={{ marginTop: 2 }} />
                     <div>
-                      <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>Create an account for faster future bookings</div>
-                      <div style={{ fontSize: '0.82rem', color: '#6b7a9a', marginTop: 2 }}>Save your details so you can view trips, message hosts, and leave reviews.</div>
+                      <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{t('checkout.createAccount')}</div>
+                      <div style={{ fontSize: '0.82rem', color: '#6b7a9a', marginTop: 2 }}>{t('checkout.createAccountHint')}</div>
                     </div>
                   </label>
                 </>
@@ -373,8 +373,8 @@ function CheckoutInner() {
                   {searchMode === 'RENTAL' && (
                     <div style={{ display: 'grid', gap: 12 }}>
                       <div>
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>Trip coverage</h2>
-                        <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Choose a protection plan or confirm you have your own coverage.</p>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{t('checkout.tripCoverage')}</h2>
+                        <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>{t('checkout.tripCoverageSubtitle')}</p>
                       </div>
                       {(selectedResult?.insurancePlans || []).map((plan) => {
                         const isSelected = String(insuranceSelection.selectedPlanCode || '').toUpperCase() === String(plan.code || '').toUpperCase();
@@ -394,23 +394,23 @@ function CheckoutInner() {
                         );
                       })}
                       <div style={{ padding: '16px 18px', borderRadius: 16, border: '1.5px solid rgba(110,73,255,.15)', background: 'rgba(255,255,255,.8)', display: 'grid', gap: 12 }}>
-                        <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>Use my own insurance</strong>
+                        <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>{t('checkout.useOwnInsurance')}</strong>
                         <div style={{ display: 'grid', gap: 8 }}>
                           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
                             <input type="checkbox" checked={insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, selectedPlanCode: '', declinedCoverage: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
-                            <span>Decline company coverage</span>
+                            <span>{t('checkout.declineCoverage')}</span>
                           </label>
                           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
                             <input type="checkbox" checked={insuranceSelection.usingOwnInsurance} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, usingOwnInsurance: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
-                            <span>I will use my own insurance</span>
+                            <span>{t('checkout.willUseOwnInsurance')}</span>
                           </label>
                           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
                             <input type="checkbox" checked={insuranceSelection.liabilityAccepted} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, liabilityAccepted: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
-                            <span>I accept responsibility and liability</span>
+                            <span>{t('checkout.acceptLiability')}</span>
                           </label>
                         </div>
                         <div>
-                          <div className="label">Policy number</div>
+                          <div className="label">{t('checkout.policyNumber')}</div>
                           <input value={insuranceSelection.ownPolicyNumber} disabled={!insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, ownPolicyNumber: e.target.value }))} />
                         </div>
                       </div>
@@ -419,8 +419,8 @@ function CheckoutInner() {
 
                   <div style={{ display: 'grid', gap: 12 }}>
                     <div>
-                      <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{searchMode === 'RENTAL' ? 'Add-ons' : 'Trip add-ons'}</h2>
-                      <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>Customize your trip with optional extras.</p>
+                      <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e2847', margin: '0 0 4px' }}>{searchMode === 'RENTAL' ? t('checkout.addOns') : t('checkout.tripAddOns')}</h2>
+                      <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>{t('checkout.addOnsSubtitle')}</p>
                     </div>
                     {selectedResult?.additionalServices?.length
                       ? selectedResult.additionalServices.map((service) => {
@@ -432,21 +432,21 @@ function CheckoutInner() {
                                 {service.description && (
                                   <div style={{ fontSize: '0.84rem', color: '#6b7a9a', marginTop: 3 }}>{service.description}</div>
                                 )}
-                                <div style={{ fontSize: '0.83rem', color: '#6b7a9a', marginTop: 4 }}>{fmtMoney(service.rate)} {service.pricingMode === 'PER_DAY' ? '/ day' : 'flat'}</div>
+                                <div style={{ fontSize: '0.83rem', color: '#6b7a9a', marginTop: 4 }}>{fmtMoney(service.rate)} {service.pricingMode === 'PER_DAY' ? t('checkout.perDay') : t('checkout.flat')}</div>
                                 {(state.selected || service.mandatory) && (
                                   <div style={{ marginTop: 10 }}>
-                                    <div className="label">Quantity</div>
+                                    <div className="label">{t('checkout.quantity')}</div>
                                     <input type="number" min="1" value={state.quantity} disabled={!state.selected && !service.mandatory} onChange={(e) => setSelectedServices((c) => ({ ...c, [service.serviceId]: { selected: c[service.serviceId]?.selected ?? !!service.mandatory, quantity: Math.max(1, Number(e.target.value || 1) || 1) } }))} style={{ width: 80, padding: '8px 12px', borderRadius: 10, border: '1.5px solid rgba(110,73,255,.18)', background: '#fff', color: '#1e2847', fontSize: '0.95rem' }} />
                                   </div>
                                 )}
                               </div>
                               <div>
                                 {service.mandatory
-                                  ? <span style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(22,163,74,.1)', color: '#15803d', fontSize: '0.78rem', fontWeight: 800 }}>Included</span>
+                                  ? <span style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(22,163,74,.1)', color: '#15803d', fontSize: '0.78rem', fontWeight: 800 }}>{t('checkout.included')}</span>
                                   : (
                                     <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: '0.88rem', fontWeight: 700, color: state.selected ? '#6e49ff' : '#6b7a9a' }}>
                                       <input type="checkbox" checked={!!state.selected} onChange={(e) => setSelectedServices((c) => ({ ...c, [service.serviceId]: { selected: e.target.checked, quantity: Math.max(1, Number(c[service.serviceId]?.quantity ?? service.quantity ?? 1) || 1) } }))} style={{ accentColor: '#6e49ff', width: 18, height: 18 }} />
-                                      Add
+                                      {t('checkout.add')}
                                     </label>
                                   )
                                 }
@@ -456,7 +456,7 @@ function CheckoutInner() {
                         })
                       : (
                         <div style={{ padding: '20px', borderRadius: 16, background: 'rgba(110,73,255,.04)', border: '1px solid rgba(110,73,255,.1)', color: '#6b7a9a', fontSize: '0.9rem', textAlign: 'center' }}>
-                          No add-ons available for this trip.
+                          {t('checkout.noAddOns')}
                         </div>
                       )
                     }
@@ -473,8 +473,8 @@ function CheckoutInner() {
 
                   <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 800, color: '#1e2847' }}>Driver</span>
-                      <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6e49ff', fontWeight: 700, fontSize: '0.88rem' }} onClick={() => setStep(1)}>Edit</button>
+                      <span style={{ fontWeight: 800, color: '#1e2847' }}>{t('checkout.driver')}</span>
+                      <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6e49ff', fontWeight: 700, fontSize: '0.88rem' }} onClick={() => setStep(1)}>{t('common.edit')}</button>
                     </div>
                     <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{`${customer.firstName} ${customer.lastName}`.trim()}</div>
                     <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{customer.email}</div>
@@ -482,7 +482,7 @@ function CheckoutInner() {
                   </div>
 
                   <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.12)', background: 'rgba(246,244,255,.8)', display: 'grid', gap: 6 }}>
-                    <div style={{ fontWeight: 800, color: '#1e2847' }}>Trip</div>
+                    <div style={{ fontWeight: 800, color: '#1e2847' }}>{t('checkout.trip')}</div>
                     <div style={{ fontSize: '0.88rem', color: '#53607b' }}>{formatPublicDateTime(pickupAt)} → {formatPublicDateTime(returnAt)}</div>
                     <div style={{ fontSize: '0.88rem', color: '#53607b', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <span>📍</span><span>{publicLocationLabel(selectedLocation)}</span>
@@ -494,27 +494,27 @@ function CheckoutInner() {
                     {/* Daily rate × days */}
                     {selectedResult?.quote?.dailyRate && selectedResult?.quote?.days && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>{fmtMoney(selectedResult.quote.dailyRate)} × {selectedResult.quote.days} {selectedResult.quote.days === 1 ? 'day' : 'days'}</span>
+                        <span>{fmtMoney(selectedResult.quote.dailyRate)} × {selectedResult.quote.days} {selectedResult.quote.days === 1 ? t('checkout.day') : t('checkout.days')}</span>
                         <strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.subtotal || baseTotal)}</strong>
                       </div>
                     )}
                     {/* Car sharing: tripDays */}
                     {!selectedResult?.quote?.dailyRate && selectedResult?.quote?.tripDays && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Base trip ({selectedResult.quote.tripDays} {selectedResult.quote.tripDays === 1 ? 'day' : 'days'})</span>
+                        <span>{t('checkout.baseTrip')} ({selectedResult.quote.tripDays} {selectedResult.quote.tripDays === 1 ? t('checkout.day') : t('checkout.days')})</span>
                         <strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.subtotal || baseTotal)}</strong>
                       </div>
                     )}
                     {/* Fees */}
                     {Number(selectedResult?.quote?.fees || 0) > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Fees</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.fees)}</strong>
+                        <span>{t('checkout.fees')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.fees)}</strong>
                       </div>
                     )}
                     {/* Taxes */}
                     {Number(selectedResult?.quote?.taxes || 0) > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
-                        <span>Taxes</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.taxes)}</strong>
+                        <span>{t('checkout.taxes')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(selectedResult.quote.taxes)}</strong>
                       </div>
                     )}
                     {addOnsTotal > 0 && (
@@ -530,9 +530,9 @@ function CheckoutInner() {
                     {/* Multi-day discount hint */}
                     {(() => {
                       const days = Number(selectedResult?.quote?.days || selectedResult?.quote?.tripDays || 0);
-                      if (days >= 30) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>🎉 Monthly rate applied — best value</div>;
-                      if (days >= 7) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>✓ Weekly rate applied</div>;
-                      if (days >= 5) return <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>💡 Book 7+ days for a weekly discount</div>;
+                      if (days >= 30) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>🎉 {t('checkout.monthlyRate')}</div>;
+                      if (days >= 7) return <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: 600 }}>✓ {t('checkout.weeklyRate')}</div>;
+                      if (days >= 5) return <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>💡 {t('checkout.weeklyHint')}</div>;
                       return null;
                     })()}
                     <div style={{ borderTop: '1.5px solid rgba(110,73,255,.14)', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -570,11 +570,11 @@ function CheckoutInner() {
                   </div>
 
                   <div style={{ padding: '16px 18px', borderRadius: 16, border: '1px solid rgba(110,73,255,.1)', background: 'rgba(110,73,255,.03)', display: 'grid', gap: 10 }}>
-                    <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '0.95rem' }}>What happens next</div>
+                    <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '0.95rem' }}>{t('checkout.whatHappensNext')}</div>
                     {[
-                      'Your reservation is confirmed immediately',
-                      estimatedDueNow > 0 ? `You'll be directed to payment for ${fmtMoney(estimatedDueNow)}` : 'No payment is due right now',
-                      "You'll receive a confirmation email with trip details and next steps"
+                      t('checkout.confirmedImmediately'),
+                      estimatedDueNow > 0 ? t('checkout.directedToPayment', { amount: fmtMoney(estimatedDueNow) }) : t('checkout.noPaymentNow'),
+                      t('checkout.confirmationEmail')
                     ].map((item, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: '0.88rem', color: '#53607b' }}>
                         <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg,#ffc258,#6e49ff 55%,#0fb0d8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.72rem', fontWeight: 800, flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
@@ -587,7 +587,7 @@ function CheckoutInner() {
 
               <div className={styles.checkoutActionRow}>
                 {step > 1 && (
-                  <button type="button" className={styles.checkoutGhostButton} onClick={() => setStep((s) => s - 1)}>← Back</button>
+                  <button type="button" className={styles.checkoutGhostButton} onClick={() => setStep((s) => s - 1)}>← {t('common.back')}</button>
                 )}
                 {step < totalSteps
                   ? (
@@ -597,7 +597,7 @@ function CheckoutInner() {
                       style={{ background: 'linear-gradient(135deg,#7c3aed,#6e49ff 55%,#0fb0d8)', color: '#fff', border: 'none', boxShadow: '0 10px 24px rgba(110,73,255,.3)' }}
                       onClick={() => {
                         if (step === 1) { validateAndAdvance(2); return; }
-                        if (step === 2 && !insuranceComplete) return setError('Please choose a coverage option.');
+                        if (step === 2 && !insuranceComplete) return setError(t('checkout.chooseCoverageOption'));
                         setError('');
                         setStep((s) => s + 1);
                       }}
@@ -613,7 +613,7 @@ function CheckoutInner() {
                       onClick={handleSubmit}
                       disabled={submitting}
                     >
-                      {submitting ? 'Confirming...' : 'Complete booking'}
+                      {submitting ? t('checkout.confirming') : t('checkout.completeBooking')}
                     </button>
                   )
                 }
@@ -631,7 +631,7 @@ function CheckoutInner() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="glass card" style={{ padding: 24 }}>Loading checkout...</div>}>
+    <Suspense fallback={<div className="glass card" style={{ padding: 24 }}>Loading...</div>}>
       <CheckoutInner />
     </Suspense>
   );

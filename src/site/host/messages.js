@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useHostAuth, hostApi } from '@/lib/useHostAuth';
 import { formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../sitePreviewPremium.module.css';
 
 export default function HostMessagesPage() {
+  const { t } = useTranslation();
   const { token, ready } = useHostAuth();
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
@@ -20,7 +22,7 @@ export default function HostMessagesPage() {
       const data = await hostApi('/messages', {}, token);
       setConversations(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err?.message || 'Unable to load messages');
+      setError(err?.message || t('errors.unableToLoad'));
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ export default function HostMessagesPage() {
       }));
       setNewMsg('');
     } catch (err) {
-      setError(err?.message || 'Unable to send message');
+      setError(err?.message || t('errors.unableToLoad'));
     } finally {
       setSending(false);
     }
@@ -65,17 +67,17 @@ export default function HostMessagesPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
-      <Link href="/host/dashboard" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← Dashboard</Link>
-      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>Guest Messages</h1>
+      <Link href="/host/dashboard" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← {t('host.dashboard')}</Link>
+      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>{t('hostMessages.title')}</h1>
 
-      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>Loading conversations...</div>}
+      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>{t('common.loading')}</div>}
       {error && <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)', marginBottom: 14 }}>{error}</div>}
 
       <div style={{ display: 'grid', gridTemplateColumns: activeConv ? '280px 1fr' : '1fr', gap: 16, minHeight: 400 }}>
         {/* Conversation list */}
         <div style={{ display: 'grid', gap: 8, alignContent: 'start' }}>
           {!loading && !conversations.length && (
-            <div className="surface-note" style={{ color: '#6b7a9a', fontSize: '0.88rem' }}>No guest conversations yet.</div>
+            <div className="surface-note" style={{ color: '#6b7a9a', fontSize: '0.88rem' }}>{t('hostMessages.noConversations')}</div>
           )}
           {conversations.map((conv) => (
             <button
@@ -89,13 +91,13 @@ export default function HostMessagesPage() {
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{conv.customerName || conv.customerEmail || 'Guest'}</span>
+                <span style={{ fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{conv.customerName || conv.customerEmail || t('host.guest')}</span>
                 {conv.unreadHostCount > 0 && (
                   <span style={{ padding: '2px 8px', borderRadius: 99, background: '#6e49ff', color: '#fff', fontSize: '0.72rem', fontWeight: 700 }}>{conv.unreadHostCount}</span>
                 )}
               </div>
               {conv.tripCode && <div style={{ fontSize: '0.76rem', color: '#6e49ff' }}>Trip: {conv.tripCode}</div>}
-              <div style={{ fontSize: '0.8rem', color: '#6b7a9a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.lastMessageText || 'No messages'}</div>
+              <div style={{ fontSize: '0.8rem', color: '#6b7a9a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.lastMessageText || t('common.noResults')}</div>
               {conv.lastMessageAt && <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>{formatPublicDateTime(conv.lastMessageAt)}</div>}
             </button>
           ))}
@@ -105,7 +107,7 @@ export default function HostMessagesPage() {
         {activeConv && (
           <section className="glass card-lg" style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginBottom: 14, borderBottom: '1px solid rgba(135,82,254,.08)', paddingBottom: 12 }}>
-              <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '1rem' }}>{activeConv.customerName || 'Guest'}</div>
+              <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '1rem' }}>{activeConv.customerName || t('host.guest')}</div>
               {activeConv.tripCode && <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>Trip: {activeConv.tripCode}</div>}
             </div>
 
@@ -133,7 +135,7 @@ export default function HostMessagesPage() {
               <input
                 value={newMsg}
                 onChange={(e) => setNewMsg(e.target.value)}
-                placeholder="Type a message..."
+                placeholder={t('hostMessages.typeMessage')}
                 style={{ flex: 1 }}
               />
               <button
@@ -142,7 +144,7 @@ export default function HostMessagesPage() {
                 disabled={sending || !newMsg.trim()}
                 style={{ fontSize: '0.85rem', padding: '10px 20px', whiteSpace: 'nowrap' }}
               >
-                {sending ? 'Sending...' : 'Send'}
+                {sending ? t('common.sending') : t('common.send')}
               </button>
             </form>
           </section>

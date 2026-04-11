@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useGuestAuth, guestApi } from '@/lib/useGuestAuth';
 import { formatPublicDateTime } from '@/site/sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
 export default function GuestMessagesPage() {
+  const { t } = useTranslation();
   const { customer, ready } = useGuestAuth();
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
@@ -21,7 +23,7 @@ export default function GuestMessagesPage() {
       const data = await guestApi('/list', { method: 'POST', body: JSON.stringify({ customerId: customer.id }) });
       setConversations(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err?.message || 'Unable to load messages');
+      setError(err?.message || t('accountMessages.loadError'));
     } finally {
       setLoading(false);
     }
@@ -63,7 +65,7 @@ export default function GuestMessagesPage() {
       }));
       setNewMsg('');
     } catch (err) {
-      setError(err?.message || 'Unable to send message');
+      setError(err?.message || t('accountMessages.sendError'));
     } finally {
       setSending(false);
     }
@@ -73,17 +75,17 @@ export default function GuestMessagesPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
-      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>← My Trips</Link>
-      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>Messages</h1>
+      <Link href="/account" style={{ fontSize: '0.82rem', color: '#6e49ff' }}>{t('accountMessages.backToTrips')}</Link>
+      <h1 style={{ margin: '4px 0 20px', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 800, color: '#1e2847' }}>{t('accountMessages.title')}</h1>
 
-      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>Loading conversations...</div>}
+      {loading && <div className="surface-note" style={{ textAlign: 'center', color: '#6b7a9a' }}>{t('accountMessages.loadingConversations')}</div>}
       {error && <div className="surface-note" style={{ borderColor: 'rgba(255,80,80,0.28)', background: 'rgba(255,60,60,0.07)', marginBottom: 14 }}>{error}</div>}
 
       <div style={{ display: 'grid', gridTemplateColumns: activeConv ? '280px 1fr' : '1fr', gap: 16, minHeight: 400 }}>
         {/* Conversation list */}
         <div style={{ display: 'grid', gap: 8, alignContent: 'start' }}>
           {!loading && !conversations.length && (
-            <div className="surface-note" style={{ color: '#6b7a9a', fontSize: '0.88rem' }}>No conversations yet. Messages with your host will appear here.</div>
+            <div className="surface-note" style={{ color: '#6b7a9a', fontSize: '0.88rem' }}>{t('accountMessages.noConversations')}</div>
           )}
           {conversations.map((conv) => (
             <button
@@ -101,7 +103,7 @@ export default function GuestMessagesPage() {
                   <span style={{ padding: '2px 8px', borderRadius: 99, background: '#6e49ff', color: '#fff', fontSize: '0.72rem', fontWeight: 700 }}>{conv.unreadGuestCount}</span>
                 )}
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#6b7a9a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.lastMessageText || conv.subject || 'No messages'}</div>
+              <div style={{ fontSize: '0.8rem', color: '#6b7a9a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.lastMessageText || conv.subject || t('accountMessages.noMessages')}</div>
               {conv.lastMessageAt && <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>{formatPublicDateTime(conv.lastMessageAt)}</div>}
             </button>
           ))}
@@ -112,7 +114,7 @@ export default function GuestMessagesPage() {
           <section className="glass card-lg" style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginBottom: 14, borderBottom: '1px solid rgba(135,82,254,.08)', paddingBottom: 12 }}>
               <div style={{ fontWeight: 700, color: '#1e2847', fontSize: '1rem' }}>{activeConv.hostDisplayName || 'Host'}</div>
-              {activeConv.tripCode && <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>Trip: {activeConv.tripCode}</div>}
+              {activeConv.tripCode && <div style={{ fontSize: '0.82rem', color: '#6b7a9a' }}>{t('accountMessages.tripLabel')}: {activeConv.tripCode}</div>}
               {activeConv.subject && <div style={{ fontSize: '0.84rem', color: '#53607b' }}>{activeConv.subject}</div>}
             </div>
 
@@ -142,7 +144,7 @@ export default function GuestMessagesPage() {
               <input
                 value={newMsg}
                 onChange={(e) => setNewMsg(e.target.value)}
-                placeholder="Type a message..."
+                placeholder={t('accountMessages.typeMessage')}
                 style={{ flex: 1 }}
               />
               <button
@@ -151,7 +153,7 @@ export default function GuestMessagesPage() {
                 disabled={sending || !newMsg.trim()}
                 style={{ fontSize: '0.85rem', padding: '10px 20px', whiteSpace: 'nowrap' }}
               >
-                {sending ? 'Sending...' : 'Send'}
+                {sending ? t('common.sending') : t('common.send')}
               </button>
             </form>
           </section>

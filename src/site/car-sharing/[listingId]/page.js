@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { api } from '../../../lib/client';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
@@ -26,7 +27,7 @@ import {
 } from '../../sitePreviewShared';
 import styles from '../../sitePreviewPremium.module.css';
 
-function InstantBookBadge() {
+function InstantBookBadge({ t }) {
   return (
     <span style={{
       display: 'inline-flex',
@@ -41,12 +42,12 @@ function InstantBookBadge() {
       letterSpacing: '0.04em',
       boxShadow: '0 6px 16px rgba(22,163,74,0.26)'
     }}>
-      <span style={{ fontSize: '0.78rem' }}>⚡</span> Instant Book
+      <span style={{ fontSize: '0.78rem' }}>⚡</span> {t('carSharingPage.instantBook')}
     </span>
   );
 }
 
-function ProtectedBadge() {
+function ProtectedBadge({ t }) {
   return (
     <div style={{
       display: 'flex',
@@ -61,27 +62,28 @@ function ProtectedBadge() {
       fontWeight: 700
     }}>
       <span style={{ fontSize: '1.1rem' }}>🛡</span>
-      <span>Trip protection included on every booking</span>
+      <span>{t('carSharingDetail.tripProtectionEveryBooking')}</span>
     </div>
   );
 }
 
-function StarRating({ count }) {
+function StarRating({ count, t }) {
   if (!count) {
     return (
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: '0.88rem', fontWeight: 700, color: '#6b7a9a' }}>
-        <span style={{ color: '#94a3b8' }}>★★★★★</span> New listing
+        <span style={{ color: '#94a3b8' }}>★★★★★</span> {t('carSharingDetail.newListing')}
       </span>
     );
   }
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: '0.88rem', fontWeight: 700, color: '#26314d' }}>
-      <span style={{ color: '#f59e0b' }}>★★★★★</span> {count} reviews
+      <span style={{ color: '#f59e0b' }}>★★★★★</span> {t('carSharingPage.reviews', { count })}
     </span>
   );
 }
 
 function CarSharingDetailPreviewContent() {
+  const { t } = useTranslation();
   const params = useParams();
   const pathname = usePathname();
   const basePath = resolveSiteBasePath(pathname);
@@ -110,7 +112,7 @@ function CarSharingDetailPreviewContent() {
         const firstLocationId = publicLocationOptions[0]?.id || '';
         const locationIds = backendLocationIdsForPublicOption(publicLocationOptions, locationId || firstLocationId);
         if (!locationIds.length) {
-          throw new Error('Pickup location not found');
+          throw new Error(t('carSharingPage.pickupLocationNotFound'));
         }
         const payload = await api('/api/public/booking/car-sharing-search', {
           method: 'POST',
@@ -128,7 +130,7 @@ function CarSharingDetailPreviewContent() {
         setListing(match);
         if (match?.id) setFaved(isFavorite(match.id));
         if (!match) {
-          setError('This car sharing listing is not currently available for the selected trip window.');
+          setError('carSharingDetail.listingNotAvailable');
         } else {
           setError('');
           // Fetch host profile with reviews in background
@@ -141,7 +143,7 @@ function CarSharingDetailPreviewContent() {
         }
       } catch (err) {
         setListing(null);
-        setError(String(err?.message || 'Unable to load car sharing listing.'));
+        setError(String(err?.message || t('carSharingDetail.unableToLoadListing')));
       } finally {
         setLoading(false);
       }
@@ -169,27 +171,27 @@ function CarSharingDetailPreviewContent() {
   const howItWorks = [
     {
       step: '1',
-      title: 'Search & Book',
-      body: 'Browse verified local vehicles by date and location. Instant Book or request to reserve — your choice.'
+      title: t('carSharingDetail.step1Title'),
+      body: t('carSharingDetail.step1Body')
     },
     {
       step: '2',
-      title: 'Meet Your Host',
-      body: 'Get clear pickup instructions before your trip. Your host will have everything ready at the agreed time and place.'
+      title: t('carSharingDetail.step2Title'),
+      body: t('carSharingDetail.step2Body')
     },
     {
       step: '3',
-      title: 'Drive & Return',
-      body: 'Hit the road with trip protection included. Return on time and complete the trip through your confirmation link.'
+      title: t('carSharingDetail.step3Title'),
+      body: t('carSharingDetail.step3Body')
     }
   ];
 
   return (
     <div className="stack" style={{ gap: 20 }}>
       <Breadcrumbs items={[
-        { label: 'Home', href: '/' },
-        { label: 'Car Sharing', href: '/car-sharing' },
-        { label: vehicleLabel || 'Listing' }
+        { label: t('common.home'), href: '/' },
+        { label: t('common.carSharing'), href: '/car-sharing' },
+        { label: vehicleLabel || t('carSharingDetail.listing') }
       ]} />
 
       {/* ── Back link ── */}
@@ -207,7 +209,7 @@ function CarSharingDetailPreviewContent() {
             padding: '8px 0'
           }}
         >
-          <span style={{ fontSize: '1rem' }}>←</span> Back to search results
+          <span style={{ fontSize: '1rem' }}>←</span> {t('carSharingDetail.backToSearchResults')}
         </Link>
       </div>
 
@@ -245,11 +247,11 @@ function CarSharingDetailPreviewContent() {
                   {vehicleLabel}
                 </h1>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                  {listing?.instantBook ? <InstantBookBadge /> : null}
-                  <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />
+                  {listing?.instantBook ? <InstantBookBadge t={t} /> : null}
+                  <StarRating count={listing?.reviewCount || listing?.ratingCount || null} t={t} />
                   {hostName ? (
                     <span style={{ fontSize: '0.88rem', color: 'rgba(220,228,255,0.9)', fontWeight: 600 }}>
-                      Hosted by {hostName}
+                      {t('carSharingPage.hostedBy', { name: hostName })}
                     </span>
                   ) : null}
                 </div>
@@ -257,11 +259,11 @@ function CarSharingDetailPreviewContent() {
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
                 <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f7fbff', lineHeight: 1, letterSpacing: '-0.02em' }}>
                   {fmtMoney(dailyRate)}
-                  <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(220,228,255,0.8)' }}> /day</span>
+                  <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(220,228,255,0.8)' }}> {t('common.perDay')}</span>
                 </div>
                 {tripTotal && tripTotal !== dailyRate ? (
                   <div style={{ marginTop: 4, fontSize: '0.88rem', color: 'rgba(200,210,255,0.82)', fontWeight: 600 }}>
-                    Est. {fmtMoney(tripTotal)} total
+                    {t('carSharingPage.estTotal', { amount: fmtMoney(tripTotal) })}
                   </div>
                 ) : null}
               </div>
@@ -291,7 +293,7 @@ function CarSharingDetailPreviewContent() {
                 transition: 'border-color 0.16s ease, box-shadow 0.16s ease'
               }}
             >
-              <Image src={src} alt={`View ${i + 1}`} width={96} height={68} style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} unoptimized />
+              <Image src={src} alt={t('carSharingDetail.viewN', { n: i + 1 })} width={96} height={68} style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block' }} unoptimized />
             </button>
           ))}
         </div>
@@ -305,24 +307,24 @@ function CarSharingDetailPreviewContent() {
 
           {loading ? (
             <div className={`glass card ${styles.contentPanel}`}>
-              <div className="ui-muted">Loading listing…</div>
+              <div className="ui-muted">{t('carSharingDetail.loadingListing')}</div>
             </div>
           ) : error && !listing ? (
             <div className={`glass card ${styles.contentPanel}`}>
-              <div style={{ color: '#b91c1c', fontWeight: 700 }}>{error}</div>
+              <div style={{ color: '#b91c1c', fontWeight: 700 }}>{error.startsWith('carSharingDetail.') ? t(error) : error}</div>
             </div>
           ) : listing ? (
             <>
               {/* About this car */}
               <div className={`glass card ${styles.contentPanel}`} style={{ gap: 14 }}>
-                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>About this car</h2>
+                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('carSharingDetail.aboutThisCar')}</h2>
                 {listing.shortDescription || listing.description ? (
                   <p style={{ margin: 0, color: '#53607b', lineHeight: 1.78, fontSize: '0.97rem' }}>
                     {listing.description || listing.shortDescription}
                   </p>
                 ) : (
                   <p style={{ margin: 0, color: '#53607b', lineHeight: 1.78, fontSize: '0.97rem' }}>
-                    A locally hosted vehicle available for your trip dates. Contact the host for any specific questions before booking.
+                    {t('carSharingDetail.defaultDescription')}
                   </p>
                 )}
 
@@ -339,13 +341,13 @@ function CarSharingDetailPreviewContent() {
                   ) : null}
                   {listing?.instantBook ? (
                     <span className={styles.resultMetaChip} style={{ borderColor: 'rgba(22,163,74,0.2)', background: 'linear-gradient(180deg,rgba(240,253,244,0.98),rgba(220,252,231,0.94))' }}>
-                      Instant Book Available
+                      {t('carSharingDetail.instantBookAvailable')}
                     </span>
                   ) : null}
                 </div>
                 {(listing?.vehicle?.mileage || listing?.vehicle?.color || listing?.vehicle?.vin) && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-                    {listing?.vehicle?.mileage && <span className={styles.resultMetaChip}>{Number(listing.vehicle.mileage).toLocaleString()} mi</span>}
+                    {listing?.vehicle?.mileage && <span className={styles.resultMetaChip}>{t('carSharingDetail.mileage', { miles: Number(listing.vehicle.mileage).toLocaleString() })}</span>}
                     {listing?.vehicle?.color && <span className={styles.resultMetaChip}>{listing.vehicle.color}</span>}
                   </div>
                 )}
@@ -353,16 +355,16 @@ function CarSharingDetailPreviewContent() {
 
               {/* What's included */}
               <div className={`glass card ${styles.contentPanel}`} style={{ gap: 14 }}>
-                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>What's included</h2>
+                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('carSharingDetail.whatsIncluded')}</h2>
                 <div className="stack" style={{ gap: 10 }}>
-                  <ProtectedBadge />
+                  <ProtectedBadge t={t} />
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
                     borderRadius: 14, border: '1px solid rgba(110,73,255,0.12)',
                     background: 'rgba(246,244,255,0.7)', color: '#32405d', fontSize: '0.88rem', fontWeight: 700
                   }}>
                     <span style={{ fontSize: '1.05rem' }}>💳</span>
-                    <span>Hosted payment — pay securely through our hosted checkout</span>
+                    <span>{t('carSharingDetail.hostedPayment')}</span>
                   </div>
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
@@ -370,7 +372,7 @@ function CarSharingDetailPreviewContent() {
                     background: 'rgba(246,244,255,0.7)', color: '#32405d', fontSize: '0.88rem', fontWeight: 700
                   }}>
                     <span style={{ fontSize: '1.05rem' }}>📍</span>
-                    <span>Pickup instructions shared before your trip — location, timing, and host contact</span>
+                    <span>{t('carSharingDetail.pickupInstructions')}</span>
                   </div>
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
@@ -378,14 +380,14 @@ function CarSharingDetailPreviewContent() {
                     background: 'rgba(246,244,255,0.7)', color: '#32405d', fontSize: '0.88rem', fontWeight: 700
                   }}>
                     <span style={{ fontSize: '1.05rem' }}>📄</span>
-                    <span>Trip confirmation, documents, and post-booking follow-up in one place</span>
+                    <span>{t('carSharingDetail.tripConfirmationDocs')}</span>
                   </div>
                 </div>
               </div>
 
               {/* The Host */}
               <div className={`glass card ${styles.contentPanel}`} style={{ gap: 14 }}>
-                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>The Host</h2>
+                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('carSharingDetail.theHost')}</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                     <div style={{
                     width: 56, height: 56, borderRadius: '50%',
@@ -399,14 +401,14 @@ function CarSharingDetailPreviewContent() {
                   <div>
                     <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '1rem' }}>
                       {(listing?.host?.id) ? (
-                        <Link href={`/hosts/${listing.host.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{hostName || 'Verified Host'}</Link>
-                      ) : (hostName || 'Verified Host')}
+                        <Link href={`/hosts/${listing.host.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{hostName || t('carSharingDetail.verifiedHost')}</Link>
+                      ) : (hostName || t('carSharingDetail.verifiedHost'))}
                     </div>
                     <div style={{ fontSize: '0.84rem', color: '#6b7a9a', fontWeight: 600, marginTop: 2 }}>
-                      Verified host
+                      {t('carSharingDetail.verifiedHost')}
                     </div>
                     <div style={{ marginTop: 6 }}>
-                      <StarRating count={listing?.reviewCount || listing?.ratingCount || null} />
+                      <StarRating count={listing?.reviewCount || listing?.ratingCount || null} t={t} />
                     </div>
                   </div>
                 </div>
@@ -415,7 +417,7 @@ function CarSharingDetailPreviewContent() {
               {/* Trip rules */}
               {listing?.tripRules ? (
                 <div className={`glass card ${styles.contentPanel}`} style={{ gap: 12 }}>
-                  <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>Trip rules</h2>
+                  <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('carSharingDetail.tripRules')}</h2>
                   <p style={{ margin: 0, color: '#53607b', lineHeight: 1.75, fontSize: '0.94rem' }}>
                     {listing.tripRules}
                   </p>
@@ -445,20 +447,20 @@ function CarSharingDetailPreviewContent() {
               }} />
               <div style={{ position: 'relative', zIndex: 1 }}>
                 <div style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(200,210,255,0.76)', marginBottom: 6 }}>
-                  Trip Price
+                  {t('carSharingDetail.tripPrice')}
                 </div>
                 <div style={{ fontSize: '2.1rem', fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em' }}>
                   {fmtMoney(dailyRate)}
-                  <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(220,228,255,0.8)' }}> /day</span>
+                  <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(220,228,255,0.8)' }}> {t('common.perDay')}</span>
                 </div>
                 {tripTotal && tripTotal !== dailyRate ? (
                   <div style={{ marginTop: 6, fontSize: '0.9rem', color: 'rgba(200,212,255,0.84)', fontWeight: 600 }}>
-                    Est. {fmtMoney(tripTotal)} total for this trip
+                    {t('carSharingDetail.estTotalForTrip', { amount: fmtMoney(tripTotal) })}
                   </div>
                 ) : null}
                 {listing?.instantBook ? (
                   <div style={{ marginTop: 12 }}>
-                    <InstantBookBadge />
+                    <InstantBookBadge t={t} />
                   </div>
                 ) : null}
               </div>
@@ -473,12 +475,12 @@ function CarSharingDetailPreviewContent() {
               background: 'rgba(246,244,255,0.8)'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
-                <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Pickup</span>
+                <span style={{ color: '#6b7a9a', fontWeight: 600 }}>{t('carSharingDetail.pickup')}</span>
                 <span>{formatPublicDateTime(pickupAt)}</span>
               </div>
               <div style={{ borderTop: '1px solid rgba(110,73,255,0.1)' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem', fontWeight: 700, color: '#32405d' }}>
-                <span style={{ color: '#6b7a9a', fontWeight: 600 }}>Return</span>
+                <span style={{ color: '#6b7a9a', fontWeight: 600 }}>{t('carSharingDetail.return')}</span>
                 <span>{formatPublicDateTime(returnAt)}</span>
               </div>
             </div>
@@ -494,7 +496,7 @@ function CarSharingDetailPreviewContent() {
             {/* Security deposit */}
             {listing?.securityDeposit || listing?.depositAmount ? (
               <div style={{ fontSize: '0.84rem', color: '#6b7a9a', fontWeight: 600, padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(110,73,255,0.1)', background: 'rgba(246,244,255,0.7)' }}>
-                Security deposit: {fmtMoney(listing.securityDeposit || listing.depositAmount)} (refundable)
+                {t('carSharingDetail.securityDeposit', { amount: fmtMoney(listing.securityDeposit || listing.depositAmount) })}
               </div>
             ) : null}
 
@@ -511,7 +513,7 @@ function CarSharingDetailPreviewContent() {
                   letterSpacing: '0.01em',
                 }}
               >
-                Book This Car
+                {t('carSharingPage.bookThisCar')}
               </Link>
               <button
                 onClick={() => { const saved = toggleFav(listing); setFaved(saved); }}
@@ -524,11 +526,11 @@ function CarSharingDetailPreviewContent() {
                   fontWeight: 700, fontSize: '0.92rem', cursor: 'pointer',
                 }}
               >
-                {faved ? '❤️ Saved' : '🤍 Save'}
+                {faved ? `❤️ ${t('carSharingDetail.saved')}` : `🤍 ${t('carSharingDetail.save')}`}
               </button>
               {(listing?.deliveryAvailable || listing?.allowDelivery) && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(22,163,74,.2)', background: 'rgba(22,163,74,.05)', fontSize: '0.84rem', fontWeight: 700, color: '#15803d' }}>
-                  <span>🚗</span><span>Delivery available for this listing</span>
+                  <span>🚗</span><span>{t('carSharingPage.deliveryAvailableNote')}</span>
                 </div>
               )}
             </div>
@@ -538,12 +540,12 @@ function CarSharingDetailPreviewContent() {
 
             {/* Cancellation policy */}
             <div style={{ padding: '12px 14px', borderRadius: 12, border: '1px solid rgba(110,73,255,.06)', background: 'rgba(110,73,255,.02)', fontSize: '0.82rem', color: '#53607b', lineHeight: 1.6 }}>
-              <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4, fontSize: '0.84rem' }}>Cancellation Policy</div>
-              <div>Free cancellation up to 24 hours before pickup. Late cancellations may incur a fee.</div>
+              <div style={{ fontWeight: 700, color: '#1e2847', marginBottom: 4, fontSize: '0.84rem' }}>{t('carSharingPage.cancellationPolicy')}</div>
+              <div>{t('carSharingPage.freeCancellation24')}</div>
             </div>
 
             <p style={{ margin: 0, fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
-              You won't be charged until your reservation is confirmed.
+              {t('carSharingPage.wontBeCharged')}
             </p>
           </div>
         </div>
@@ -552,8 +554,8 @@ function CarSharingDetailPreviewContent() {
       {/* ── How it works ── */}
       <section className={`glass card ${styles.journeyPanel}`} style={{ marginTop: 8 }}>
         <div className={styles.editorialHeader}>
-          <span className="eyebrow">How it works</span>
-          <h2 style={{ margin: 0 }}>Three steps to your perfect trip</h2>
+          <span className="eyebrow">{t('carSharingDetail.howItWorks')}</span>
+          <h2 style={{ margin: 0 }}>{t('carSharingDetail.threeSteps')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
           {howItWorks.map((item) => (
@@ -572,9 +574,9 @@ function CarSharingDetailPreviewContent() {
       {hostProfile?.reviews?.length > 0 && (
         <section className={`glass card ${styles.journeyPanel}`} style={{ marginTop: 8 }}>
           <div className={styles.editorialHeader}>
-            <span className="eyebrow">Guest Reviews</span>
+            <span className="eyebrow">{t('carSharingDetail.guestReviews')}</span>
             <h2 style={{ margin: 0 }}>
-              {hostProfile.host?.averageRating ? `${Number(hostProfile.host.averageRating).toFixed(1)} ★` : ''} {hostProfile.host?.reviewCount || hostProfile.reviews.length} reviews
+              {hostProfile.host?.averageRating ? `${Number(hostProfile.host.averageRating).toFixed(1)} ★` : ''} {t('carSharingPage.reviews', { count: hostProfile.host?.reviewCount || hostProfile.reviews.length })}
             </h2>
           </div>
           <div style={{ display: 'grid', gap: 14 }}>
@@ -583,7 +585,7 @@ function CarSharingDetailPreviewContent() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
                     <span style={{ color: '#f5a623', letterSpacing: 2 }}>{'★'.repeat(Math.min(Math.round(Number(review.rating || 0)), 5))}{'☆'.repeat(Math.max(0, 5 - Math.round(Number(review.rating || 0))))}</span>
-                    <span style={{ marginLeft: 8, fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{review.reviewerName || 'Guest'}</span>
+                    <span style={{ marginLeft: 8, fontWeight: 700, color: '#1e2847', fontSize: '0.9rem' }}>{review.reviewerName || t('carSharingDetail.guest')}</span>
                   </div>
                   {review.submittedAt && <span style={{ fontSize: '0.76rem', color: '#9ca3af' }}>{formatPublicDateTime(review.submittedAt)}</span>}
                 </div>
@@ -600,7 +602,7 @@ function CarSharingDetailPreviewContent() {
 
 export default function CarSharingDetailPreviewPage() {
   return (
-    <Suspense fallback={<div className="glass card" style={{ padding: 32 }}>Loading listing detail…</div>}>
+    <Suspense fallback={<div className="glass card" style={{ padding: 32 }}>Loading...</div>}>
       <CarSharingDetailPreviewContent />
     </Suspense>
   );
