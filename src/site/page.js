@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/client';
@@ -10,6 +10,53 @@ import { addDays, buildPublicLocationOptions, buildUnifiedCheckoutQuery, fmtMone
 import styles from './sitePreviewPremium.module.css';
 import { absoluteSiteUrl, siteConfig } from './siteConfig';
 import { saveSearch, getSavedSearches, clearSavedSearches } from '../lib/savedSearches';
+
+function ShowcaseGallery({ vehicleTypes, featuredListings, basePath, t }) {
+  const slides = useMemo(() => {
+    const items = [];
+    vehicleTypes.forEach((vt) => items.push({ type: 'rental', id: vt.id, label: vehicleTypeLabel(vt), image: vt.imageUrl, href: `/rent/${vt.id}` }));
+    featuredListings.forEach((l) => items.push({ type: 'carsharing', id: l.id, label: listingVehicleLabel(l), image: l.imageUrls?.[0], href: `/car-sharing/${l.id}`, host: l.hostDisplayName, rating: l.hostAvgRating, price: l.baseDailyRate }));
+    return items;
+  }, [vehicleTypes, featuredListings]);
+
+  const [current, setCurrent] = useState(0);
+  const count = slides.length;
+
+  const next = useCallback(() => setCurrent((c) => (c + 1) % count), [count]);
+  const prev = useCallback(() => setCurrent((c) => (c - 1 + count) % count), [count]);
+
+  useEffect(() => {
+    if (count <= 1) return;
+    const timer = setInterval(next, 4000);
+    return () => clearInterval(timer);
+  }, [count, next]);
+
+  if (!count) return null;
+  const slide = slides[current];
+
+  return (
+    <div className={styles.showcaseGallery}>
+      <Link href={withSiteBase(basePath, slide.href)} className={styles.gallerySlide} style={{ textDecoration: 'none' }}>
+        {slide.image && <img src={slide.image} alt={slide.label} className={styles.galleryImage} />}
+        <div className={styles.galleryOverlay}>
+          <span className={styles.gallerySlideBadge} style={slide.type === 'carsharing' ? { background: 'rgba(15,176,216,.15)', color: '#0a7e9c' } : undefined}>
+            {slide.type === 'rental' ? t('homePage.rentalClass') : 'Car Sharing'}
+          </span>
+          <strong className={styles.gallerySlideTitle}>{slide.label}</strong>
+          {slide.host && <span className={styles.gallerySlideHost}>{slide.host}{slide.rating ? ` · ${slide.rating}★` : ''}</span>}
+          {slide.price && <span className={styles.gallerySlidePrice}>{fmtMoney(slide.price)}{t('common.perDay')}</span>}
+        </div>
+      </Link>
+      {count > 1 && (
+        <div className={styles.galleryControls}>
+          <button onClick={(e) => { e.preventDefault(); prev(); }} className={styles.galleryArrow} aria-label="Previous">‹</button>
+          <span className={styles.galleryCounter}>{current + 1} / {count}</span>
+          <button onClick={(e) => { e.preventDefault(); next(); }} className={styles.galleryArrow} aria-label="Next">›</button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function SitePreviewHomePage() {
   const { t } = useTranslation();
@@ -340,32 +387,12 @@ export default function SitePreviewHomePage() {
           </div>
         </div>
 
-        <div className={styles.showcaseCarousel}>
-          <div className={styles.showcaseCarouselTrack}>
-            {/* Vehicle types */}
-            {vehicleTypes.map((vt) => (
-              <Link key={`vt-${vt.id}`} href={withSiteBase(basePath, `/rent/${vt.id}`)} className={styles.showcaseSlide} style={{ textDecoration: 'none' }}>
-                {vt.imageUrl && <img src={vt.imageUrl} alt={vehicleTypeLabel(vt)} className={styles.showcaseSlideImg} />}
-                <div className={styles.showcaseSlideBody}>
-                  <span className={styles.showcaseSlideBadge}>{t('homePage.rentalClass')}</span>
-                  <strong>{vehicleTypeLabel(vt)}</strong>
-                </div>
-              </Link>
-            ))}
-            {/* Featured car sharing listings */}
-            {featuredListings.map((listing) => (
-              <Link key={`cs-${listing.id}`} href={withSiteBase(basePath, `/car-sharing/${listing.id}`)} className={styles.showcaseSlide} style={{ textDecoration: 'none' }}>
-                {listing.imageUrls?.[0] && <img src={listing.imageUrls[0]} alt={listingVehicleLabel(listing)} className={styles.showcaseSlideImg} />}
-                <div className={styles.showcaseSlideBody}>
-                  <span className={styles.showcaseSlideBadge} style={{ background: 'rgba(15,176,216,.1)', color: '#0a7e9c' }}>Car Sharing</span>
-                  <strong>{listingVehicleLabel(listing)}</strong>
-                  {listing.hostDisplayName && <span className={styles.showcaseSlideHost}>{listing.hostDisplayName}{listing.hostAvgRating ? ` · ${listing.hostAvgRating}★` : ''}</span>}
-                  {listing.baseDailyRate && <span className={styles.showcaseSlidePrice}>{fmtMoney(listing.baseDailyRate)}{t('common.perDay')}</span>}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <ShowcaseGallery
+          vehicleTypes={vehicleTypes}
+          featuredListings={featuredListings}
+          basePath={basePath}
+          t={t}
+        />
       </section>
 
       {/* 5. How it works */}
