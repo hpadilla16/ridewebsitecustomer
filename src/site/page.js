@@ -320,7 +320,7 @@ export default function SitePreviewHomePage() {
         </section>
       )}
 
-      {/* 4. Trust signals */}
+      {/* 4. Trust signals + showcase carousel */}
       <section className={styles.trustBand} aria-labelledby="trust-section-title">
         <div className={`glass card-lg ${styles.trustPanel}`}>
           <div className={styles.editorialHeader}>
@@ -336,6 +336,33 @@ export default function SitePreviewHomePage() {
                 <div className="label">{item.title}</div>
                 <p className="ui-muted" style={{ margin: '10px 0 0' }}>{item.body}</p>
               </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.showcaseCarousel}>
+          <div className={styles.showcaseCarouselTrack}>
+            {/* Vehicle types */}
+            {vehicleTypes.map((vt) => (
+              <Link key={`vt-${vt.id}`} href={withSiteBase(basePath, `/rent/${vt.id}`)} className={styles.showcaseSlide} style={{ textDecoration: 'none' }}>
+                {vt.imageUrl && <img src={vt.imageUrl} alt={vehicleTypeLabel(vt)} className={styles.showcaseSlideImg} />}
+                <div className={styles.showcaseSlideBody}>
+                  <span className={styles.showcaseSlideBadge}>{t('homePage.rentalClass')}</span>
+                  <strong>{vehicleTypeLabel(vt)}</strong>
+                </div>
+              </Link>
+            ))}
+            {/* Featured car sharing listings */}
+            {featuredListings.map((listing) => (
+              <Link key={`cs-${listing.id}`} href={withSiteBase(basePath, `/car-sharing/${listing.id}`)} className={styles.showcaseSlide} style={{ textDecoration: 'none' }}>
+                {listing.imageUrls?.[0] && <img src={listing.imageUrls[0]} alt={listingVehicleLabel(listing)} className={styles.showcaseSlideImg} />}
+                <div className={styles.showcaseSlideBody}>
+                  <span className={styles.showcaseSlideBadge} style={{ background: 'rgba(15,176,216,.1)', color: '#0a7e9c' }}>Car Sharing</span>
+                  <strong>{listingVehicleLabel(listing)}</strong>
+                  {listing.hostDisplayName && <span className={styles.showcaseSlideHost}>{listing.hostDisplayName}{listing.hostAvgRating ? ` · ${listing.hostAvgRating}★` : ''}</span>}
+                  {listing.baseDailyRate && <span className={styles.showcaseSlidePrice}>{fmtMoney(listing.baseDailyRate)}{t('common.perDay')}</span>}
+                </div>
+              </Link>
             ))}
           </div>
         </div>
