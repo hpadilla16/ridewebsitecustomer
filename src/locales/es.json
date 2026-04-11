@@ -72,22 +72,13 @@
     "protectedTrip": "Protegido"
   },
   "homePage": {
+    "heroEyebrow": "Ride Car Sharing",
+    "heroTitle": "Alquileres y car sharing listos para el aeropuerto",
+    "heroLead": "Reserva tu vehículo en línea con precios claros, recogida en aeropuerto y una experiencia digital sin complicaciones.",
     "heroStats": {
       "0": { "value": "5+", "label": "Ciudades activas" },
       "1": { "value": "24/7", "label": "Reservas en línea" },
       "2": { "value": "100%", "label": "Entrega digital" }
-    },
-    "heroFeatureCards": {
-      "0": {
-        "label": "Alquileres",
-        "title": "Alquileres tradicionales con recogida en aeropuerto",
-        "body": "Reserva por día, semana o mes. Recogida en puntos de aeropuerto con precios claros y entrega digital."
-      },
-      "1": {
-        "label": "Car Sharing",
-        "title": "Vehículos locales de anfitriones verificados",
-        "body": "Explora autos de anfitriones locales con reserva instantánea, protección de viaje y pagos seguros."
-      }
     },
     "marketingMoments": {
       "0": { "title": "Buscar y seleccionar", "body": "Explora vehículos de alquiler o car sharing por ubicación, fechas y tipo de vehículo." },
@@ -101,41 +92,14 @@
       "2": "Operaciones de Ride Fleet"
     },
     "trustSignals": {
-      "0": { "title": "Pagos seguros", "body": "Cada transacción se procesa a través de nuestro sistema seguro de pagos alojados." },
-      "1": { "title": "Protección de viaje", "body": "Cobertura de responsabilidad y protección incluidas en cada reserva." },
-      "2": { "title": "Soporte de reserva", "body": "Confirmación de reserva, detalles de recogida y soporte en cada paso." }
-    },
-    "guestJourneySignals": {
-      "0": "Buscar",
-      "1": "Reservar",
-      "2": "Recoger",
-      "3": "Conducir"
-    },
-    "premiumMoments": {
-      "0": { "title": "Precios claros", "body": "Desglose de precios transparente sin cargos ocultos. Lo que ves es lo que pagas." },
-      "1": { "title": "Entrega digital", "body": "Confirmación de reserva, instrucciones de recogida y documentos del viaje, todo digital." },
-      "2": { "title": "Soporte en vivo", "body": "Chat en tiempo real con tu anfitrión y acceso a soporte durante todo el viaje." }
+      "0": { "title": "Recogida en aeropuerto", "body": "Instrucciones claras, puntos de recogida designados y coordinación en tiempo real para que conduzcas minutos después de aterrizar." },
+      "1": { "title": "Pagos seguros", "body": "Cada transacción se procesa a través de nuestro sistema seguro de pagos. Sin efectivo, sin sorpresas." },
+      "2": { "title": "Experiencia digital", "body": "Reserva en línea, confirmación instantánea, acuerdos digitales y chat de viaje, todo en un solo lugar." }
     },
     "reviewMoments": {
       "0": { "quote": "Recogida perfecta en el aeropuerto. El auto estaba limpio y listo.", "author": "Carlos M. — San Juan", "score": "★★★★★" },
       "1": { "quote": "Reserva sencilla, precios claros y excelente comunicación con el anfitrión.", "author": "María L. — Miami", "score": "★★★★★" },
       "2": { "quote": "La mejor experiencia de alquiler que he tenido. Muy recomendado.", "author": "José R. — Orlando", "score": "★★★★★" }
-    },
-    "airportJourney": {
-      "0": { "title": "Reserva en línea", "body": "Selecciona tu vehículo, fechas y ubicación. Confirma tu reserva al instante." },
-      "1": { "title": "Recibe instrucciones", "body": "Recibirás detalles de recogida, punto de encuentro y contacto del anfitrión." },
-      "2": { "title": "Recoge y conduce", "body": "Llega al punto de recogida, confirma la entrega y comienza tu viaje." }
-    },
-    "launchSignals": {
-      "0": "Reservas en vivo",
-      "1": "Pagos alojados",
-      "2": "Recogida en aeropuerto",
-      "3": "Operaciones Ride Fleet"
-    },
-    "prestigeSignals": {
-      "0": { "title": "Operaciones de Ride Fleet", "body": "Respaldado por operaciones reales de gestión de flotas con disponibilidad y precios en tiempo real." },
-      "1": { "title": "Experiencia premium", "body": "Diseñado para viajeros que valoran claridad, eficiencia y calidad en cada paso." },
-      "2": { "title": "Alcance en expansión", "body": "Ciudades activas en Puerto Rico, Florida, California y Ecuador, con más destinos en camino." }
     },
     "destinationPanels": {
       "0": { "city": "San Juan, PR", "note": "Recogida en aeropuerto SJU y puntos en Condado, Isla Verde y áreas metropolitanas." },
@@ -143,77 +107,12 @@
       "2": { "city": "Orlando, FL", "note": "Recogida en aeropuerto MCO, conveniente para parques temáticos y centro de la ciudad." },
       "3": { "city": "Fort Lauderdale, FL", "note": "Recogida en aeropuerto FLL con alcance en el área de Broward." }
     },
-    "signatureMoments": {
-      "0": { "label": "Reserva", "title": "Reserva clara y guiada", "body": "Checkout paso a paso con desglose de precios, cobertura de viaje y confirmación instantánea." },
-      "1": { "label": "Recogida", "title": "Entrega lista para el aeropuerto", "body": "Instrucciones de recogida, punto de encuentro y contacto directo con el anfitrión o equipo." },
-      "2": { "label": "Soporte", "title": "Soporte durante todo el viaje", "body": "Chat en vivo, gestión de viaje y soporte de reserva accesibles desde tu cuenta." }
-    },
-    "testimonialRibbon": {
-      "0": { "quote": "Proceso de reserva increíblemente fluido. Todo estaba claro desde el principio.", "author": "Ana G." },
-      "1": { "quote": "La recogida en el aeropuerto fue perfecta. El auto estaba exactamente donde dijeron.", "author": "Roberto D." },
-      "2": { "quote": "Mucho mejor que las grandes empresas de alquiler. Personal y profesional.", "author": "Laura P." }
-    },
-    "prestigeTicker": {
-      "0": "Pagos seguros",
-      "1": "Recogida en aeropuerto",
-      "2": "Operaciones Ride Fleet",
-      "3": "Protección de viaje",
-      "4": "Reserva instantánea",
-      "5": "Soporte en vivo"
-    },
-    "conciergeMoments": {
-      "0": { "label": "Experiencia del huésped", "title": "Viaje guiado de principio a fin", "body": "Desde la búsqueda hasta la devolución, cada paso está diseñado para ser claro y sin fricción." },
-      "1": { "label": "Operaciones", "title": "Respaldado por Ride Fleet", "body": "Disponibilidad en tiempo real, precios dinámicos y gestión de reservas impulsados por operaciones reales." }
-    },
-    "prestigeEditorialMoments": {
-      "0": { "label": "Diseño de marca", "title": "Una tienda digital premium", "body": "Cada detalle de la experiencia de reserva está diseñado para transmitir confianza y calidad." },
-      "1": { "label": "Posicionamiento", "title": "Más que un alquiler", "body": "Ride Car Sharing ofrece una experiencia de movilidad curada que va más allá del alquiler tradicional." }
-    },
-    "curatedPerks": {
-      "0": "Precios transparentes",
-      "1": "Confirmación instantánea",
-      "2": "Instrucciones de recogida claras",
-      "3": "Soporte durante el viaje"
-    },
-    "unifiedCheckoutSignals": {
-      "0": "Checkout unificado para alquileres y car sharing",
-      "1": "Pagos seguros con desglose completo",
-      "2": "Confirmación inmediata con detalles del viaje"
-    },
-    "errorBootstrapFallback": "No se pudieron cargar los datos del sitio. Intenta recargar la página.",
-    "errorChooseLocationsRental": "Por favor selecciona las ubicaciones de recogida y devolución.",
-    "errorChooseLocationCarSharing": "Por favor selecciona una ubicación.",
-    "heroEyebrow": "Ride Car Sharing",
-    "heroTitle": "Alquileres y car sharing listos para el aeropuerto",
-    "heroLead": "Reserva tu vehículo en línea con precios claros, recogida en aeropuerto y entrega digital premium.",
-    "heroNarrativeLabel": "Nuestra propuesta",
-    "heroNarrativeBody": "Una experiencia de reserva de nivel premium impulsada por operaciones reales de Ride Fleet, con pagos seguros y continuidad del portal del huésped.",
     "exploreRentals": "Explorar Alquileres",
     "browseCarSharing": "Explorar Car Sharing",
     "nowServing": "Ahora disponible en",
-    "signatureLaunchDirection": "Experiencia Ride",
-    "heroShowcaseTitle": "Tu viaje comienza aquí",
-    "fastLaneBoldRide": "Movilidad audaz con Ride",
-    "heroBannerOverlay": "Alquileres y car sharing premium",
-    "brandTrustSignals": "Señales de confianza de la marca",
-    "prestigePositioning": "Posicionamiento premium",
-    "prestigePositioningTitle": "Una experiencia de movilidad de primer nivel",
-    "prestigePositioningLead": "Diseñado para viajeros que esperan claridad, velocidad y calidad en cada interacción.",
-    "curatedGuestCues": "Beneficios para el huésped",
-    "websiteDirection": "Nuestra dirección",
-    "websiteDirectionBody": "Experiencia de reserva premium con operaciones reales",
-    "trustLayer": "Confianza y seguridad",
-    "trustLayerTitle": "Reserva con total confianza",
-    "trustLayerLead": "Pagos seguros, protección de viaje y soporte en cada paso de tu experiencia.",
-    "guestJourney": "Experiencia del huésped",
-    "modernBookingFlow": "Un flujo de reserva moderno y claro",
-    "guestPromise": "Nuestra promesa",
-    "guestPromiseTitle": "Transparencia en cada paso",
-    "guestPromiseBody": "Sin cargos ocultos, sin sorpresas. Precios claros, cobertura incluida y soporte cuando lo necesites.",
-    "prestigeLayer": "Experiencia de marca",
-    "prestigeLayerTitle": "Diseñado para el viajero moderno",
-    "prestigeLayerLead": "Cada detalle de Ride Car Sharing está pensado para ofrecer una experiencia que supera las expectativas.",
-    "guestLane": "Para huéspedes",
+    "whyChooseUs": "Por qué elegirnos",
+    "trustSectionTitle": "Reserva con total confianza",
+    "trustSectionLead": "Pagos seguros, protección de viaje y soporte en cada paso de tu experiencia.",
     "traditionalRentals": "Alquileres Tradicionales",
     "traditionalRentalsLead": "Reserva por día, semana o mes con recogida en aeropuerto y precios claros.",
     "pickupLocation": "Lugar de recogida",
@@ -232,63 +131,18 @@
     "rental": "Alquiler",
     "search": "Búsqueda",
     "destination": "Destino",
-    "conciergePositioning": "Experiencia concierge",
-    "conciergeTitle": "Servicio personalizado en cada viaje",
-    "conciergeLead": "Más que una plataforma de reservas: una experiencia de movilidad guiada con atención al detalle.",
-    "signatureStorefrontDirection": "Tienda digital Ride",
-    "guestFeel": "Sensación del huésped",
-    "guestFeelValue": "Premium y sin esfuerzo",
-    "operationalTruth": "Realidad operativa",
-    "operationalTruthValue": "Respaldado por Ride Fleet",
-    "signatureExperience": "Experiencia exclusiva",
-    "signatureExperienceTitle": "Momentos que definen tu viaje",
-    "signatureExperienceLead": "Desde la primera búsqueda hasta la devolución, cada interacción está diseñada para ser memorable.",
-    "socialProofDirection": "Testimonios",
-    "socialProofTitle": "Lo que dicen nuestros huéspedes",
-    "socialProofBadge": "Verificado",
-    "airportPickupStory": "Recogida en aeropuerto",
-    "airportPickupStoryTitle": "Tu llegada, simplificada",
-    "airportPickupStoryLead": "Un flujo de recogida claro y sin estrés desde el momento en que aterrizas.",
     "step": "Paso {{number}}",
-    "arrivalFlow": "Flujo de llegada",
-    "pickupMode": "Modo de recogida",
-    "pickupModeValue": "Listo para el aeropuerto",
-    "dueNow": "A pagar ahora",
-    "dueNowBody": "Pago seguro al momento de la reserva",
-    "pickupPromise": "Promesa de recogida",
-    "pickupPromiseValue": "Puntual y sin complicaciones",
-    "pickupPromiseBody": "Instrucciones claras y punto de encuentro confirmado",
-    "premiumMomentsEyebrow": "Momentos premium",
-    "premiumMomentsTitle": "La diferencia Ride",
-    "premiumMomentsLead": "Detalles que elevan tu experiencia de reserva y viaje.",
     "howItWorks": "Cómo funciona",
     "howItWorksTitle": "Tres pasos hacia tu próximo viaje",
     "howItWorksLead": "Desde la búsqueda hasta la recogida, un proceso claro y sin fricciones.",
     "seeCheckoutFlow": "Ver el checkout",
-    "guidedReservationFlow": "Reserva guiada",
-    "guidedReservationFlowTitle": "Un checkout unificado y claro",
-    "guidedReservationFlowLead": "Un solo flujo de reserva para alquileres y car sharing, con desglose de precios y confirmación inmediata.",
-    "previewReservationFlow": "Vista previa de la reserva",
-    "rentalLane": "Canal de alquiler",
-    "rentalLaneValue": "Reserva directa con Ride Fleet",
-    "carSharingLane": "Canal de Car Sharing",
-    "carSharingLaneValue": "Vehículos de anfitriones verificados",
-    "trustedSystem": "Sistema de confianza",
-    "trustedSystemValue": "Pagos seguros y protección incluida",
-    "launchReadyDirection": "Comienza tu viaje",
-    "launchReadyTitle": "Tu próximo destino te espera",
-    "launchReadyLead": "Explora alquileres y car sharing en las principales ciudades. Reserva en minutos con precios claros y recogida garantizada.",
+    "guestReviews": "Opiniones de clientes",
+    "guestReviewsTitle": "Lo que dicen nuestros huéspedes",
+    "readyToBook": "Comienza tu viaje",
+    "readyToBookTitle": "Tu próximo destino te espera",
+    "readyToBookLead": "Explora alquileres y car sharing en las principales ciudades. Reserva en minutos con precios claros y recogida garantizada.",
     "exploreRentalJourney": "Explorar Alquileres",
     "exploreCarSharingJourney": "Explorar Car Sharing",
-    "learnMoreAboutUs": "Conócenos",
-    "learnMoreTitle": "Más que alquilar un auto",
-    "learnMoreLead": "Ride Car Sharing combina alquileres premium y car sharing local en una sola plataforma, con operaciones reales de Ride Fleet.",
-    "browseAndBook": "Busca y reserva",
-    "browseAndBookBody": "Explora vehículos por ubicación, tipo y fecha. Reserva con precios claros y confirmación instantánea.",
-    "pickupAndGo": "Recoge y conduce",
-    "pickupAndGoBody": "Recibe instrucciones de recogida detalladas y comienza tu viaje sin demoras.",
-    "exploreAndReturn": "Explora y devuelve",
-    "exploreAndReturnBody": "Disfruta tu viaje con soporte en vivo y devuelve el vehículo en el punto acordado.",
     "liveLocations": "Ubicaciones activas",
     "airportAndCityHubs": "Aeropuertos y puntos urbanos",
     "viewFleet": "Ver Flota",
@@ -301,7 +155,10 @@
     "featuredCarSharingVehicles": "Vehículos de Car Sharing destacados",
     "openCatalog": "Ver catálogo",
     "fromPerDay": "desde {{price}}/día",
-    "noFeaturedListings": "No hay listados destacados disponibles"
+    "noFeaturedListings": "No hay listados destacados disponibles",
+    "errorBootstrapFallback": "No se pudieron cargar los datos del sitio. Intenta recargar la página.",
+    "errorChooseLocationsRental": "Por favor selecciona las ubicaciones de recogida y devolución.",
+    "errorChooseLocationCarSharing": "Por favor selecciona una ubicación."
   },
   "rentPage": {
     "title": "Explorar Vehículos de Alquiler",

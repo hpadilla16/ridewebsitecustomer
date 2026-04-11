@@ -74,25 +74,11 @@
   "homePage": {
     "heroEyebrow": "Ride Car Sharing",
     "heroTitle": "Airport-ready rentals and curated car sharing",
-    "heroLead": "Reserve your vehicle online with clear pricing, airport pickup details, and a premium digital handoff powered by Ride Fleet operations.",
-    "heroNarrativeLabel": "Why Ride",
-    "heroNarrativeBody": "We combine the reliability of a traditional rental fleet with the flexibility of peer-to-peer car sharing — all under one booking experience with hosted payments and airport-first pickup.",
+    "heroLead": "Reserve your vehicle online with clear pricing, airport pickup details, and a seamless digital experience.",
     "heroStats": {
       "0": { "value": "5+", "label": "Cities served" },
       "1": { "value": "24/7", "label": "Online booking" },
       "2": { "value": "100%", "label": "Digital handoff" }
-    },
-    "heroFeatureCards": {
-      "0": {
-        "label": "Rentals",
-        "title": "Fleet-backed daily rentals",
-        "body": "Choose from verified vehicle classes with transparent pricing, airport pickup, and hosted payment processing."
-      },
-      "1": {
-        "label": "Car Sharing",
-        "title": "Curated peer-to-peer vehicles",
-        "body": "Browse locally hosted cars with instant book, trip protection, and delivery options — all managed through Ride."
-      }
     },
     "marketingMoments": {
       "0": { "title": "Search & compare", "body": "Browse rental classes and car sharing listings side by side. Filter by location, dates, and vehicle type." },
@@ -106,41 +92,14 @@
       "2": "Ride Fleet operations"
     },
     "trustSignals": {
-      "0": { "title": "Hosted payments", "body": "Every transaction is processed through our secure, PCI-compliant payment system. No cash, no surprises." },
-      "1": { "title": "Trip protection", "body": "Every booking includes baseline coverage. Upgrade options available at checkout for added peace of mind." },
-      "2": { "title": "Verified fleet", "body": "All vehicles — rental and car sharing — are reviewed, documented, and backed by Ride Fleet operations." }
-    },
-    "guestJourneySignals": {
-      "0": "Search",
-      "1": "Reserve",
-      "2": "Pay",
-      "3": "Pick up"
-    },
-    "premiumMoments": {
-      "0": { "title": "Concierge-grade booking", "body": "A guided reservation flow that feels more like a premium travel experience than a rental checkout." },
-      "1": { "title": "Airport-first design", "body": "Pickup instructions, location details, and timing built around the way travelers actually arrive." },
-      "2": { "title": "Operational transparency", "body": "Real-time availability, honest pricing, and clear next steps — no hidden fees or bait-and-switch." }
+      "0": { "title": "Airport-friendly pickup", "body": "Clear pickup instructions, designated hubs, and real-time coordination so you're driving within minutes of landing." },
+      "1": { "title": "Secure payments", "body": "Every transaction is processed through our secure, PCI-compliant payment system. No cash, no surprises." },
+      "2": { "title": "Digital readiness", "body": "Online booking, instant confirmation, digital agreements, and trip chat — all in one seamless flow." }
     },
     "reviewMoments": {
       "0": { "quote": "The smoothest airport pickup I've ever had. Clear instructions, car was ready, no waiting around.", "author": "Sarah M. — San Juan", "score": "★★★★★" },
       "1": { "quote": "Booked a car sharing vehicle for the weekend. Instant book, fair price, and the host was great.", "author": "Carlos R. — Miami", "score": "★★★★★" },
       "2": { "quote": "Finally a rental site that doesn't feel like it's from 2005. Clean, fast, and transparent.", "author": "James L. — Orlando", "score": "★★★★★" }
-    },
-    "airportJourney": {
-      "0": { "title": "Reserve online", "body": "Choose your vehicle, select dates, and complete checkout with hosted payments. Confirmation is instant." },
-      "1": { "title": "Arrive at airport", "body": "Follow your pickup instructions to the designated hub. Your vehicle and handoff details are ready." },
-      "2": { "title": "Drive away", "body": "Complete a quick digital inspection, sign off, and you're on the road — trip protection included." }
-    },
-    "launchSignals": {
-      "0": "Live availability",
-      "1": "Hosted payments",
-      "2": "Airport pickup",
-      "3": "Trip protection"
-    },
-    "prestigeSignals": {
-      "0": { "title": "Premium storefront", "body": "A booking experience designed to feel like a luxury travel brand — not a budget rental counter." },
-      "1": { "title": "Operational backbone", "body": "Powered by Ride Fleet's reservation system, fleet management, and guest support infrastructure." },
-      "2": { "title": "Guest-first design", "body": "Every screen, every flow, every detail optimized for clarity, confidence, and conversion." }
     },
     "destinationPanels": {
       "0": { "city": "San Juan, PR", "note": "Airport hub with fleet-backed rentals and local car sharing" },
@@ -148,69 +107,12 @@
       "2": { "city": "Orlando, FL", "note": "MCO airport and theme park corridor availability" },
       "3": { "city": "Fort Lauderdale, FL", "note": "FLL airport and beachside pickup options" }
     },
-    "signatureMoments": {
-      "0": { "label": "Booking", "title": "Guided reservation flow", "body": "Step-by-step checkout with price breakdowns, coverage options, and instant confirmation." },
-      "1": { "label": "Arrival", "title": "Airport-ready pickup", "body": "Clear pickup instructions, hub locations, and real-time coordination with your host or fleet." },
-      "2": { "label": "Experience", "title": "Premium digital handoff", "body": "Digital agreements, inspection photos, and trip chat — all in one seamless flow." }
-    },
-    "testimonialRibbon": {
-      "0": { "quote": "Ride made my Puerto Rico trip effortless. Booked in minutes, picked up at the airport, zero stress.", "author": "Maria G." },
-      "1": { "quote": "The car sharing option saved me so much compared to traditional rentals. Great host, great car.", "author": "David K." },
-      "2": { "quote": "I love that everything is digital. No paper forms, no waiting in line. Just book and go.", "author": "Priya S." }
-    },
-    "prestigeTicker": {
-      "0": "Airport-ready",
-      "1": "Hosted payments",
-      "2": "Trip protection",
-      "3": "Verified fleet",
-      "4": "Digital handoff",
-      "5": "Guest support"
-    },
-    "conciergeMoments": {
-      "0": { "label": "Guest experience", "title": "White-glove digital booking", "body": "A reservation flow designed for clarity and confidence — from search to pickup confirmation." },
-      "1": { "label": "Operations", "title": "Fleet-powered reliability", "body": "Every booking is backed by Ride Fleet's reservation system, payment processing, and guest support." }
-    },
-    "prestigeEditorialMoments": {
-      "0": { "label": "Brand", "title": "A storefront that converts", "body": "Premium design, clear pricing, and trust signals that move guests from browsing to booking." },
-      "1": { "label": "Platform", "title": "Operational depth", "body": "Real fleet management, hosted payments, and guest portal continuity — not just a pretty frontend." }
-    },
-    "curatedPerks": {
-      "0": "Instant confirmation",
-      "1": "Transparent pricing",
-      "2": "Airport pickup details",
-      "3": "Trip protection included"
-    },
-    "unifiedCheckoutSignals": {
-      "0": "Single checkout for rentals and car sharing",
-      "1": "Hosted payment processing",
-      "2": "Instant booking confirmation"
-    },
     "exploreRentals": "Explore Rentals",
     "browseCarSharing": "Browse Car Sharing",
     "nowServing": "Now serving",
-    "signatureLaunchDirection": "Signature launch direction",
-    "heroShowcaseTitle": "Premium mobility, simplified",
-    "fastLaneBoldRide": "Fast lane. Bold ride.",
-    "heroBannerOverlay": "Reserve your ride today",
-    "brandTrustSignals": "Brand trust signals",
-    "prestigePositioning": "Prestige positioning",
-    "prestigePositioningTitle": "A premium storefront for modern mobility",
-    "prestigePositioningLead": "Ride combines the operational depth of a fleet management platform with the design sensibility of a premium travel brand.",
-    "curatedGuestCues": "Curated guest cues",
-    "websiteDirection": "Website direction",
-    "websiteDirectionBody": "Convert browsers into confirmed bookings",
-    "trustLayer": "Trust layer",
-    "trustLayerTitle": "Built on trust, transparency, and real operations",
-    "trustLayerLead": "Every feature on this website is backed by Ride Fleet's reservation system, payment infrastructure, and guest support team.",
-    "guestJourney": "Guest journey",
-    "modernBookingFlow": "A modern booking flow",
-    "guestPromise": "Guest promise",
-    "guestPromiseTitle": "Clarity at every step",
-    "guestPromiseBody": "From search to pickup, every screen is designed to reduce friction and build confidence. No hidden fees, no bait-and-switch, no surprises.",
-    "prestigeLayer": "Prestige layer",
-    "prestigeLayerTitle": "Designed for guests who expect more",
-    "prestigeLayerLead": "Ride is built for travelers who value clarity, reliability, and a premium digital experience.",
-    "guestLane": "Guest lane",
+    "whyChooseUs": "Why choose us",
+    "trustSectionTitle": "Built on trust, transparency, and real operations",
+    "trustSectionLead": "Every feature is backed by Ride Fleet's reservation system, payment infrastructure, and guest support team.",
     "traditionalRentals": "Traditional Rentals",
     "traditionalRentalsLead": "Fleet-backed daily rentals with airport pickup, transparent pricing, and hosted payment processing.",
     "pickupLocation": "Pickup location",
@@ -229,63 +131,18 @@
     "rental": "Rental",
     "search": "Search",
     "destination": "Destination",
-    "conciergePositioning": "Concierge positioning",
-    "conciergeTitle": "A calmer, more premium guest experience",
-    "conciergeLead": "Ride is designed to feel like a concierge service — not a rental counter. Every interaction is guided, transparent, and built for confidence.",
-    "signatureStorefrontDirection": "Signature storefront direction",
-    "guestFeel": "Guest feel",
-    "guestFeelValue": "Premium and effortless",
-    "operationalTruth": "Operational truth",
-    "operationalTruthValue": "Fleet-powered reliability",
-    "signatureExperience": "Signature experience",
-    "signatureExperienceTitle": "Three moments that define the Ride experience",
-    "signatureExperienceLead": "From booking to pickup to return, every touchpoint is designed for clarity, confidence, and a premium feel.",
-    "socialProofDirection": "Social proof",
-    "socialProofTitle": "What guests are saying",
-    "socialProofBadge": "★★★★★",
-    "airportPickupStory": "Airport pickup story",
-    "airportPickupStoryTitle": "From landing to driving in three simple steps",
-    "airportPickupStoryLead": "Our airport pickup flow is designed around how travelers actually arrive — with clear instructions, real-time coordination, and zero guesswork.",
     "step": "Step {{number}}",
-    "arrivalFlow": "Arrival flow",
-    "pickupMode": "Pickup mode",
-    "pickupModeValue": "Airport hub",
-    "dueNow": "Due now",
-    "dueNowBody": "Deposit collected at booking. Remaining balance at pickup.",
-    "pickupPromise": "Pickup promise",
-    "pickupPromiseValue": "Ready on arrival",
-    "pickupPromiseBody": "Your vehicle is prepared and waiting at the designated hub.",
-    "premiumMomentsEyebrow": "Premium moments",
-    "premiumMomentsTitle": "What makes Ride different",
-    "premiumMomentsLead": "Every detail is designed to deliver a guest experience that feels more like a premium travel brand than a rental counter.",
     "howItWorks": "How it works",
     "howItWorksTitle": "Book in three easy steps",
     "howItWorksLead": "Search, reserve, and pick up — with hosted payments, transparent pricing, and instant confirmation at every step.",
     "seeCheckoutFlow": "See checkout flow",
-    "guidedReservationFlow": "Guided reservation flow",
-    "guidedReservationFlowTitle": "One checkout for rentals and car sharing",
-    "guidedReservationFlowLead": "Our unified checkout handles both traditional rentals and car sharing bookings — with coverage options, price breakdowns, and hosted payment processing.",
-    "previewReservationFlow": "Preview reservation flow",
-    "rentalLane": "Rental lane",
-    "rentalLaneValue": "Fleet-backed daily rentals",
-    "carSharingLane": "Car sharing lane",
-    "carSharingLaneValue": "Peer-to-peer hosted vehicles",
-    "trustedSystem": "Trusted system",
-    "trustedSystemValue": "Hosted payments + trip protection",
-    "launchReadyDirection": "Launch ready",
-    "launchReadyTitle": "Ready to book your next trip?",
-    "launchReadyLead": "Explore our rental fleet or browse car sharing listings — with airport pickup, hosted payments, and trip protection on every booking.",
+    "guestReviews": "Guest reviews",
+    "guestReviewsTitle": "What our guests are saying",
+    "readyToBook": "Get started",
+    "readyToBookTitle": "Ready to book your next trip?",
+    "readyToBookLead": "Explore our rental fleet or browse car sharing listings — with airport pickup, hosted payments, and trip protection on every booking.",
     "exploreRentalJourney": "Explore Rental Vehicles",
     "exploreCarSharingJourney": "Explore Car Sharing",
-    "learnMoreAboutUs": "Learn more about us",
-    "learnMoreTitle": "How the Ride experience works",
-    "learnMoreLead": "From search to return, every step is designed for clarity, confidence, and a premium guest experience.",
-    "browseAndBook": "Browse & Book",
-    "browseAndBookBody": "Search rental classes and car sharing listings. Compare pricing, coverage, and availability side by side.",
-    "pickupAndGo": "Pick Up & Go",
-    "pickupAndGoBody": "Follow your pickup instructions to the designated hub. Complete a quick digital inspection and you're on the road.",
-    "exploreAndReturn": "Explore & Return",
-    "exploreAndReturnBody": "Enjoy your trip with confidence. Return at the agreed time and location — digital checkout makes it seamless.",
     "liveLocations": "Live locations",
     "airportAndCityHubs": "Airport & city hubs",
     "viewFleet": "View Fleet",
