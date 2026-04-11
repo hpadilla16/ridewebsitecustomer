@@ -175,7 +175,39 @@
     "subtitle": "Choose your vehicle class, review pricing, and reserve online.",
     "noVehicles": "No vehicles found for this search. Try different dates or locations.",
     "bookNow": "Book Now",
-    "fromPerDay": "from {{price}}/day"
+    "fromPerDay": "from {{price}}/day",
+    "eyebrow": "Rent a Car",
+    "heading": "Browse Rental Availability",
+    "description": "Search real-time rental availability by location and dates. Compare vehicle classes, pricing, and reserve online.",
+    "pickupLocation": "Pickup location",
+    "returnLocation": "Return location",
+    "selectLocation": "Select location",
+    "pickup": "Pickup",
+    "return": "Return",
+    "searching": "Searching...",
+    "loadAvailability": "Search Availability",
+    "openReservationFlow": "Open Reservation Flow",
+    "liveAvailability": "Live availability",
+    "hostedPaymentHandoff": "Hosted payment handoff",
+    "airportPickupExpectations": "Airport pickup ready",
+    "availableRentalOption": "Available Rental",
+    "availableCount": "{{count}} available",
+    "airportReadyClass": "Airport-ready class",
+    "hostedPaymentHandoffShort": "Hosted payments",
+    "pickupContextSurfacedEarly": "Pickup details included",
+    "dailyRate": "Daily rate",
+    "estimatedTotal": "Estimated total",
+    "dueNow": "Due now",
+    "dueNowShownBeforeCheckout": "Due now shown before checkout",
+    "hostedPaymentExperience": "Secure hosted payment",
+    "pickupContextIncluded": "Pickup context included",
+    "viewDetails": "View Details",
+    "reserveNow": "Reserve Now",
+    "results": "Results",
+    "runSearchPrompt": "Use the search above to find available rental vehicles.",
+    "pickupLocationNotFound": "Pickup location not found.",
+    "unableToLoadSearch": "Unable to load search data.",
+    "unableToSearchRentals": "Unable to search rentals."
   },
   "rentDetail": {
     "pickupLocationNotFound": "Pickup location not found. Please go back and select a valid location.",
@@ -809,11 +841,95 @@
   },
   "contactPage": {
     "title": "Contact Us",
-    "subtitle": "Get in touch with us for any questions or support needs."
+    "subtitle": "Get in touch with us for any questions or support needs.",
+    "eyebrow": "Support",
+    "heading": "How Can We Help?",
+    "intro": "Whether you need help with a reservation, have questions about Car Sharing, or want to become a host, our team is here for you.",
+    "readGuestFaq": "Read Guest FAQ",
+    "supportCategories": "Support Categories",
+    "whenGuestsReachOut": "When Guests Reach Out",
+    "guideNotCollect": "We Guide, Not Collect",
+    "guideNotCollectDesc": "Our support team focuses on helping you navigate the booking process, not collecting payments over the phone. Everything is handled securely online.",
+    "openCheckout": "Open Checkout",
+    "readFaq": "Read FAQ",
+    "supportFlow": "Support Flow",
+    "selfService": "Self-Service",
+    "selfServiceHeading": "Handle It Online",
+    "selfServiceDesc": "Most questions can be resolved through our online tools. Check your booking status, modify your trip, or manage payments — all from your account.",
+    "openCheckoutHandoff": "Open Checkout",
+    "cards": {
+      "reservations": {
+        "label": "Reservations",
+        "value": "Questions about booking a vehicle, pickup times, or rental pricing.",
+        "action": "Browse Rentals"
+      },
+      "carSharing": {
+        "label": "Car Sharing",
+        "value": "Need help with a Car Sharing trip, host communication, or listing details.",
+        "action": "Browse Car Sharing"
+      },
+      "hosts": {
+        "label": "Hosts & Partners",
+        "value": "Information about listing your vehicle, host onboarding, or partnership inquiries.",
+        "action": "Become a Host"
+      }
+    },
+    "supportMoments": {
+      "choosingHelp": "Help choosing the right vehicle or rental class",
+      "airportQuestions": "Airport pickup and drop-off questions",
+      "paymentSteps": "Payment steps and pricing clarity"
+    },
+    "channels": {
+      "beforeBooking": {
+        "title": "Before Booking",
+        "body": "Browse our fleet, compare rental classes, and check availability. Our FAQ covers the most common pre-booking questions."
+      },
+      "afterBooking": {
+        "title": "After Booking",
+        "body": "Access your trip details, modify your reservation, or contact your host directly through your account dashboard."
+      },
+      "hostsPartnerships": {
+        "title": "Hosts & Partnerships",
+        "body": "Learn about listing your vehicle on Ride Car Sharing, track your submission status, or reach our onboarding team."
+      }
+    },
+    "serviceDetails": {
+      "airportPickup": {
+        "label": "Airport Pickup",
+        "value": "Coordinated pickup at major airports with clear instructions sent before your trip."
+      },
+      "payments": {
+        "label": "Payments",
+        "value": "Secure online payments with transparent pricing. No hidden fees — see your total before you book."
+      },
+      "tripHelp": {
+        "label": "Trip Help",
+        "value": "Real-time support during your trip through in-app messaging with your host or our support team."
+      }
+    }
   },
   "fleetPage": {
     "title": "Our Fleet",
-    "subtitle": "Browse pickup locations, rental classes, and featured car sharing vehicles."
+    "subtitle": "Browse pickup locations, rental classes, and featured car sharing vehicles.",
+    "unableToLoad": "Unable to load fleet data",
+    "eyebrow": "Fleet",
+    "heading": "Our Fleet",
+    "intro": "Explore our pickup locations, available rental classes, and featured Car Sharing vehicles across all markets.",
+    "locationsLabel": "Pickup Locations",
+    "publicPickupHubs": "Public Pickup Hubs",
+    "noLocations": "No pickup locations available",
+    "rentalClassesLabel": "Rental Classes",
+    "vehicleTypesAvailable": "Vehicle Types Available",
+    "rentalClass": "Rental class",
+    "noRentalClasses": "No rental classes available",
+    "featuredGuestListings": "Featured Guest Listings",
+    "fromPerDay": "From {{price}}/day",
+    "noFeaturedListings": "No featured listings available",
+    "websiteDirection": "Explore",
+    "exploreOurFleet": "Explore Our Fleet",
+    "exploreDesc": "Search available rentals or browse Car Sharing listings to find the perfect vehicle for your next trip.",
+    "openRentalLane": "Open Rental Lane",
+    "openCarSharingLane": "Open Car Sharing Lane"
   },
   "issue": {
     "title": "Report an Issue",

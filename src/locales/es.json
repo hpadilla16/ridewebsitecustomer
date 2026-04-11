@@ -176,7 +176,38 @@
     "noVehicles": "No se encontraron vehículos para esta búsqueda. Prueba con otras fechas o ubicaciones.",
     "bookNow": "Reservar",
     "fromPerDay": "desde {{price}}/día",
-    "pickupLocationNotFound": "Ubicación de recogida no encontrada. Selecciona una ubicación válida."
+    "eyebrow": "Alquila un Auto",
+    "heading": "Buscar Disponibilidad de Alquiler",
+    "description": "Busca disponibilidad de alquiler en tiempo real por ubicación y fechas. Compara clases de vehículos, precios y reserva en línea.",
+    "pickupLocation": "Lugar de recogida",
+    "returnLocation": "Lugar de devolución",
+    "selectLocation": "Seleccionar ubicación",
+    "pickup": "Recogida",
+    "return": "Devolución",
+    "searching": "Buscando...",
+    "loadAvailability": "Buscar Disponibilidad",
+    "openReservationFlow": "Abrir Flujo de Reserva",
+    "liveAvailability": "Disponibilidad en tiempo real",
+    "hostedPaymentHandoff": "Pago seguro",
+    "airportPickupExpectations": "Recogida en aeropuerto",
+    "availableRentalOption": "Alquiler Disponible",
+    "availableCount": "{{count}} disponibles",
+    "airportReadyClass": "Clase lista para aeropuerto",
+    "hostedPaymentHandoffShort": "Pagos seguros",
+    "pickupContextSurfacedEarly": "Detalles de recogida incluidos",
+    "dailyRate": "Tarifa diaria",
+    "estimatedTotal": "Total estimado",
+    "dueNow": "A pagar ahora",
+    "dueNowShownBeforeCheckout": "Monto visible antes del checkout",
+    "hostedPaymentExperience": "Pago seguro hospedado",
+    "pickupContextIncluded": "Contexto de recogida incluido",
+    "viewDetails": "Ver Detalles",
+    "reserveNow": "Reservar Ahora",
+    "results": "Resultados",
+    "runSearchPrompt": "Usa la búsqueda para encontrar vehículos de alquiler disponibles.",
+    "pickupLocationNotFound": "Ubicación de recogida no encontrada.",
+    "unableToLoadSearch": "No se pudieron cargar los datos de búsqueda.",
+    "unableToSearchRentals": "No se pudo buscar alquileres."
   },
   "rentDetail": {
     "pickupLocationNotFound": "Ubicación de recogida no encontrada.",
@@ -784,11 +815,95 @@
   },
   "contactPage": {
     "title": "Contáctanos",
-    "subtitle": "Comunícate con nosotros para cualquier pregunta o necesidad de soporte."
+    "subtitle": "Comunícate con nosotros para cualquier pregunta o necesidad de soporte.",
+    "eyebrow": "Soporte",
+    "heading": "¿Cómo Podemos Ayudarte?",
+    "intro": "Ya sea que necesites ayuda con una reserva, tengas preguntas sobre Car Sharing o quieras convertirte en anfitrión, nuestro equipo está aquí para ti.",
+    "readGuestFaq": "Leer Preguntas Frecuentes",
+    "supportCategories": "Categorías de Soporte",
+    "whenGuestsReachOut": "Cuando los Huéspedes Nos Contactan",
+    "guideNotCollect": "Guiamos, No Cobramos",
+    "guideNotCollectDesc": "Nuestro equipo de soporte se enfoca en ayudarte a navegar el proceso de reserva, no en cobrar pagos por teléfono. Todo se maneja de forma segura en línea.",
+    "openCheckout": "Abrir Checkout",
+    "readFaq": "Leer FAQ",
+    "supportFlow": "Flujo de Soporte",
+    "selfService": "Autoservicio",
+    "selfServiceHeading": "Resuélvelo en Línea",
+    "selfServiceDesc": "La mayoría de las preguntas se pueden resolver con nuestras herramientas en línea. Consulta el estado de tu reserva, modifica tu viaje o gestiona pagos — todo desde tu cuenta.",
+    "openCheckoutHandoff": "Abrir Checkout",
+    "cards": {
+      "reservations": {
+        "label": "Reservaciones",
+        "value": "Preguntas sobre reservar un vehículo, horarios de recogida o precios de alquiler.",
+        "action": "Ver Alquileres"
+      },
+      "carSharing": {
+        "label": "Car Sharing",
+        "value": "¿Necesitas ayuda con un viaje de Car Sharing, comunicación con el anfitrión o detalles del listado?",
+        "action": "Ver Car Sharing"
+      },
+      "hosts": {
+        "label": "Anfitriones y Socios",
+        "value": "Información sobre publicar tu vehículo, incorporación de anfitriones o consultas de asociación.",
+        "action": "Ser Anfitrión"
+      }
+    },
+    "supportMoments": {
+      "choosingHelp": "Ayuda para elegir el vehículo o clase de alquiler adecuado",
+      "airportQuestions": "Preguntas sobre recogida y entrega en el aeropuerto",
+      "paymentSteps": "Pasos de pago y claridad en precios"
+    },
+    "channels": {
+      "beforeBooking": {
+        "title": "Antes de Reservar",
+        "body": "Explora nuestra flota, compara clases de alquiler y verifica disponibilidad. Nuestras preguntas frecuentes cubren las consultas más comunes antes de reservar."
+      },
+      "afterBooking": {
+        "title": "Después de Reservar",
+        "body": "Accede a los detalles de tu viaje, modifica tu reserva o contacta a tu anfitrión directamente desde el panel de tu cuenta."
+      },
+      "hostsPartnerships": {
+        "title": "Anfitriones y Asociaciones",
+        "body": "Conoce cómo publicar tu vehículo en Ride Car Sharing, rastrea el estado de tu solicitud o comunícate con nuestro equipo de incorporación."
+      }
+    },
+    "serviceDetails": {
+      "airportPickup": {
+        "label": "Recogida en Aeropuerto",
+        "value": "Recogida coordinada en los principales aeropuertos con instrucciones claras enviadas antes de tu viaje."
+      },
+      "payments": {
+        "label": "Pagos",
+        "value": "Pagos seguros en línea con precios transparentes. Sin cargos ocultos — ve tu total antes de reservar."
+      },
+      "tripHelp": {
+        "label": "Ayuda en el Viaje",
+        "value": "Soporte en tiempo real durante tu viaje a través de mensajería en la app con tu anfitrión o nuestro equipo de soporte."
+      }
+    }
   },
   "fleetPage": {
     "title": "Nuestra Flota",
-    "subtitle": "Explora puntos de recogida, clases de alquiler y vehículos de car sharing destacados."
+    "subtitle": "Explora puntos de recogida, clases de alquiler y vehículos de car sharing destacados.",
+    "unableToLoad": "No se pudo cargar la información de la flota",
+    "eyebrow": "Flota",
+    "heading": "Nuestra Flota",
+    "intro": "Explora nuestros puntos de recogida, clases de alquiler disponibles y vehículos de Car Sharing destacados en todos los mercados.",
+    "locationsLabel": "Puntos de Recogida",
+    "publicPickupHubs": "Centros de Recogida Públicos",
+    "noLocations": "No hay puntos de recogida disponibles",
+    "rentalClassesLabel": "Clases de Alquiler",
+    "vehicleTypesAvailable": "Tipos de Vehículos Disponibles",
+    "rentalClass": "Clase de alquiler",
+    "noRentalClasses": "No hay clases de alquiler disponibles",
+    "featuredGuestListings": "Listados Destacados para Huéspedes",
+    "fromPerDay": "Desde {{price}}/día",
+    "noFeaturedListings": "No hay listados destacados disponibles",
+    "websiteDirection": "Explorar",
+    "exploreOurFleet": "Explora Nuestra Flota",
+    "exploreDesc": "Busca alquileres disponibles o explora listados de Car Sharing para encontrar el vehículo perfecto para tu próximo viaje.",
+    "openRentalLane": "Abrir Canal de Alquiler",
+    "openCarSharingLane": "Abrir Canal de Car Sharing"
   },
   "issue": {
     "title": "Reportar un Problema",
