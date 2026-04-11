@@ -14,8 +14,8 @@ import { saveSearch, getSavedSearches, clearSavedSearches } from '../lib/savedSe
 function ShowcaseGallery({ vehicleTypes, featuredListings, basePath, t }) {
   const slides = useMemo(() => {
     const items = [];
-    vehicleTypes.forEach((vt) => items.push({ type: 'rental', id: vt.id, label: vehicleTypeLabel(vt), image: vt.imageUrl, href: `/rent/${vt.id}` }));
-    featuredListings.forEach((l) => items.push({ type: 'carsharing', id: l.id, label: listingVehicleLabel(l), image: l.imageUrls?.[0], href: `/car-sharing/${l.id}`, host: l.hostDisplayName, rating: l.hostAvgRating, price: l.baseDailyRate }));
+    vehicleTypes.filter((vt) => vt.imageUrl).forEach((vt) => items.push({ type: 'rental', id: vt.id, label: vehicleTypeLabel(vt), image: vt.imageUrl, href: `/rent/${vt.id}` }));
+    featuredListings.filter((l) => l.imageUrls?.[0]).forEach((l) => items.push({ type: 'carsharing', id: l.id, label: listingVehicleLabel(l), image: l.imageUrls[0], href: `/car-sharing/${l.id}`, host: l.hostDisplayName, rating: l.hostAvgRating, price: l.baseDailyRate }));
     return items;
   }, [vehicleTypes, featuredListings]);
 
