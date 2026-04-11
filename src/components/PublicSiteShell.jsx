@@ -42,8 +42,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
   const basePath = forcedBasePath || resolveSiteBasePath(pathname);
   const isHost = useIsHostLoggedIn();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const year = new Date().getFullYear();
-  const navHrefFor = (path) => withSiteBase(basePath, path);
+const navHrefFor = (path) => withSiteBase(basePath, path);
   const isActive = (path) => {
     const href = navHrefFor(path);
     if (!path) return pathname === href;
@@ -201,6 +200,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               width={170}
               height={55}
               className={styles.footerLogo}
+              style={{ filter: 'brightness(0) saturate(100%) invert(12%) sepia(20%) saturate(1800%) hue-rotate(200deg)' }}
             />
             <span className={styles.footerEyebrow}>Ride Car Sharing</span>
             <h3 className={styles.footerTitle}>{t('shell.footerTitle')}</h3>
@@ -243,14 +243,14 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
             <div className={styles.footerColumn}>
               <span className={styles.footerColumnLabel}>Contact</span>
               <div className={styles.footerLinks}>
-                <a href="mailto:support@ride-carsharing.com">support@ride-carsharing.com</a>
+                <a href="mailto:customerservice@ridecarsharing.com">customerservice@ridecarsharing.com</a>
                 <a href="tel:+18006765764">1 (800) 676-5764</a>
                 <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>San Juan, Puerto Rico</span>
               </div>
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <span>{siteConfig.name} © {year}</span>
+            <span>{siteConfig.name} © 2025</span>
             <span>{t('shell.poweredBy')}</span>
           </div>
         </footer>
