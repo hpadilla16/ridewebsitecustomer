@@ -80,6 +80,16 @@
       "1": { "value": "24/7", "label": "Online booking" },
       "2": { "value": "100%", "label": "Digital handoff" }
     },
+    "features": {
+      "0": "Airport-ready pickup",
+      "1": "Secure online payments",
+      "2": "Verified hosts",
+      "3": "Trip protection included",
+      "4": "Digital agreements",
+      "5": "Transparent pricing",
+      "6": "Instant book available",
+      "7": "Puerto Rico to Miami coverage"
+    },
     "marketingMoments": {
       "0": { "title": "Search & compare", "body": "Browse rental classes and car sharing listings side by side. Filter by location, dates, and vehicle type." },
       "1": { "title": "Reserve online", "body": "Complete your booking with hosted payments, transparent pricing, and instant confirmation." },

@@ -80,6 +80,16 @@
       "1": { "value": "24/7", "label": "Reservas en línea" },
       "2": { "value": "100%", "label": "Entrega digital" }
     },
+    "features": {
+      "0": "Recogida en aeropuerto",
+      "1": "Pagos seguros en línea",
+      "2": "Anfitriones verificados",
+      "3": "Protección de viaje incluida",
+      "4": "Acuerdos digitales",
+      "5": "Precios transparentes",
+      "6": "Reserva instantánea disponible",
+      "7": "Cobertura de Puerto Rico a Miami"
+    },
     "marketingMoments": {
       "0": { "title": "Buscar y seleccionar", "body": "Explora vehículos de alquiler o car sharing por ubicación, fechas y tipo de vehículo." },
       "1": { "title": "Reservar en línea", "body": "Completa tu reserva con precios claros, cobertura de viaje y confirmación inmediata." },

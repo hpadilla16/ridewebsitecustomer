@@ -52,6 +52,17 @@ export default function SitePreviewHomePage() {
     t('homePage.marketingPillars.2')
   ];
 
+  const featureHighlights = [
+    t('homePage.features.0'),
+    t('homePage.features.1'),
+    t('homePage.features.2'),
+    t('homePage.features.3'),
+    t('homePage.features.4'),
+    t('homePage.features.5'),
+    t('homePage.features.6'),
+    t('homePage.features.7')
+  ];
+
   const trustSignals = [
     { title: t('homePage.trustSignals.0.title'), body: t('homePage.trustSignals.0.body') },
     { title: t('homePage.trustSignals.1.title'), body: t('homePage.trustSignals.1.body') },
@@ -271,6 +282,18 @@ export default function SitePreviewHomePage() {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Feature carousel */}
+      <section className={styles.motionRibbon} aria-label={t('homePage.brandTrustSignals')}>
+        <div className={styles.motionTrack}>
+          {[...featureHighlights, ...featureHighlights].map((item, index) => (
+            <div key={`${item}-${index}`} className={styles.motionPill}>
+              <span className={styles.motionDot} />
+              {item}
+            </div>
+          ))}
         </div>
       </section>
 
