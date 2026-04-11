@@ -38,15 +38,17 @@ function ShowcaseGallery({ vehicleTypes, featuredListings, basePath, t }) {
     <div className={styles.showcaseGallery}>
       <Link href={withSiteBase(basePath, slide.href)} className={styles.gallerySlide} style={{ textDecoration: 'none' }}>
         {slide.image && <img src={slide.image} alt={slide.label} className={styles.galleryImage} />}
-        <div className={styles.galleryOverlay}>
-          <span className={styles.gallerySlideBadge} style={slide.type === 'carsharing' ? { background: 'rgba(15,176,216,.15)', color: '#0a7e9c' } : undefined}>
+      </Link>
+      <div className={styles.galleryInfo}>
+        <div className={styles.galleryInfoLeft}>
+          <span className={styles.gallerySlideBadge} style={slide.type === 'carsharing' ? { background: 'rgba(15,176,216,.1)', color: '#0a7e9c' } : undefined}>
             {slide.type === 'rental' ? t('homePage.rentalClass') : 'Car Sharing'}
           </span>
           <strong className={styles.gallerySlideTitle}>{slide.label}</strong>
           {slide.host && <span className={styles.gallerySlideHost}>{slide.host}{slide.rating ? ` · ${slide.rating}★` : ''}</span>}
-          {slide.price && <span className={styles.gallerySlidePrice}>{fmtMoney(slide.price)}{t('common.perDay')}</span>}
         </div>
-      </Link>
+        {slide.price && <span className={styles.gallerySlidePrice}>{fmtMoney(slide.price)}{t('common.perDay')}</span>}
+      </div>
       {count > 1 && (
         <div className={styles.galleryControls}>
           <button onClick={(e) => { e.preventDefault(); prev(); }} className={styles.galleryArrow} aria-label="Previous">‹</button>
