@@ -183,112 +183,94 @@ export default function SitePreviewHomePage() {
 
       {/* 1. Hero */}
       <section className={styles.heroShell} aria-labelledby="home-hero-title">
-        <div className="stack" style={{ gap: 18, maxWidth: 720 }}>
-          <div className={styles.heroLogoLockup}>
-            <Image
-              src="/brand/ride-logo-white-horizontal.png"
-              alt="Ride Car Sharing"
-              width={230}
-              height={75}
-              className={styles.heroLogo}
-              priority
-            />
+        <div className={styles.heroGrid}>
+          <div className="stack" style={{ gap: 18 }}>
+            <div className={styles.heroLogoLockup}>
+              <Image
+                src="/brand/ride-logo-white-horizontal.png"
+                alt="Ride Car Sharing"
+                width={230}
+                height={75}
+                className={styles.heroLogo}
+                priority
+              />
+            </div>
+            <h1 id="home-hero-title" className={styles.heroTitle}>
+              {t('homePage.heroTitle')}
+            </h1>
+            <p className={styles.heroLead}>
+              {t('homePage.heroLead')}
+            </p>
+            <div className={styles.heroPills}>
+              {marketingPillars.map((pill) => (
+                <span key={pill} className={styles.heroPill}>{pill}</span>
+              ))}
+            </div>
+            <div className={styles.heroStatRow}>
+              {heroStats.map((stat) => (
+                <div key={stat.label} className={styles.heroStat}>
+                  <div className={styles.heroStatValue}>{stat.value}</div>
+                  <div className={styles.heroStatLabel}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.heroDestinations}>
+              <span className={styles.heroDestinationsLabel}>{t('homePage.nowServing')}</span>
+              <div className={styles.heroDestinationList}>{destinationStory.join(' | ')}</div>
+            </div>
           </div>
-          <span className="eyebrow">{t('homePage.heroEyebrow')}</span>
-          <h1 id="home-hero-title" className={styles.heroTitle}>
-            {t('homePage.heroTitle')}
-          </h1>
-          <p className={styles.heroLead}>
-            {t('homePage.heroLead')}
-          </p>
-          <div className={styles.heroPills}>
-            {marketingPillars.map((pill) => (
-              <span key={pill} className={styles.heroPill}>{pill}</span>
-            ))}
-          </div>
-          <div className={styles.heroStatRow}>
-            {heroStats.map((stat) => (
-              <div key={stat.label} className={styles.heroStat}>
-                <div className={styles.heroStatValue}>{stat.value}</div>
-                <div className={styles.heroStatLabel}>{stat.label}</div>
+
+          <div className={styles.heroSearchPanel}>
+            {error ? <div className="label" style={{ color: '#ff8a8a', marginBottom: 8 }}>{error}</div> : null}
+            <div className={styles.heroSearchCard}>
+              <h3 style={{ margin: '0 0 10px', fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.traditionalRentals')}</h3>
+              <label className="label">{t('homePage.pickupLocation')}</label>
+              <select value={rentalSearch.pickupLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupLocationId: e.target.value }))}>
+                <option value="">{t('homePage.selectLocation')}</option>
+                {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
+              </select>
+              <label className="label">{t('homePage.returnLocation')}</label>
+              <select value={rentalSearch.returnLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, returnLocationId: e.target.value }))}>
+                <option value="">{t('homePage.selectLocation')}</option>
+                {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
+              </select>
+              <div className="grid2">
+                <div className="stack">
+                  <label className="label">{t('homePage.pickup')}</label>
+                  <input type="datetime-local" value={rentalSearch.pickupAt} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
+                </div>
+                <div className="stack">
+                  <label className="label">{t('homePage.return')}</label>
+                  <input type="datetime-local" value={rentalSearch.returnAt} onChange={(e) => setRentalSearch((current) => ({ ...current, returnAt: e.target.value }))} />
+                </div>
               </div>
-            ))}
-          </div>
-          {error ? <div className="label" style={{ color: '#b91c1c' }}>{error}</div> : null}
-          <div className={styles.heroActionRow}>
-            <Link href={withSiteBase(basePath, '/rent')} className="ios-action-btn" style={{ textDecoration: 'none' }}>
-              {t('homePage.exploreRentals')}
-            </Link>
-            <Link href={withSiteBase(basePath, '/car-sharing')} className={styles.heroSecondaryAction} style={{ textDecoration: 'none' }}>
-              {t('homePage.browseCarSharing')}
-            </Link>
-          </div>
-          <div className={styles.heroDestinations}>
-            <span className={styles.heroDestinationsLabel}>{t('homePage.nowServing')}</span>
-            <div className={styles.heroDestinationList}>{destinationStory.join(' | ')}</div>
-          </div>
-        </div>
-      </section>
+              <button type="button" className="ios-action-btn" onClick={openRental} disabled={busy === 'rental'}>
+                {busy === 'rental' ? t('homePage.opening') : t('homePage.searchRentals')}
+              </button>
+            </div>
 
-      {/* 2. Search lanes */}
-      <section className={styles.laneGrid}>
-        <div className={`glass card ${styles.laneCard}`}>
-          <div className={styles.laneHeader}>
-            <h2 className={styles.laneTitle}>{t('homePage.traditionalRentals')}</h2>
-            <p className={styles.laneLead}>
-              {t('homePage.traditionalRentalsLead')}
-            </p>
-          </div>
-          <label className="label">{t('homePage.pickupLocation')}</label>
-          <select value={rentalSearch.pickupLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupLocationId: e.target.value }))}>
-            <option value="">{t('homePage.selectLocation')}</option>
-            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
-          </select>
-          <label className="label">{t('homePage.returnLocation')}</label>
-          <select value={rentalSearch.returnLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, returnLocationId: e.target.value }))}>
-            <option value="">{t('homePage.selectLocation')}</option>
-            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
-          </select>
-          <div className="grid2">
-            <div className="stack">
-              <label className="label">{t('homePage.pickup')}</label>
-              <input type="datetime-local" value={rentalSearch.pickupAt} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
-            </div>
-            <div className="stack">
-              <label className="label">{t('homePage.return')}</label>
-              <input type="datetime-local" value={rentalSearch.returnAt} onChange={(e) => setRentalSearch((current) => ({ ...current, returnAt: e.target.value }))} />
+            <div className={styles.heroSearchCard}>
+              <h3 style={{ margin: '0 0 10px', fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.carSharing')}</h3>
+              <label className="label">{t('homePage.location')}</label>
+              <select value={carSharingSearch.locationId} onChange={(e) => setCarSharingSearch((current) => ({ ...current, locationId: e.target.value }))}>
+                <option value="">{t('homePage.selectLocation')}</option>
+                {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
+              </select>
+              <div className="grid2">
+                <div className="stack">
+                  <label className="label">{t('homePage.pickup')}</label>
+                  <input type="datetime-local" value={carSharingSearch.pickupAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
+                </div>
+                <div className="stack">
+                  <label className="label">{t('homePage.return')}</label>
+                  <input type="datetime-local" value={carSharingSearch.returnAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, returnAt: e.target.value }))} />
+                </div>
+              </div>
+              <button type="button" className="ios-action-btn" onClick={openCarSharing} disabled={busy === 'carsharing'}>
+                {busy === 'carsharing' ? t('homePage.opening') : t('homePage.searchCarSharing')}
+              </button>
             </div>
           </div>
-          <button type="button" className="ios-action-btn" onClick={openRental} disabled={busy === 'rental'}>
-            {busy === 'rental' ? t('homePage.opening') : t('homePage.searchRentals')}
-          </button>
-        </div>
-
-        <div className={`glass card ${styles.laneCard}`}>
-          <div className={styles.laneHeader}>
-            <h2 className={styles.laneTitle}>{t('homePage.carSharing')}</h2>
-            <p className={styles.laneLead}>
-              {t('homePage.carSharingLead')}
-            </p>
-          </div>
-          <label className="label">{t('homePage.location')}</label>
-          <select value={carSharingSearch.locationId} onChange={(e) => setCarSharingSearch((current) => ({ ...current, locationId: e.target.value }))}>
-            <option value="">{t('homePage.selectLocation')}</option>
-            {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
-          </select>
-          <div className="grid2">
-            <div className="stack">
-              <label className="label">{t('homePage.pickup')}</label>
-              <input type="datetime-local" value={carSharingSearch.pickupAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
-            </div>
-            <div className="stack">
-              <label className="label">{t('homePage.return')}</label>
-              <input type="datetime-local" value={carSharingSearch.returnAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, returnAt: e.target.value }))} />
-            </div>
-          </div>
-          <button type="button" className="ios-action-btn" onClick={openCarSharing} disabled={busy === 'carsharing'}>
-            {busy === 'carsharing' ? t('homePage.opening') : t('homePage.searchCarSharing')}
-          </button>
         </div>
       </section>
 
