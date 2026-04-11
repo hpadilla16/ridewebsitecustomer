@@ -414,13 +414,20 @@
   font-weight: 700;
 }
 
-.heroSearchCard :global(.grid2) {
-  gap: 12px;
-  margin-bottom: 0;
+.heroDateRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.heroSearchCard :global(.stack) {
-  gap: 6px;
+.heroDateField {
+  display: grid;
+  gap: 5px;
+}
+
+.heroDateField input[type="datetime-local"] {
+  font-size: 0.76rem;
+  padding: 9px 8px;
 }
 
 .heroSearchCard :global(.ios-action-btn) {
@@ -980,12 +987,15 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(110, 73, 255, 0.16);
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  font-size: 1.1rem;
-  line-height: 1;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  line-height: 0;
+  padding: 0 0 2px;
   color: #6e49ff;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;

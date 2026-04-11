@@ -283,7 +283,7 @@ export default function SitePreviewHomePage() {
           <div className={styles.heroSearchPanel}>
             {error ? <div className="label" style={{ color: '#ff8a8a', marginBottom: 8 }}>{error}</div> : null}
             <div className={styles.heroSearchCard}>
-              <h3 style={{ margin: '0 0 10px', fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.traditionalRentals')}</h3>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.traditionalRentals')}</h3>
               <label className="label">{t('homePage.pickupLocation')}</label>
               <select value={rentalSearch.pickupLocationId} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupLocationId: e.target.value }))}>
                 <option value="">{t('homePage.selectLocation')}</option>
@@ -294,12 +294,12 @@ export default function SitePreviewHomePage() {
                 <option value="">{t('homePage.selectLocation')}</option>
                 {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
               </select>
-              <div className="grid2">
-                <div className="stack">
+              <div className={styles.heroDateRow}>
+                <div className={styles.heroDateField}>
                   <label className="label">{t('homePage.pickup')}</label>
                   <input type="datetime-local" value={rentalSearch.pickupAt} onChange={(e) => setRentalSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
                 </div>
-                <div className="stack">
+                <div className={styles.heroDateField}>
                   <label className="label">{t('homePage.return')}</label>
                   <input type="datetime-local" value={rentalSearch.returnAt} onChange={(e) => setRentalSearch((current) => ({ ...current, returnAt: e.target.value }))} />
                 </div>
@@ -310,18 +310,18 @@ export default function SitePreviewHomePage() {
             </div>
 
             <div className={styles.heroSearchCard}>
-              <h3 style={{ margin: '0 0 10px', fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.carSharing')}</h3>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e2847' }}>{t('homePage.carSharing')}</h3>
               <label className="label">{t('homePage.location')}</label>
               <select value={carSharingSearch.locationId} onChange={(e) => setCarSharingSearch((current) => ({ ...current, locationId: e.target.value }))}>
                 <option value="">{t('homePage.selectLocation')}</option>
                 {publicLocationOptions.map((location) => <option key={location.id} value={location.id}>{location.label}</option>)}
               </select>
-              <div className="grid2">
-                <div className="stack">
+              <div className={styles.heroDateRow}>
+                <div className={styles.heroDateField}>
                   <label className="label">{t('homePage.pickup')}</label>
                   <input type="datetime-local" value={carSharingSearch.pickupAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, pickupAt: e.target.value }))} />
                 </div>
-                <div className="stack">
+                <div className={styles.heroDateField}>
                   <label className="label">{t('homePage.return')}</label>
                   <input type="datetime-local" value={carSharingSearch.returnAt} onChange={(e) => setCarSharingSearch((current) => ({ ...current, returnAt: e.target.value }))} />
                 </div>
