@@ -242,7 +242,7 @@ export function PublicSiteShell({ children, basePath: forcedBasePath }) {
               <span className={styles.footerColumnLabel}>Contact</span>
               <div className={styles.footerLinks}>
                 <a href="mailto:support@ride-carsharing.com">support@ride-carsharing.com</a>
-                <a href="tel:+17875550100">+1 (787) 555-0100</a>
+                <a href="tel:+18006765764">1 (800) 676-5764</a>
                 <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>San Juan, Puerto Rico</span>
               </div>
             </div>

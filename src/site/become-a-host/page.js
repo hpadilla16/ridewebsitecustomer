@@ -647,7 +647,7 @@ function BecomeAHostPageInner() {
               <input value={form.legalName} onChange={set('legalName')} style={inputStyle} />
             </Field>
             <Field label="Phone number" required>
-              <input value={form.phone} onChange={set('phone')} placeholder="+1 787 555 0100" required style={inputStyle} />
+              <input value={form.phone} onChange={set('phone')} placeholder="(800) 676-5764" required style={inputStyle} />
             </Field>
             <Field label="Email address" required>
               <input type="email" value={form.email} onChange={set('email')} placeholder="you@example.com" required style={inputStyle} />
