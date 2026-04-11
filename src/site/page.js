@@ -442,10 +442,10 @@ export default function SitePreviewHomePage() {
       {/* 7. Featured locations */}
       <section className={styles.destinationRail}>
         {destinationPanels.map((panel, index) => (
-          <article key={panel.city} className={`glass card ${styles.destinationCard}`} style={{ animationDelay: `${index * 0.15}s` }}>
-            <div className="label">{t('homePage.destination')}</div>
-            <h3 style={{ margin: '8px 0 8px' }}>{panel.city}</h3>
-            <p className="ui-muted" style={{ margin: 0 }}>{panel.note}</p>
+          <article key={panel.city} className={`card ${styles.destinationCard}`} style={{ animationDelay: `${index * 0.15}s` }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200, 210, 255, 0.8)' }}>{t('homePage.destination')}</div>
+            <h3 style={{ margin: '8px 0 8px', color: '#fff' }}>{panel.city}</h3>
+            <p style={{ margin: 0, color: 'rgba(220, 225, 255, 0.85)', fontSize: '0.9rem', lineHeight: 1.5 }}>{panel.note}</p>
           </article>
         ))}
       </section>
