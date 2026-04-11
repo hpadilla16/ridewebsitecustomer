@@ -512,9 +512,9 @@ export default function SitePreviewHomePage() {
       {/* 9. Final CTA */}
       <section className={styles.launchFinale}>
         <div className={styles.launchFinaleCopy}>
-          <span className="eyebrow">{t('homePage.readyToBook')}</span>
-          <h2 style={{ margin: 0 }}>{t('homePage.readyToBookTitle')}</h2>
-          <p className="ui-muted" style={{ margin: 0 }}>
+          <span className="eyebrow" style={{ color: 'rgba(200, 210, 255, 0.85)' }}>{t('homePage.readyToBook')}</span>
+          <h2 style={{ margin: 0, color: '#fff' }}>{t('homePage.readyToBookTitle')}</h2>
+          <p style={{ margin: 0, color: 'rgba(220, 225, 255, 0.85)', lineHeight: 1.6 }}>
             {t('homePage.readyToBookLead')}
           </p>
         </div>
