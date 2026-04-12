@@ -126,9 +126,8 @@ export async function api(path, opts = {}, token) {
   const authToken = token || readStoredToken();
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
   const isBrowser = typeof window !== 'undefined';
-  const isPublicApiPath = String(path || '').startsWith('/api/public/');
-  const backendBase = normalizeBaseUrl(process.env.NEXT_PUBLIC_API_BASE) || 'https://ridefleetmanager.com';
-  const url = isBrowser && isPublicApiPath ? path : `${backendBase}${path}`;
+  const isProxiedPath = String(path || '').startsWith('/api/public/') || String(path || '').startsWith('/api/auth/');
+  const url = isBrowser && isProxiedPath ? path : `${API_BASE}${path}`;
   const useGetCache = typeof window !== 'undefined' && method === 'GET' && !bypassCache && cacheTtlMs !== 0;
 
   if (!useGetCache) {
