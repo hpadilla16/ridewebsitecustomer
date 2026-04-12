@@ -542,6 +542,38 @@
   }
 }
 
+@media print {
+  .page {
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  .page::before,
+  .page::after {
+    display: none !important;
+  }
+
+  .topline,
+  .header,
+  .footer,
+  .skipLink,
+  .mobileMenuBtn,
+  .mobileDrawer {
+    display: none !important;
+  }
+
+  .shell {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mainContent {
+    gap: 0 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page::before,
   .page::after,

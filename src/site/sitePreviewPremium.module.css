@@ -2415,3 +2415,29 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+@media print {
+  .heroShell,
+  .motionRibbon,
+  .trustBand,
+  .editorialPanel,
+  .socialProofGrid,
+  .destinationRail,
+  .spotlightGrid,
+  .launchFinale,
+  .laneGrid {
+    display: none !important;
+  }
+
+  .asidePanel {
+    display: none !important;
+  }
+
+  .detailHero,
+  .detailGrid {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+}
