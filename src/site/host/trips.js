@@ -62,7 +62,7 @@ export default function HostTripsPage() {
 
   if (!ready) return null;
 
-  const filters = ['', 'PENDING_APPROVAL', 'CONFIRMED', 'ACTIVE', 'COMPLETED', 'CANCELLED', 'DISPUTED'];
+  const filters = ['', 'INQUIRY', 'RESERVED', 'CONFIRMED', 'READY_FOR_PICKUP', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'DISPUTED'];
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
