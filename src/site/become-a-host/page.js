@@ -441,7 +441,7 @@ function SuccessScreen({ createdHost, t }) {
 function BecomeAHostPageInner() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
-  const envTenantSlug = String(process.env.NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG || 'carsharing').trim().toLowerCase();
+  const envTenantSlug = (process.env.NEXT_PUBLIC_CAR_SHARING_TENANT_SLUG || '').trim().toLowerCase() || 'carsharing';
   const initialTenantSlug = String(searchParams.get('tenantSlug') || '').trim().toLowerCase() || envTenantSlug;
 
   const [step, setStep] = useState(0); // 0 = landing, 1–4 = wizard, 5 = success
