@@ -756,6 +756,8 @@
     "notFound": "Booking not found",
     "notFoundBody": "We couldn't find your booking details. Please check your confirmation email.",
     "allSet": "You're all set!",
+    "reservationConfirmedName": "{{name}}, your {{type}} reservation has been confirmed.",
+    "reservationConfirmed": "Your {{type}} reservation has been confirmed.",
     "bookingRef": "Booking ref",
     "emailSentTo": "A confirmation has been sent to your email.",
     "tripTotal": "Trip total",

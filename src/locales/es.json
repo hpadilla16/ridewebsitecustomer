@@ -470,6 +470,8 @@
     "notFound": "Reserva no encontrada",
     "notFoundBody": "No pudimos encontrar los detalles de tu reserva. Revisa tu email de confirmación.",
     "allSet": "¡Todo listo!",
+    "reservationConfirmedName": "{{name}}, tu reserva de {{type}} ha sido confirmada.",
+    "reservationConfirmed": "Tu reserva de {{type}} ha sido confirmada.",
     "bookingRef": "Ref. de reserva",
     "emailSentTo": "Se ha enviado una confirmación a tu email.",
     "tripTotal": "Total del viaje",
