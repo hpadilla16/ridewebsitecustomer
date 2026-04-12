@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ride Car Sharing — Vehicle Inspection Checklist</title>
+<style>
+  @page { size: letter; margin: 0.5in; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e2847; font-size: 11pt; line-height: 1.5; padding: 0.5in; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 3px solid #6e49ff; }
+  .header h1 { font-size: 18pt; color: #6e49ff; margin: 0 0 4px; }
+  .header p { font-size: 9pt; color: #5b6685; }
+  .header .brand { font-size: 14pt; font-weight: 800; color: #6e49ff; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .info-field { border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 10px; }
+  .info-field label { display: block; font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7a9a; margin-bottom: 2px; }
+  .info-field .value { font-size: 10pt; min-height: 16px; }
+  .section { margin-bottom: 16px; }
+  .section-title { font-size: 12pt; font-weight: 800; color: #1e2847; margin-bottom: 8px; padding: 6px 10px; background: #f3f0ff; border-radius: 6px; border-left: 4px solid #6e49ff; }
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  th { text-align: left; font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7a9a; padding: 6px 8px; border-bottom: 2px solid #e5e7eb; }
+  td { padding: 7px 8px; border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
+  .check-col { width: 28px; text-align: center; }
+  .checkbox { display: inline-block; width: 16px; height: 16px; border: 1.5px solid #9ca3af; border-radius: 3px; }
+  .notes-col { width: 180px; }
+  .notes-line { border-bottom: 1px solid #d1d5db; min-height: 18px; }
+  .footer { margin-top: 24px; padding-top: 14px; border-top: 2px solid #e5e7eb; }
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 14px; }
+  .sig-field { border-bottom: 1px solid #1e2847; padding-bottom: 4px; min-height: 30px; }
+  .sig-field label { display: block; font-size: 8pt; font-weight: 700; text-transform: uppercase; color: #6b7a9a; margin-top: 4px; }
+  .page-break { page-break-before: always; }
+  .result-box { display: inline-block; padding: 4px 12px; border: 1.5px solid #d1d5db; border-radius: 6px; font-weight: 700; margin-right: 12px; font-size: 10pt; }
+  .small { font-size: 8pt; color: #6b7a9a; }
+  @media print { body { padding: 0; } .no-print { display: none; } }
+  .print-btn { display: block; margin: 0 auto 20px; padding: 12px 32px; background: #6e49ff; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .print-btn:hover { background: #5a3ad9; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+<div class="header">
+  <div>
+    <h1>Vehicle Inspection Checklist</h1>
+    <p>Complete this checklist before listing your vehicle on Ride Car Sharing.<br>All items must pass for listing approval. Photos are required.</p>
+  </div>
+  <div style="text-align: right;">
+    <div class="brand">Ride Car Sharing</div>
+    <div class="small">ride-carsharing.com</div>
+    <div class="small">1 (800) 676-5764</div>
+  </div>
+</div>
+
+<div class="info-grid">
+  <div class="info-field"><label>Owner / Host Name</label><div class="value"></div></div>
+  <div class="info-field"><label>Inspection Date</label><div class="value"></div></div>
+  <div class="info-field"><label>Inspector</label><div class="value"></div></div>
+  <div class="info-field"><label>Vehicle (Year / Make / Model)</label><div class="value"></div></div>
+  <div class="info-field"><label>License Plate</label><div class="value"></div></div>
+  <div class="info-field"><label>VIN</label><div class="value"></div></div>
+  <div class="info-field"><label>Current Mileage</label><div class="value"></div></div>
+  <div class="info-field"><label>Color</label><div class="value"></div></div>
+  <div class="info-field"><label>Listing Location</label><div class="value"></div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">1. Exterior Condition</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Front bumper — no cracks, missing parts, or major damage</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Rear bumper — no cracks, missing parts, or major damage</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>All body panels — no major dents, rust, or structural damage</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Windshield — no cracks longer than 6 inches, no obstruction</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>All windows — open, close, and lock properly</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Side mirrors — both present, adjustable, no cracks</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Doors — all open, close, and latch securely</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Trunk / hatch — opens, closes, and latches properly</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Paint condition — no excessive peeling, fading, or oxidation</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">2. Lights & Electrical</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Headlights — low beam and high beam functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Taillights — both functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Brake lights — both functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Turn signals — front and rear, left and right</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Hazard lights — functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Reverse lights — functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Interior lights and dashboard — no warning indicators active</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Horn — functional</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">3. Tires & Wheels</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>All 4 tires — tread depth above 3/32" (penny test)</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Tire age — manufactured within last 6 years (check DOT code)</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>No visible sidewall damage, bulges, or punctures</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Tire pressure — within manufacturer spec (check door jamb sticker)</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Spare tire or tire repair kit — present and accessible</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Wheels / rims — no cracks, bends, or missing lug nuts</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section page-break">
+  <div class="section-title">4. Safety Systems</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Foot brakes — firm pedal, vehicle stops straight</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Parking / emergency brake — holds vehicle on incline</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Steering — no excessive play, no unusual noise</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Seat belts — all functional for driver and passengers</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Airbag indicator — no warning light on dashboard</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>ABS indicator — no warning light on dashboard</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Windshield wipers — functional, blades in good condition</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Windshield washer fluid — reservoir filled</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Rearview mirror — present and adjustable</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">5. Fluids & Mechanical</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Engine oil — at proper level, no leaks visible</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Coolant — at proper level in reservoir</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Brake fluid — at proper level</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Transmission fluid — no visible leaks</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Engine start — starts smoothly, no unusual noise</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Exhaust — no excessive smoke, no unusual odor</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Check engine light — not illuminated</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>A/C and heating — functional</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">6. Interior Condition</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Seats — no major tears, stains, or structural damage</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Carpet / floor mats — clean, no major damage</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Dashboard and controls — all gauges and controls functional</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Door locks — all lock and unlock properly (manual and power)</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Cleanliness — vehicle interior is clean and odor-free</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Glove box and storage — functional, no personal items left</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">7. Required Documentation</div>
+  <table>
+    <thead><tr><th class="check-col">Pass</th><th class="check-col">Fail</th><th>Item</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Vehicle registration — current and valid</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Insurance — active coverage with proof</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Vehicle title — host is owner or authorized representative</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>State inspection sticker — current (if required by state)</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td class="check-col"><span class="checkbox"></span></td><td>Emissions certification — current (if required by state)</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">8. Photo Requirements (minimum 4 required)</div>
+  <table>
+    <thead><tr><th class="check-col">Done</th><th>Photo</th><th class="notes-col">Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Front view — full vehicle from front</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Rear view — full vehicle from back</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Left side — full vehicle from driver side</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Right side — full vehicle from passenger side</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Interior — front seats and dashboard</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Dashboard / mileage — odometer clearly visible</td><td><div class="notes-line"></div></td></tr>
+      <tr><td class="check-col"><span class="checkbox"></span></td><td>Any existing damage — close-up photos of scratches, dents, etc.</td><td><div class="notes-line"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <div>
+      <strong>Inspection Result:</strong>
+      <span class="result-box">PASS</span>
+      <span class="result-box">FAIL</span>
+      <span class="result-box">CONDITIONAL</span>
+    </div>
+  </div>
+  <div class="small" style="margin-bottom: 12px;">By signing below, I confirm that this inspection was conducted accurately and the information above is true and complete.</div>
+  <div class="sig-grid">
+    <div><div class="sig-field"></div><label>Inspector Signature</label></div>
+    <div><div class="sig-field"></div><label>Date</label></div>
+    <div><div class="sig-field"></div><label>Host / Owner Signature</label></div>
+    <div><div class="sig-field"></div><label>Date</label></div>
+  </div>
+  <div class="small" style="margin-top: 16px; text-align: center;">Ride Car Sharing — ride-carsharing.com — 1 (800) 676-5764 — customerservice@ridecarsharing.com</div>
+</div>
+
+</body>
+</html>

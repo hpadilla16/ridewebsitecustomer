@@ -930,6 +930,13 @@ function BecomeAHostPageInner() {
                 </div>
               ))}
             </div>
+            <div style={{ padding: '12px 16px', borderRadius: 12, background: 'rgba(110,73,255,.05)', border: '1px solid rgba(110,73,255,.12)', display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.88rem' }}>
+              <span style={{ fontSize: '1.2rem' }}>📋</span>
+              <div>
+                <a href="/vehicle-inspection-checklist.html" target="_blank" rel="noreferrer" style={{ color: '#6e49ff', fontWeight: 700, textDecoration: 'none' }}>{t('becomeAHost.downloadChecklist')}</a>
+                <div style={{ color: '#6b7a9a', fontSize: '0.82rem', marginTop: 2 }}>{t('becomeAHost.downloadChecklistHint')}</div>
+              </div>
+            </div>
             <Field label={t('becomeAHost.inspectionNotes')} hint={t('becomeAHost.inspectionNotesHint')}>
               <textarea
                 rows={3}

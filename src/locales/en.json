@@ -1242,6 +1242,8 @@
     "docInspectionHint": "Photo or PDF of pre-listing inspection",
     "uploading": "Uploading...",
     "ready": "✓ Ready",
+    "downloadChecklist": "Download Vehicle Inspection Checklist",
+    "downloadChecklistHint": "Print this checklist and complete it before submitting your vehicle. All items must pass for approval.",
     "inspectionNotes": "Inspection notes",
     "inspectionNotesHint": "Anything the review team should know before approval",
     "inspectionNotesPlaceholder": "Scratch on rear bumper noted prior to listing. All systems functional.",

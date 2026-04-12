@@ -1216,6 +1216,8 @@
     "docInspectionHint": "Foto o PDF de la inspección previa al listado",
     "uploading": "Subiendo...",
     "ready": "✓ Listo",
+    "downloadChecklist": "Descargar Lista de Inspección Vehicular",
+    "downloadChecklistHint": "Imprime esta lista y complétala antes de enviar tu vehículo. Todos los puntos deben pasar para la aprobación.",
     "inspectionNotes": "Notas de inspección",
     "inspectionNotesHint": "Cualquier cosa que el equipo de revisión deba saber antes de la aprobación",
     "inspectionNotesPlaceholder": "Rasguño en el parachoques trasero notado antes del listado. Todos los sistemas funcionan.",
