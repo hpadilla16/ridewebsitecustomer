@@ -626,17 +626,7 @@ function BecomeAHostPageInner() {
             </p>
           </div>
 
-          {/* Tenant selector — only when not env-scoped */}
-          {!envTenantSlug && (
-            <Field label={t('becomeAHost.platform')} required>
-              <select value={form.tenantSlug} onChange={set('tenantSlug')} required style={inputStyle}>
-                <option value="">{t('becomeAHost.selectPlatform')}</option>
-                {availableTenants.map((t) => (
-                  <option key={t.id} value={t.slug}>{t.name}</option>
-                ))}
-              </select>
-            </Field>
-          )}
+          {/* Tenant is always car sharing on this website */}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
             <Field label={t('becomeAHost.fullName')} required>
