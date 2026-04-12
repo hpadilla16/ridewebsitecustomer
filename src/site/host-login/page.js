@@ -153,15 +153,13 @@ export default function HostLoginPage() {
                   >
                     {t('hostLogin.viewSubmissionStatus')}
                   </Link>
-                  <a
-                    href="https://ridefleetmanager.com/host"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/host/dashboard"
                     className="button-subtle"
                     style={{ textDecoration: 'none' }}
                   >
                     {t('hostLogin.openHostApp')}
-                  </a>
+                  </Link>
                 </div>
 
                 <div
