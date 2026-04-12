@@ -81,25 +81,10 @@ function RentalDetailPreviewContent() {
     pickupAt,
     returnAt
   });
-  const rentalExperience = [
-    { title: t('rentDetail.experienceAirportReadyTitle'), body: t('rentDetail.experienceAirportReadyBody') },
-    { title: t('rentDetail.experienceSecurePaymentsTitle'), body: t('rentDetail.experienceSecurePaymentsBody') },
-    { title: t('rentDetail.experienceRealtimeTitle'), body: t('rentDetail.experienceRealtimeBody') }
-  ];
   const rentalHighlights = [
     t('rentDetail.highlightPriorityPickup'),
     t('rentDetail.highlightDueNowPricing'),
     t('rentDetail.highlightTripProtection')
-  ];
-  const rentalProofSignals = [
-    t('rentDetail.proofHostedPayment'),
-    t('rentDetail.proofLiveAvailability'),
-    t('rentDetail.proofPickupDetails')
-  ];
-  const nextSteps = [
-    t('rentDetail.stepReviewPricing'),
-    t('rentDetail.stepCompleteCheckout'),
-    t('rentDetail.stepFinishAgreement')
   ];
 
   return (
@@ -128,10 +113,6 @@ function RentalDetailPreviewContent() {
             <div className={styles.detailSnapshotValue}>{formatPublicDateTime(pickupAt)}</div>
             <div className="ui-muted" style={{ marginTop: 6 }}>{t('rentDetail.returnLabel')} {formatPublicDateTime(returnAt)}</div>
             <div className="ui-muted" style={{ marginTop: 16 }}>{publicLocationLabel(location)}</div>
-            <div className={styles.snapshotAccent}>
-              <span className="label">{t('rentDetail.storefrontPosture')}</span>
-              <strong>{t('rentDetail.storefrontPostureValue')}</strong>
-            </div>
           </div>
         </div>
       </section>
@@ -160,13 +141,6 @@ function RentalDetailPreviewContent() {
                 <strong>{t('rentDetail.pickupHub')}</strong>
                 <div className="ui-muted">{publicLocationLabel(location)}</div>
               </div>
-              <div className={styles.storyCard}>
-                <div className="label">{t('rentDetail.guestFit')}</div>
-                <h3 style={{ margin: '8px 0 10px' }}>{t('rentDetail.guestFitHeading')}</h3>
-                <p className="ui-muted" style={{ margin: 0 }}>
-                  {t('rentDetail.guestFitDescription')}
-                </p>
-              </div>
               <div className="metric-grid">
                 <div className="metric-card">
                   <span className="label">{t('rentDetail.dailyRate')}</span>
@@ -183,51 +157,11 @@ function RentalDetailPreviewContent() {
               </div>
               <div className="surface-note">
                 <strong>{t('rentDetail.tripWindow')}</strong>
-                <div className="ui-muted">{formatPublicDateTime(pickupAt)} {'->'} {formatPublicDateTime(returnAt)}</div>
+                <div className="ui-muted">{formatPublicDateTime(pickupAt)} → {formatPublicDateTime(returnAt)}</div>
               </div>
               <div className="surface-note">
                 <strong>{t('rentDetail.availabilitySnapshot')}</strong>
                 <div className="ui-muted">{t('rentDetail.unitsAvailable', { count: Number(result?.availabilityCount || 0) })}</div>
-              </div>
-              <div className="surface-note">
-                <strong>{t('rentDetail.whyGuestsPick')}</strong>
-                <div className="ui-muted">
-                  {t('rentDetail.whyGuestsPickDescription')}
-                </div>
-              </div>
-              <div className={styles.highlightStrip}>
-                {rentalProofSignals.map((item) => (
-                  <span key={item} className={styles.highlightChip}>{item}</span>
-                ))}
-              </div>
-              <div className={styles.experiencePanel}>
-                <div className="label">{t('rentDetail.signatureExperience')}</div>
-                <div className={styles.experienceGrid} style={{ marginTop: 12 }}>
-                  {rentalExperience.map((item) => (
-                    <div key={item.title} className={styles.experienceTile}>
-                      <strong>{item.title}</strong>
-                      <p className="ui-muted" style={{ margin: '8px 0 0' }}>{item.body}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.conciergePanel}>
-                <div className="label">{t('rentDetail.conciergeFraming')}</div>
-                <h3 style={{ margin: '8px 0 10px' }}>{t('rentDetail.conciergeHeading')}</h3>
-                <p className="ui-muted" style={{ margin: 0 }}>
-                  {t('rentDetail.conciergeDescription')}
-                </p>
-              </div>
-              <div className={styles.reassurancePanel}>
-                <div className="label">{t('rentDetail.whatHappensAfterReserve')}</div>
-                <div className={styles.reassuranceChecklist}>
-                  {nextSteps.map((step) => (
-                    <div key={step} className={styles.reassuranceItem}>
-                      <span className={styles.reassuranceDot} />
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           ) : null}
