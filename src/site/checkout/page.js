@@ -113,7 +113,7 @@ function CheckoutInner() {
   const [step, setStep] = useState(1);
   const [customer, setCustomer] = useState({ firstName: '', lastName: '', email: '', phone: '', dateOfBirth: '', licenseNumber: '', licenseState: '' });
   const [selectedServices, setSelectedServices] = useState({});
-  const [insuranceSelection, setInsuranceSelection] = useState({ selectedPlanCode: '', declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false, ownPolicyNumber: '' });
+  const [insuranceSelection, setInsuranceSelection] = useState({ selectedPlanCodes: [], declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false, ownPolicyNumber: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [createAccount, setCreateAccount] = useState(false);
 
@@ -167,10 +167,14 @@ function CheckoutInner() {
 
   const locationOptions = useMemo(() => buildPublicLocationOptions(bootstrap?.locations || []), [bootstrap]);
   const returnOption = useMemo(() => findPublicLocationOption(locationOptions, returnSelectionId || pickupSelectionId), [locationOptions, pickupSelectionId, returnSelectionId]);
-  const selectedInsurancePlan = useMemo(() => (selectedResult?.insurancePlans || []).find((plan) => String(plan.code || '').toUpperCase() === String(insuranceSelection.selectedPlanCode || '').toUpperCase()) || null, [insuranceSelection.selectedPlanCode, selectedResult]);
+  const selectedInsurancePlans = useMemo(() => {
+    const codes = (insuranceSelection.selectedPlanCodes || []).map(c => String(c).toUpperCase());
+    return (selectedResult?.insurancePlans || []).filter((plan) => codes.includes(String(plan.code || '').toUpperCase()));
+  }, [insuranceSelection.selectedPlanCodes, selectedResult]);
+  const selectedInsurancePlan = selectedInsurancePlans[0] || null;
   const chosenServices = useMemo(() => computeSelectedServices(selectedResult, selectedServices, searchMode), [searchMode, selectedResult, selectedServices]);
   const addOnsTotal = useMemo(() => chosenServices.reduce((sum, service) => sum + Number(service.total || 0), 0), [chosenServices]);
-  const insuranceTotal = Number(selectedInsurancePlan?.total || 0);
+  const insuranceTotal = selectedInsurancePlans.reduce((sum, plan) => sum + Number(plan.total || 0), 0);
   const baseTotal = Number(searchMode === 'RENTAL' ? selectedResult?.quote?.estimatedTripTotal || 0 : selectedResult?.quote?.total || 0);
   const estimatedTotal = baseTotal + addOnsTotal + insuranceTotal;
   const estimatedDueNow = (() => {
@@ -196,7 +200,7 @@ function CheckoutInner() {
     setError('');
     setStep(nextStep);
   }
-  const insuranceComplete = searchMode !== 'RENTAL' || !!selectedInsurancePlan || (insuranceSelection.declinedCoverage && insuranceSelection.usingOwnInsurance && insuranceSelection.liabilityAccepted);
+  const insuranceComplete = searchMode !== 'RENTAL' || selectedInsurancePlans.length > 0 || (insuranceSelection.declinedCoverage && insuranceSelection.usingOwnInsurance && insuranceSelection.liabilityAccepted);
   const totalSteps = 3;
 
   const backHref = searchMode === 'CAR_SHARING' ? withSiteBase(basePath, `/car-sharing/${listingId}`) : withSiteBase(basePath, `/rent/${vehicleTypeId}`);
@@ -227,7 +231,8 @@ function CheckoutInner() {
           listingId: searchMode === 'CAR_SHARING' ? selectedResult?.id : null,
           additionalServices: chosenServices.map((service) => ({ serviceId: service.serviceId, quantity: service.quantity })),
           insuranceSelection: searchMode === 'RENTAL' ? {
-            selectedPlanCode: selectedInsurancePlan?.code || '',
+            selectedPlanCode: selectedInsurancePlans[0]?.code || '',
+            selectedPlanCodes: selectedInsurancePlans.map(p => p.code),
             declinedCoverage: !!insuranceSelection.declinedCoverage,
             usingOwnInsurance: !!insuranceSelection.usingOwnInsurance,
             liabilityAccepted: !!insuranceSelection.liabilityAccepted,
@@ -303,7 +308,7 @@ function CheckoutInner() {
               </div>
             )}
           </div>
-          {(selectedInsurancePlan || searchMode === 'CAR_SHARING') && (
+          {(selectedInsurancePlans.length > 0 || searchMode === 'CAR_SHARING') && (
             <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
               🛡 {t('checkout.tripProtection')}
             </div>
@@ -383,18 +388,27 @@ function CheckoutInner() {
                         <p style={{ color: '#6b7a9a', fontSize: '0.9rem', margin: 0 }}>{t('checkout.tripCoverageSubtitle')}</p>
                       </div>
                       {(selectedResult?.insurancePlans || []).map((plan) => {
-                        const isSelected = String(insuranceSelection.selectedPlanCode || '').toUpperCase() === String(plan.code || '').toUpperCase();
+                        const codes = (insuranceSelection.selectedPlanCodes || []).map(c => String(c).toUpperCase());
+                        const isSelected = codes.includes(String(plan.code || '').toUpperCase());
+                        const desc = plan.displayDescription || plan.description || '';
                         return (
                           <label key={plan.code} style={{ display: 'grid', gap: 10, padding: '16px 18px', borderRadius: 16, border: `2px solid ${isSelected ? '#6e49ff' : 'rgba(110,73,255,.15)'}`, background: isSelected ? 'rgba(110,73,255,.05)' : 'rgba(255,255,255,.8)', cursor: 'pointer', transition: 'all 0.18s' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <input type="radio" name="insurance" checked={isSelected} onChange={() => setInsuranceSelection((c) => ({ ...c, selectedPlanCode: plan.code, declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false }))} style={{ accentColor: '#6e49ff', width: 18, height: 18 }} />
+                                <input type="checkbox" checked={isSelected} onChange={() => {
+                                  setInsuranceSelection((c) => {
+                                    const prev = (c.selectedPlanCodes || []).map(cc => String(cc).toUpperCase());
+                                    const code = String(plan.code || '').toUpperCase();
+                                    const next = prev.includes(code) ? prev.filter(cc => cc !== code) : [...prev, code];
+                                    return { ...c, selectedPlanCodes: next, declinedCoverage: false, usingOwnInsurance: false, liabilityAccepted: false };
+                                  });
+                                }} style={{ accentColor: '#6e49ff', width: 18, height: 18 }} />
                                 <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>{plan.name}</strong>
                               </div>
                               <span style={{ fontWeight: 800, color: '#1e2847' }}>{fmtMoney(plan.total)}</span>
                             </div>
-                            {plan.description && (
-                              <div style={{ fontSize: '0.85rem', color: '#6b7a9a', paddingLeft: 28 }}>{plan.description}</div>
+                            {desc && (
+                              <div style={{ fontSize: '0.85rem', color: '#6b7a9a', paddingLeft: 28, lineHeight: 1.5 }}>{desc}</div>
                             )}
                           </label>
                         );
@@ -403,7 +417,7 @@ function CheckoutInner() {
                         <strong style={{ color: '#1e2847', fontSize: '0.97rem' }}>{t('checkout.useOwnInsurance')}</strong>
                         <div style={{ display: 'grid', gap: 8 }}>
                           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
-                            <input type="checkbox" checked={insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, selectedPlanCode: '', declinedCoverage: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
+                            <input type="checkbox" checked={insuranceSelection.declinedCoverage} onChange={(e) => setInsuranceSelection((c) => ({ ...c, selectedPlanCodes: [], declinedCoverage: e.target.checked }))} style={{ accentColor: '#6e49ff', width: 17, height: 17 }} />
                             <span>{t('checkout.declineCoverage')}</span>
                           </label>
                           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.9rem', color: '#53607b' }}>
