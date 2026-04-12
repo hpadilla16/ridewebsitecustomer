@@ -126,7 +126,7 @@ export async function api(path, opts = {}, token) {
   const authToken = token || readStoredToken();
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
   const isBrowser = typeof window !== 'undefined';
-  const isProxiedPath = String(path || '').startsWith('/api/public/') || String(path || '').startsWith('/api/auth/') || String(path || '').startsWith('/api/host-app/');
+  const isProxiedPath = String(path || '').startsWith('/api/');
   const url = isBrowser && isProxiedPath ? path : `${API_BASE}${path}`;
   const useGetCache = typeof window !== 'undefined' && method === 'GET' && !bypassCache && cacheTtlMs !== 0;
 
