@@ -173,11 +173,15 @@ function CheckoutInner() {
   const insuranceTotal = Number(selectedInsurancePlan?.total || 0);
   const baseTotal = Number(searchMode === 'RENTAL' ? selectedResult?.quote?.estimatedTripTotal || 0 : selectedResult?.quote?.total || 0);
   const estimatedTotal = baseTotal + addOnsTotal + insuranceTotal;
-  const estimatedDueNow = Number(
-    searchMode === 'RENTAL'
-      ? selectedResult?.quote?.dueNow ?? selectedResult?.quote?.depositDueNow ?? selectedResult?.quote?.amountDueNow ?? 0
-      : selectedResult?.quote?.dueNow ?? selectedResult?.quote?.amountDueNow ?? selectedResult?.quote?.depositDueNow ?? 0
-  );
+  const estimatedDueNow = (() => {
+    const deposit = selectedResult?.deposit || selectedResult?.quote?.deposit;
+    if (!deposit?.required) return 0;
+    const mode = String(deposit.mode || 'FIXED').toUpperCase();
+    const value = Number(deposit.value || 0);
+    if (!value) return 0;
+    if (mode === 'PERCENTAGE') return Math.round(estimatedTotal * (value / 100) * 100) / 100;
+    return Math.min(value, estimatedTotal);
+  })();
   const gallery = searchMode === 'RENTAL'
     ? rentalResultImageList(selectedResult)
     : normalizeImageList(selectedResult?.imageUrls?.length ? selectedResult.imageUrls : selectedResult?.primaryImageUrl ? [selectedResult.primaryImageUrl] : []);
@@ -299,9 +303,11 @@ function CheckoutInner() {
               </div>
             )}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
-            🛡 {t('checkout.tripProtection')}
-          </div>
+          {(selectedInsurancePlan || searchMode === 'CAR_SHARING') && (
+            <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textAlign: 'center', lineHeight: 1.55 }}>
+              🛡 {t('checkout.tripProtection')}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -573,7 +579,7 @@ function CheckoutInner() {
                     <div style={{ fontWeight: 800, color: '#1e2847', fontSize: '0.95rem' }}>{t('checkout.whatHappensNext')}</div>
                     {[
                       t('checkout.confirmedImmediately'),
-                      estimatedDueNow > 0 ? t('checkout.directedToPayment', { amount: fmtMoney(estimatedDueNow) }) : t('checkout.noPaymentNow'),
+                      estimatedDueNow > 0 ? t('checkout.directedToPayment', { amount: fmtMoney(estimatedDueNow) }) : t('checkout.depositMayBeDue'),
                       t('checkout.confirmationEmail')
                     ].map((item, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: '0.88rem', color: '#53607b' }}>

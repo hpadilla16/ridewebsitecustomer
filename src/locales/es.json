@@ -423,6 +423,7 @@
     "confirmedImmediately": "Tu reserva se confirma inmediatamente",
     "directedToPayment": "Serás dirigido al pago de {{amount}}",
     "noPaymentNow": "No se requiere pago en este momento",
+    "depositMayBeDue": "Un depósito puede ser requerido al confirmar",
     "confirmationEmail": "Recibirás un email de confirmación con los detalles del viaje",
     "continue": "Continuar →",
     "confirmBooking": "Confirmar Reserva",

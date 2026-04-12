@@ -709,6 +709,7 @@
     "confirmedImmediately": "Your reservation is confirmed immediately",
     "directedToPayment": "You'll be directed to payment for {{amount}}",
     "noPaymentNow": "No payment is due right now",
+    "depositMayBeDue": "A deposit may be due at checkout",
     "confirmationEmail": "You'll receive a confirmation email with trip details and next steps",
     "continue": "Continue →",
     "confirmBooking": "Confirm Booking",
