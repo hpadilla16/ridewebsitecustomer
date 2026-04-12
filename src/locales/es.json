@@ -76,9 +76,18 @@
     "heroTitle": "Alquileres y car sharing listos para el aeropuerto",
     "heroLead": "Reserva tu vehículo en línea con precios claros, recogida en aeropuerto y una experiencia digital sin complicaciones.",
     "heroStats": {
-      "0": { "value": "5+", "label": "Ciudades activas" },
-      "1": { "value": "24/7", "label": "Reservas en línea" },
-      "2": { "value": "100%", "label": "Entrega digital" }
+      "0": {
+        "value": "5+",
+        "label": "Ciudades activas"
+      },
+      "1": {
+        "value": "24/7",
+        "label": "Reservas en línea"
+      },
+      "2": {
+        "value": "100%",
+        "label": "Entrega digital"
+      }
     },
     "features": {
       "0": "Recogida en aeropuerto",
@@ -91,31 +100,80 @@
       "7": "Cobertura de Puerto Rico a Miami"
     },
     "marketingMoments": {
-      "0": { "title": "Buscar y seleccionar", "body": "Explora vehículos de alquiler o car sharing por ubicación, fechas y tipo de vehículo." },
-      "1": { "title": "Reservar en línea", "body": "Completa tu reserva con precios claros, cobertura de viaje y confirmación inmediata." },
-      "2": { "title": "Recoger y conducir", "body": "Recibe instrucciones de recogida, confirma la entrega y comienza tu viaje." }
+      "0": {
+        "title": "Buscar y seleccionar",
+        "body": "Explora vehículos de alquiler o car sharing por ubicación, fechas y tipo de vehículo."
+      },
+      "1": {
+        "title": "Reservar en línea",
+        "body": "Completa tu reserva con precios claros, cobertura de viaje y confirmación inmediata."
+      },
+      "2": {
+        "title": "Recoger y conducir",
+        "body": "Recibe instrucciones de recogida, confirma la entrega y comienza tu viaje."
+      }
     },
-    "destinationStory": ["Puerto Rico", "Miami", "Orlando", "Fort Lauderdale", "Los Angeles", "Ecuador"],
+    "destinationStory": [
+      "Puerto Rico",
+      "Miami",
+      "Orlando",
+      "Fort Lauderdale",
+      "Los Angeles",
+      "Ecuador"
+    ],
     "marketingPillars": {
       "0": "Pagos seguros",
       "1": "Recogida en aeropuerto",
       "2": "Operaciones de Ride Fleet"
     },
     "trustSignals": {
-      "0": { "title": "Recogida en aeropuerto", "body": "Instrucciones claras, puntos de recogida designados y coordinación en tiempo real para que conduzcas minutos después de aterrizar." },
-      "1": { "title": "Pagos seguros", "body": "Cada transacción se procesa a través de nuestro sistema seguro de pagos. Sin efectivo, sin sorpresas." },
-      "2": { "title": "Experiencia digital", "body": "Reserva en línea, confirmación instantánea, acuerdos digitales y chat de viaje, todo en un solo lugar." }
+      "0": {
+        "title": "Recogida en aeropuerto",
+        "body": "Instrucciones claras, puntos de recogida designados y coordinación en tiempo real para que conduzcas minutos después de aterrizar."
+      },
+      "1": {
+        "title": "Pagos seguros",
+        "body": "Cada transacción se procesa a través de nuestro sistema seguro de pagos. Sin efectivo, sin sorpresas."
+      },
+      "2": {
+        "title": "Experiencia digital",
+        "body": "Reserva en línea, confirmación instantánea, acuerdos digitales y chat de viaje, todo en un solo lugar."
+      }
     },
     "reviewMoments": {
-      "0": { "quote": "Recogida perfecta en el aeropuerto. El auto estaba limpio y listo.", "author": "Carlos M. — San Juan", "score": "★★★★★" },
-      "1": { "quote": "Reserva sencilla, precios claros y excelente comunicación con el anfitrión.", "author": "María L. — Miami", "score": "★★★★★" },
-      "2": { "quote": "La mejor experiencia de alquiler que he tenido. Muy recomendado.", "author": "José R. — Orlando", "score": "★★★★★" }
+      "0": {
+        "quote": "Recogida perfecta en el aeropuerto. El auto estaba limpio y listo.",
+        "author": "Carlos M. — San Juan",
+        "score": "★★★★★"
+      },
+      "1": {
+        "quote": "Reserva sencilla, precios claros y excelente comunicación con el anfitrión.",
+        "author": "María L. — Miami",
+        "score": "★★★★★"
+      },
+      "2": {
+        "quote": "La mejor experiencia de alquiler que he tenido. Muy recomendado.",
+        "author": "José R. — Orlando",
+        "score": "★★★★★"
+      }
     },
     "destinationPanels": {
-      "0": { "city": "San Juan, PR", "note": "Recogida en aeropuerto SJU y puntos en Condado, Isla Verde y áreas metropolitanas." },
-      "1": { "city": "Miami, FL", "note": "Recogida en aeropuerto MIA con opciones de entrega en el sur de Florida." },
-      "2": { "city": "Orlando, FL", "note": "Recogida en aeropuerto MCO, conveniente para parques temáticos y centro de la ciudad." },
-      "3": { "city": "Fort Lauderdale, FL", "note": "Recogida en aeropuerto FLL con alcance en el área de Broward." }
+      "0": {
+        "city": "San Juan, PR",
+        "note": "Recogida en aeropuerto SJU y puntos en Condado, Isla Verde y áreas metropolitanas."
+      },
+      "1": {
+        "city": "Miami, FL",
+        "note": "Recogida en aeropuerto MIA con opciones de entrega en el sur de Florida."
+      },
+      "2": {
+        "city": "Orlando, FL",
+        "note": "Recogida en aeropuerto MCO, conveniente para parques temáticos y centro de la ciudad."
+      },
+      "3": {
+        "city": "Fort Lauderdale, FL",
+        "note": "Recogida en aeropuerto FLL con alcance en el área de Broward."
+      }
     },
     "exploreRentals": "Explorar Alquileres",
     "browseCarSharing": "Explorar Car Sharing",
@@ -667,12 +725,30 @@
     },
     "locationsTitle": "Dónde operamos",
     "locations": {
-      "sanJuan": { "city": "San Juan, PR", "note": "Sede principal — Aeropuerto SJU, Condado e Isla Verde" },
-      "miami": { "city": "Miami, FL", "note": "Aeropuerto MIA y áreas del sur de Florida" },
-      "orlando": { "city": "Orlando, FL", "note": "Aeropuerto MCO y zona de parques temáticos" },
-      "fortLauderdale": { "city": "Fort Lauderdale, FL", "note": "Aeropuerto FLL y área de Broward" },
-      "losAngeles": { "city": "Los Angeles, CA", "note": "Aeropuerto LAX y área metropolitana" },
-      "ecuador": { "city": "Ecuador", "note": "Expansión internacional — próximamente" }
+      "sanJuan": {
+        "city": "San Juan, PR",
+        "note": "Sede principal — Aeropuerto SJU, Condado e Isla Verde"
+      },
+      "miami": {
+        "city": "Miami, FL",
+        "note": "Aeropuerto MIA y áreas del sur de Florida"
+      },
+      "orlando": {
+        "city": "Orlando, FL",
+        "note": "Aeropuerto MCO y zona de parques temáticos"
+      },
+      "fortLauderdale": {
+        "city": "Fort Lauderdale, FL",
+        "note": "Aeropuerto FLL y área de Broward"
+      },
+      "losAngeles": {
+        "city": "Los Angeles, CA",
+        "note": "Aeropuerto LAX y área metropolitana"
+      },
+      "ecuador": {
+        "city": "Ecuador",
+        "note": "Expansión internacional — próximamente"
+      }
     },
     "ctaTitle": "Comienza tu próximo viaje",
     "ctaSubtitle": "Explora alquileres, car sharing o conviértete en anfitrión hoy mismo.",
@@ -687,11 +763,11 @@
     "sections": {
       "acceptance": {
         "title": "1. Aceptación de los Términos",
-        "body": "Al acceder y utilizar la plataforma Ride Car Sharing, usted acepta cumplir con estos Términos y Condiciones de Servicio. Si no está de acuerdo con alguna parte de estos términos, le solicitamos que no utilice nuestros servicios. Estos términos constituyen un acuerdo vinculante entre usted y Ride Car Sharing."
+        "body": "Ride Car Sharing (\"Ride,\" \"nosotros\") opera una plataforma de marketplace de car sharing entre personas. Ride NO es una compañía de alquiler de vehículos, proveedor de seguros, ni transportista. No somos dueños, operamos, mantenemos, inspeccionamos, ni aseguramos ningún vehículo. Somos un marketplace tecnológico que facilita conexiones entre propietarios de vehículos independientes (\"Anfitriones\") y usuarios (\"Huéspedes\"). Al usar nuestra plataforma, aceptas estos Términos, incluyendo la cláusula de arbitraje vinculante y la renuncia a acciones colectivas."
       },
       "eligibility": {
         "title": "2. Elegibilidad",
-        "body": "Para utilizar nuestros servicios, usted debe tener al menos 21 años de edad, poseer una licencia de conducir válida y vigente, y contar con una tarjeta de crédito o débito a su nombre. Nos reservamos el derecho de verificar su identidad y elegibilidad antes de confirmar cualquier reserva."
+        "body": "Huéspedes: Deben tener 21+ años con licencia de conducir válida y sin restricciones. Huéspedes de 21-24 años pagan un recargo de $15/día. Licencias internacionales aceptadas con pasaporte válido.\n\nAnfitriones: Deben tener 21+ años, ser propietarios legales del vehículo, mantener seguro de auto activo que cumpla los mínimos estatales (PR: SRO; FL: 10/20/10; CA: 15/30/5; NY: 25/50/10; TX: 30/60/25), notificar a su aseguradora del uso P2P, y listar vehículos de 15 años o menos con menos de 150,000 millas."
       },
       "booking": {
         "title": "3. Reservas y Confirmaciones",
@@ -699,31 +775,31 @@
       },
       "cancellation": {
         "title": "4. Política de Cancelación",
-        "body": "Los alquileres tradicionales permiten cancelación gratuita hasta 48 horas antes de la hora de recogida programada. Las reservas de car sharing permiten cancelación gratuita hasta 24 horas antes. Las cancelaciones realizadas fuera de estos plazos pueden incurrir en cargos según el tipo de reserva. Las ausencias se cobran el monto completo del viaje."
+        "body": "Huésped: Cancelación gratuita hasta 48 horas antes de la recogida. 24-48 horas: 50% de la tarifa del primer día. Menos de 24 horas: 100% del primer día. No-show: monto total del viaje.\n\nAnfitrión: 1ra cancelación = advertencia. 2da en 90 días = $50. 3ra = $100 + 30 días de supresión en búsqueda. 4ta+ = revisión de cuenta/suspensión."
       },
       "payment": {
         "title": "5. Pagos y Facturación",
-        "body": "Todos los pagos se procesan de forma segura a través de nuestro sistema de pagos alojados. Los precios incluyen el desglose completo de tarifas base, cargos de servicio, impuestos y cualquier tarifa adicional aplicable. Los depósitos de seguridad, cuando apliquen, se retendrán y liberarán según los términos de la reserva."
+        "body": "El pago se procesa a través de nuestro sistema seguro. El total incluye: tarifa diaria base, tarifa de servicio (10%), tarifa de Protección de Viaje (si seleccionada), complementos opcionales, tarifa de entrega, tarifa de limpieza e impuestos.\n\nDepósito de Seguridad: $250 de retención reembolsable ($500 máximo). Liberado dentro de 48 horas de devolución limpia.\n\nDevolución Tardía: 30 minutos de gracia. Después: $25/hora. 2+ horas: día extra completo. 6+ horas sin contacto: depósito confiscado.\n\nMillaje: 200 millas/día incluidas. Exceso: $0.35/milla.\n\nCombustible: Devolver al mismo nivel. Faltante: $5/galón + $25. EV: $0.30/kWh + $15.\n\nPeajes: Con Toll Pass ($3.50/día): peajes ilimitados. Sin él: cobro por placa + $5 por peaje."
       },
       "vehicleUse": {
         "title": "6. Uso del Vehículo",
-        "body": "El vehículo debe ser utilizado exclusivamente por el conductor autorizado en la reserva. Queda prohibido el uso del vehículo para actividades ilegales, carreras, remolque no autorizado o cualquier uso que viole las leyes locales y federales. El conductor es responsable de todas las infracciones de tránsito y peajes durante el período de alquiler."
+        "body": "Solo el huésped registrado puede conducir. Prohibido: conducción fuera de carretera, carreras, remolque, uso comercial, fumar (excepto si el listado lo permite), mascotas (excepto si el listado lo permite), conducir bajo influencia, actividad ilegal.\n\nTarifas de limpieza: Ligera $30, Media $75, Pesada $150, Severa $250. Fumar: $250. Mascotas no autorizadas: $150.\n\nLa violación de cualquier restricción anula la Protección de Viaje."
       },
       "insurance": {
-        "title": "7. Seguro y Protección",
-        "body": "Todas las reservas incluyen protección básica de viaje que cubre responsabilidad civil y daños al vehículo según los límites establecidos. Se ofrecen planes de cobertura adicional durante el proceso de checkout. La protección está sujeta a los términos y exclusiones de la póliza correspondiente."
+        "title": "Programa de Protección de Viaje",
+        "body": "EL PROGRAMA DE PROTECCIÓN DE VIAJE NO ES SEGURO. Es un programa limitado de reembolso contractual.\n\nBásico (Gratis): Sin reembolso. El huésped paga todos los daños.\nEstándar ($12/día): Ride reembolsa el deducible del seguro del anfitrión hasta $1,000.\nPremium ($22/día): Ride reembolsa el deducible del seguro del anfitrión hasta $2,500.\n\nREEMBOLSO AL ANFITRIÓN: Ride reembolsa SOLO el deducible del seguro del anfitrión, NO costos de reparación directamente.\n\nNO CUBIERTO: Neumáticos, cristales, desgaste normal, averías mecánicas, daño interior por uso normal, propiedad personal, responsabilidad a terceros, conductores no autorizados.\n\nCOMPLEMENTOS OPCIONALES: Protección de Neumáticos ($5/día), Protección de Cristales ($4/día), Asistencia en Carretera ($6/día), Pase de Peajes ($3.50/día).\n\nSI EL ANFITRIÓN NO TIENE SEGURO VÁLIDO: Ride NO es responsable de ningún daño."
       },
       "hostResponsibilities": {
         "title": "8. Responsabilidades del Anfitrión",
-        "body": "Los anfitriones de car sharing son responsables de mantener sus vehículos en condiciones seguras y operativas, cumplir con todos los requisitos de seguro y registro, y proporcionar información precisa en sus listados. Ride Car Sharing se reserva el derecho de suspender o eliminar listados que no cumplan con nuestros estándares."
+        "body": "Los anfitriones deben: mantener seguro de auto que cumpla los mínimos estatales, notificar a su aseguradora del uso P2P, mantener el vehículo en condiciones seguras, proporcionar descripciones y fotos precisas.\n\nINDEMNIZACIÓN: Los anfitriones aceptan indemnizar a Ride contra todos los reclamos que surjan de la condición del vehículo, operación, mantenimiento o brechas de seguro.\n\nRide NO verifica ni garantiza la cobertura de seguro de ningún anfitrión."
       },
       "disputeResolution": {
         "title": "9. Resolución de Disputas",
-        "body": "En caso de disputas relacionadas con reservas, pagos o servicio, le recomendamos contactar primero a nuestro equipo de soporte. Haremos todo lo posible por resolver la situación de manera justa y oportuna. Si no se alcanza una resolución satisfactoria, las partes acuerdan someterse a mediación antes de iniciar procedimientos legales."
+        "body": "Resolución Informal: Contactar support@ride-carsharing.com. Permitir 30 días.\n\nProcedimiento de Accidente: Asegurar seguridad → fotos → intercambiar info → reportar en Trip Chat en 1 hora → reporte policial si daño >$500 → NO admitir culpa.\n\nArbitraje Vinculante: Disputas no resueltas se resuelven mediante arbitraje individual bajo reglas AAA.\n\nRENUNCIA A ACCIÓN COLECTIVA: Cada parte puede presentar reclamos solo individualmente.\n\nLey Aplicable: Estado Libre Asociado de Puerto Rico."
       },
       "liability": {
         "title": "10. Limitación de Responsabilidad",
-        "body": "Ride Car Sharing actúa como plataforma intermediaria y no asume responsabilidad directa por las condiciones de los vehículos listados por anfitriones independientes. Nuestra responsabilidad se limita al monto pagado por la reserva en cuestión. No somos responsables por daños indirectos, incidentales o consecuentes."
+        "body": "RIDE NO SERÁ RESPONSABLE POR DAÑOS INDIRECTOS, INCIDENTALES, ESPECIALES, CONSECUENTES O PUNITIVOS. LA RESPONSABILIDAD TOTAL DE RIDE NO EXCEDERÁ LO MAYOR DE: (A) TARIFAS DE PLATAFORMA PAGADAS EN LOS 12 MESES ANTERIORES, O (B) $100.\n\nUSTED RECONOCE QUE RIDE NO PROPORCIONA SEGURO Y QUE LA PROTECCIÓN DE VIAJE ES UN BENEFICIO CONTRACTUAL LIMITADO."
       },
       "privacy": {
         "title": "11. Privacidad y Datos Personales",
@@ -737,7 +813,8 @@
         "title": "13. Contacto",
         "body": "Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos a través de nuestra página de contacto, por email a soporte@ridecarsharing.com o mediante el chat de soporte disponible en la plataforma."
       }
-    }
+    },
+    "importantNotice": "IMPORTANTE: Al usar Ride Car Sharing, aceptas estos Términos, incluyendo la cláusula de arbitraje vinculante y la renuncia a acciones colectivas. Lee cuidadosamente."
   },
   "hostLogin": {
     "hostAccess": "Acceso de anfitrión",

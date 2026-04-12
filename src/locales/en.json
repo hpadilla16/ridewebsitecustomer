@@ -76,9 +76,18 @@
     "heroTitle": "Airport-ready rentals and curated car sharing",
     "heroLead": "Reserve your vehicle online with clear pricing, airport pickup details, and a seamless digital experience.",
     "heroStats": {
-      "0": { "value": "5+", "label": "Cities served" },
-      "1": { "value": "24/7", "label": "Online booking" },
-      "2": { "value": "100%", "label": "Digital handoff" }
+      "0": {
+        "value": "5+",
+        "label": "Cities served"
+      },
+      "1": {
+        "value": "24/7",
+        "label": "Online booking"
+      },
+      "2": {
+        "value": "100%",
+        "label": "Digital handoff"
+      }
     },
     "features": {
       "0": "Airport-ready pickup",
@@ -91,31 +100,80 @@
       "7": "Puerto Rico to Miami coverage"
     },
     "marketingMoments": {
-      "0": { "title": "Search & compare", "body": "Browse rental classes and car sharing listings side by side. Filter by location, dates, and vehicle type." },
-      "1": { "title": "Reserve online", "body": "Complete your booking with hosted payments, transparent pricing, and instant confirmation." },
-      "2": { "title": "Pick up & go", "body": "Arrive at your pickup hub with clear instructions, digital handoff, and trip protection already in place." }
+      "0": {
+        "title": "Search & compare",
+        "body": "Browse rental classes and car sharing listings side by side. Filter by location, dates, and vehicle type."
+      },
+      "1": {
+        "title": "Reserve online",
+        "body": "Complete your booking with hosted payments, transparent pricing, and instant confirmation."
+      },
+      "2": {
+        "title": "Pick up & go",
+        "body": "Arrive at your pickup hub with clear instructions, digital handoff, and trip protection already in place."
+      }
     },
-    "destinationStory": ["Puerto Rico", "Miami", "Orlando", "Fort Lauderdale", "Los Angeles", "Ecuador"],
+    "destinationStory": [
+      "Puerto Rico",
+      "Miami",
+      "Orlando",
+      "Fort Lauderdale",
+      "Los Angeles",
+      "Ecuador"
+    ],
     "marketingPillars": {
       "0": "Airport-ready pickup",
       "1": "Hosted payments",
       "2": "Ride Fleet operations"
     },
     "trustSignals": {
-      "0": { "title": "Airport-friendly pickup", "body": "Clear pickup instructions, designated hubs, and real-time coordination so you're driving within minutes of landing." },
-      "1": { "title": "Secure payments", "body": "Every transaction is processed through our secure, PCI-compliant payment system. No cash, no surprises." },
-      "2": { "title": "Digital readiness", "body": "Online booking, instant confirmation, digital agreements, and trip chat — all in one seamless flow." }
+      "0": {
+        "title": "Airport-friendly pickup",
+        "body": "Clear pickup instructions, designated hubs, and real-time coordination so you're driving within minutes of landing."
+      },
+      "1": {
+        "title": "Secure payments",
+        "body": "Every transaction is processed through our secure, PCI-compliant payment system. No cash, no surprises."
+      },
+      "2": {
+        "title": "Digital readiness",
+        "body": "Online booking, instant confirmation, digital agreements, and trip chat — all in one seamless flow."
+      }
     },
     "reviewMoments": {
-      "0": { "quote": "The smoothest airport pickup I've ever had. Clear instructions, car was ready, no waiting around.", "author": "Sarah M. — San Juan", "score": "★★★★★" },
-      "1": { "quote": "Booked a car sharing vehicle for the weekend. Instant book, fair price, and the host was great.", "author": "Carlos R. — Miami", "score": "★★★★★" },
-      "2": { "quote": "Finally a rental site that doesn't feel like it's from 2005. Clean, fast, and transparent.", "author": "James L. — Orlando", "score": "★★★★★" }
+      "0": {
+        "quote": "The smoothest airport pickup I've ever had. Clear instructions, car was ready, no waiting around.",
+        "author": "Sarah M. — San Juan",
+        "score": "★★★★★"
+      },
+      "1": {
+        "quote": "Booked a car sharing vehicle for the weekend. Instant book, fair price, and the host was great.",
+        "author": "Carlos R. — Miami",
+        "score": "★★★★★"
+      },
+      "2": {
+        "quote": "Finally a rental site that doesn't feel like it's from 2005. Clean, fast, and transparent.",
+        "author": "James L. — Orlando",
+        "score": "★★★★★"
+      }
     },
     "destinationPanels": {
-      "0": { "city": "San Juan, PR", "note": "Airport hub with fleet-backed rentals and local car sharing" },
-      "1": { "city": "Miami, FL", "note": "South Beach, Brickell, and MIA airport coverage" },
-      "2": { "city": "Orlando, FL", "note": "MCO airport and theme park corridor availability" },
-      "3": { "city": "Fort Lauderdale, FL", "note": "FLL airport and beachside pickup options" }
+      "0": {
+        "city": "San Juan, PR",
+        "note": "Airport hub with fleet-backed rentals and local car sharing"
+      },
+      "1": {
+        "city": "Miami, FL",
+        "note": "South Beach, Brickell, and MIA airport coverage"
+      },
+      "2": {
+        "city": "Orlando, FL",
+        "note": "MCO airport and theme park corridor availability"
+      },
+      "3": {
+        "city": "Fort Lauderdale, FL",
+        "note": "FLL airport and beachside pickup options"
+      }
     },
     "exploreRentals": "Explore Rentals",
     "browseCarSharing": "Browse Car Sharing",
@@ -442,12 +500,30 @@
     },
     "locationsTitle": "Where We Operate",
     "locations": {
-      "sanJuan": { "city": "San Juan, Puerto Rico", "note": "Airport hub, fleet rentals, and local car sharing" },
-      "miami": { "city": "Miami, Florida", "note": "MIA airport, South Beach, and Brickell coverage" },
-      "orlando": { "city": "Orlando, Florida", "note": "MCO airport and theme park corridor" },
-      "fortLauderdale": { "city": "Fort Lauderdale, Florida", "note": "FLL airport and beachside availability" },
-      "losAngeles": { "city": "Los Angeles, California", "note": "LAX area and metro coverage" },
-      "ecuador": { "city": "Ecuador", "note": "Expanding operations in Quito and Guayaquil" }
+      "sanJuan": {
+        "city": "San Juan, Puerto Rico",
+        "note": "Airport hub, fleet rentals, and local car sharing"
+      },
+      "miami": {
+        "city": "Miami, Florida",
+        "note": "MIA airport, South Beach, and Brickell coverage"
+      },
+      "orlando": {
+        "city": "Orlando, Florida",
+        "note": "MCO airport and theme park corridor"
+      },
+      "fortLauderdale": {
+        "city": "Fort Lauderdale, Florida",
+        "note": "FLL airport and beachside availability"
+      },
+      "losAngeles": {
+        "city": "Los Angeles, California",
+        "note": "LAX area and metro coverage"
+      },
+      "ecuador": {
+        "city": "Ecuador",
+        "note": "Expanding operations in Quito and Guayaquil"
+      }
     },
     "valuesTitle": "What We Stand For",
     "ctaTitle": "Ready to experience Ride?",
@@ -463,11 +539,11 @@
     "sections": {
       "acceptance": {
         "title": "Acceptance of Terms",
-        "body": "By accessing or using the Ride platform, website, or mobile application, you agree to be bound by these Terms of Service. If you do not agree, you may not use our services."
+        "body": "Ride Car Sharing (\"Ride,\" \"we,\" \"us,\" or \"our\") operates a peer-to-peer car sharing marketplace platform. Ride is NOT a car rental company, insurance provider, or transportation carrier. We do not own, operate, maintain, inspect, or insure any vehicles. We are a technology marketplace that facilitates connections between independent vehicle owners (\"Hosts\") and renters (\"Guests\"). By using our platform, you agree to these Terms, including the binding arbitration clause and class action waiver."
       },
       "eligibility": {
         "title": "Eligibility",
-        "body": "You must be at least 21 years old and hold a valid driver's license to rent or share a vehicle through Ride. Additional age restrictions may apply for certain vehicle classes."
+        "body": "Guests: Must be 21+ with a valid, unrestricted driver's license. Guests aged 21-24 pay a $15/day young driver surcharge. International licenses accepted with valid passport.\n\nHosts: Must be 21+, legal owner of the vehicle, maintain active auto insurance meeting state minimums (PR: SRO; FL: 10/20/10; CA: 15/30/5; NY: 25/50/10; TX: 30/60/25), notify insurer of P2P sharing, and list vehicles 15 years old or newer with under 150,000 miles."
       },
       "booking": {
         "title": "Booking and Reservations",
@@ -475,31 +551,31 @@
       },
       "cancellation": {
         "title": "Cancellation Policy",
-        "body": "Rental bookings may be cancelled free of charge up to 48 hours before the scheduled pickup time. Car sharing bookings may be cancelled free of charge up to 24 hours before pickup. Late cancellations may result in a fee."
+        "body": "Guest: Free cancellation up to 48 hours before pickup. 24-48 hours: 50% of first day's rate. Under 24 hours: 100% of first day's rate. No-shows: full trip amount charged.\n\nHost: 1st cancel = warning. 2nd in 90 days = $50 fee. 3rd = $100 + 30-day search suppression. 4th+ = account review/suspension. Guests receive compensation: one day's rate for 2+ day trips, half day for shorter trips."
       },
       "payment": {
         "title": "Payment and Pricing",
-        "body": "All payments are processed through our secure, PCI-compliant hosted payment system. Prices are displayed in USD and include applicable taxes and fees. Additional charges may apply for add-ons, late returns, or damage."
+        "body": "Payment is processed through our secure hosted payment system. Total includes: base daily rate, platform service fee (10%), Trip Protection fee (if selected), optional add-ons, delivery fee (if applicable), cleaning fee (if applicable), and taxes.\n\nSecurity Deposit: $250 refundable hold at booking (host may set up to $500). Released within 48 hours of clean return.\n\nLate Return: 30-minute grace period. After: $25/hour. 2+ hours late: full extra day at daily rate. 6+ hours with no communication: security deposit forfeited.\n\nMileage: 200 miles/day included (host may set different limit). Excess: $0.35/mile.\n\nFuel: Return at same level. Shortage: $5/gallon + $25 refueling fee. EV: $0.30/kWh + $15 charging fee.\n\nTolls: With Toll Pass add-on ($3.50/day): unlimited toll usage. Without: tolls charged by plate match + $5 admin fee per toll (up to 90 days post-trip)."
       },
       "vehicleUse": {
         "title": "Vehicle Use",
-        "body": "Vehicles must be used in accordance with all applicable laws and regulations. Prohibited uses include off-road driving, racing, towing, and any illegal activity. Smoking is not permitted in any vehicle."
+        "body": "Only the registered guest may drive. Prohibited: off-road driving, racing, towing, commercial use, smoking/vaping (unless listing permits), pets (unless listing permits), driving under influence, illegal activity. Must comply with all traffic laws. Must return at agreed time and location.\n\nCleaning fees: Light $30, Medium $75, Heavy $150, Severe $250. Smoking violation: $250. Unauthorized pets: $150.\n\nViolation of any restriction immediately voids Trip Protection and may result in full financial liability, security deposit forfeiture, and account suspension."
       },
       "insurance": {
-        "title": "Insurance and Coverage",
-        "body": "Every booking includes baseline trip protection. Additional coverage options are available at checkout. Guests are responsible for any damage not covered by the selected plan."
+        "title": "Trip Protection Program",
+        "body": "THE TRIP PROTECTION PROGRAM IS NOT INSURANCE. It is a limited contractual reimbursement program.\n\nBasic (Free): No reimbursement. Guest pays all damages. Host files with own insurer.\nStandard ($12/day): Ride reimburses host's insurance deductible up to $1,000.\nPremium ($22/day): Ride reimburses host's insurance deductible up to $2,500.\n\nHOST REIMBURSEMENT: When a Guest selects Standard or Premium, Ride reimburses the host's insurance deductible only — the amount the host's insurer charges before covering the repair. We do NOT pay repair costs directly.\n\nNOT COVERED (all tiers): Tires, glass/windshield, wear and tear, mechanical breakdown, interior damage from normal use, personal property, liability to others, unauthorized drivers, off-road/illegal use, pre-existing damage.\n\nOPTIONAL ADD-ONS (sold separately if host offers): Tire Protection ($5/day), Glass Protection ($4/day), Roadside Assistance ($6/day), Toll Pass ($3.50/day).\n\nIF HOST LACKS VALID INSURANCE: Ride is NOT responsible for any damage and no deductible reimbursement will be made."
       },
       "hostResponsibilities": {
         "title": "Host Responsibilities",
-        "body": "Car sharing hosts are responsible for maintaining their vehicles in safe, roadworthy condition. Hosts must provide accurate vehicle descriptions, maintain valid insurance, and respond to guest communications promptly."
+        "body": "Hosts must: maintain auto insurance meeting state minimums, notify insurer of P2P sharing, keep vehicle in safe/roadworthy condition, provide accurate descriptions and photos, be available during pickup/return, report known issues.\n\nHOST INDEMNIFICATION: Hosts agree to indemnify Ride against all claims arising from vehicle condition, operation, maintenance, insurance gaps, or breach of these Terms. This includes attorneys' fees and costs.\n\nRide does NOT verify or guarantee any host's insurance coverage."
       },
       "disputeResolution": {
         "title": "Dispute Resolution",
-        "body": "Disputes between guests and hosts will be mediated by Ride's support team. If a resolution cannot be reached, disputes may be escalated to binding arbitration in accordance with applicable law."
+        "body": "Informal Resolution: Contact support@ride-carsharing.com. Allow 30 days for resolution.\n\nAccident Procedure: Ensure safety → photos of all damage → exchange info → report in Trip Chat within 1 hour → police report if damage exceeds $500 → DO NOT admit fault → contact personal insurer within 24 hours.\n\nBinding Arbitration: Unresolved disputes settled through binding individual arbitration under AAA rules.\n\nCLASS ACTION WAIVER: Each party may bring claims only individually, not as plaintiff or class member in any class action.\n\nGoverning Law: Commonwealth of Puerto Rico.\n\nData Usage: All messages, photos, inspection images, GPS data, and trip activity may be used as evidence in claims and disputes."
       },
       "liability": {
         "title": "Limitation of Liability",
-        "body": "Ride's liability is limited to the amount paid for the booking in question. Ride is not liable for indirect, incidental, or consequential damages arising from the use of our platform or services."
+        "body": "RIDE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES. RIDE'S TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED THE GREATER OF: (A) PLATFORM FEES PAID IN THE PRECEDING 12 MONTHS, OR (B) $100.\n\nYOU ACKNOWLEDGE THAT RIDE DOES NOT PROVIDE INSURANCE AND THAT TRIP PROTECTION IS A LIMITED CONTRACTUAL BENEFIT. YOU ASSUME ALL RISK ASSOCIATED WITH USING THE PLATFORM."
       },
       "privacy": {
         "title": "Privacy",
@@ -513,7 +589,8 @@
         "title": "Contact",
         "body": "For questions about these Terms of Service, please contact our support team through the Contact page or email us directly."
       }
-    }
+    },
+    "importantNotice": "IMPORTANT: By using Ride Car Sharing, you agree to these Terms, including the binding arbitration clause and class action waiver. Please read carefully."
   },
   "hostLogin": {
     "hostAccess": "Host access",
