@@ -60,13 +60,6 @@ export default function HostEarningsPage() {
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#b45309', marginTop: 6 }}>{fmtMoney(pendingEarnings)}</div>
               <div style={{ fontSize: '0.78rem', color: '#6b7a9a', marginTop: 4 }}>{pendingTrips.length} {t('hostEarnings.upcomingTrips')}</div>
             </div>
-            <div className="glass card" style={{ padding: '20px', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.78rem', color: '#6b7a9a', fontWeight: 600, textTransform: 'uppercase' }}>{t('hostEarnings.payoutStatus')}</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: profile?.payoutEnabled ? '#047857' : '#991b1b', marginTop: 6 }}>
-                {profile?.payoutEnabled ? t('hostEarnings.enabled') : t('hostEarnings.notConfigured')}
-              </div>
-              {profile?.payoutProvider && <div style={{ fontSize: '0.78rem', color: '#6b7a9a', marginTop: 4 }}>via {profile.payoutProvider}</div>}
-            </div>
           </div>
 
           {/* Completed trip earnings */}
