@@ -314,16 +314,11 @@
     "conciergeHeading": "Tu viaje, simplificado",
     "conciergeDescription": "Desde la reserva hasta la devolución, te acompañamos con instrucciones claras, soporte en vivo y una experiencia premium.",
     "whatHappensAfterReserve": "¿Qué sucede después de reservar?",
-    "premiumTripSummary": "Resumen premium",
-    "premiumTripSummaryValue": "Reserva completa con desglose claro",
-    "nextStep": "Siguiente paso",
-    "whyThisPageMatters": "Por qué esta página importa",
-    "whyThisPageMattersDescription": "Aquí puedes revisar todos los detalles antes de confirmar tu reserva.",
-    "websiteGoal": "Nuestro objetivo",
-    "websiteGoalDescription": "Hacer que tu experiencia de reserva sea clara, rápida y sin complicaciones.",
-    "reserveThisClass": "Reservar esta clase",
-    "openReservationFlow": "Abrir flujo de reserva",
-    "backToRentalResults": "← Volver a resultados"
+    "tripSummary": "Resumen del Viaje",
+    "estimatedTotal": "Total estimado",
+    "pickupLocation": "Lugar de recogida",
+    "reserveThisClass": "Reservar Esta Clase",
+    "backToRentalResults": "← Volver a Resultados"
   },
   "carSharingPage": {
     "title": "Marketplace de Car Sharing",

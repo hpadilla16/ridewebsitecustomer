@@ -314,15 +314,10 @@
     "conciergeHeading": "A premium rental experience",
     "conciergeDescription": "Every detail — from search to pickup to return — is designed to feel like a premium travel experience, not a budget rental counter.",
     "whatHappensAfterReserve": "What happens after you reserve",
-    "premiumTripSummary": "Premium trip summary",
-    "premiumTripSummaryValue": "Hosted booking with trip protection",
-    "nextStep": "Next step",
-    "whyThisPageMatters": "Why this page matters",
-    "whyThisPageMattersDescription": "You're reviewing real-time pricing and availability from Ride Fleet operations. This isn't a placeholder — it's a live booking flow.",
-    "websiteGoal": "Website goal",
-    "websiteGoalDescription": "Move from browsing to a confirmed reservation with clear pricing, coverage options, and hosted payments.",
+    "tripSummary": "Trip Summary",
+    "estimatedTotal": "Estimated total",
+    "pickupLocation": "Pickup location",
     "reserveThisClass": "Reserve This Class",
-    "openReservationFlow": "Open Reservation Flow",
     "backToRentalResults": "← Back to Rental Results"
   },
   "carSharingPage": {

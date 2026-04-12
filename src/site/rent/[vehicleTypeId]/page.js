@@ -234,25 +234,42 @@ function RentalDetailPreviewContent() {
         </div>
 
         <div className={`glass card ${styles.asidePanel}`}>
-          <div className={styles.detailAsideHero}>
-            <span className="label">{t('rentDetail.premiumTripSummary')}</span>
-            <strong>{t('rentDetail.premiumTripSummaryValue')}</strong>
-          </div>
-          <span className="eyebrow">{t('rentDetail.nextStep')}</span>
-          <div className="surface-note">
-            <strong>{t('rentDetail.whyThisPageMatters')}</strong>
-            <div className="ui-muted">{t('rentDetail.whyThisPageMattersDescription')}</div>
-          </div>
-          <div className="surface-note">
-            <strong>{t('rentDetail.websiteGoal')}</strong>
-            <div className="ui-muted">{t('rentDetail.websiteGoalDescription')}</div>
+          <div style={{ display: 'grid', gap: 14 }}>
+            <div style={{ display: 'grid', gap: 6 }}>
+              <span className="label">{t('rentDetail.tripSummary')}</span>
+              <strong style={{ fontSize: '1.1rem', color: '#1e2847' }}>{vehicleTypeLabel(result?.vehicleType)}</strong>
+            </div>
+            {result?.quote && (
+              <div style={{ display: 'grid', gap: 8 }}>
+                {Number(result.quote.dailyRate) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                    <span>{t('rentDetail.dailyRate')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(result.quote.dailyRate)}</strong>
+                  </div>
+                )}
+                {Number(result.quote.estimatedTripTotal || result.quote.total) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#53607b' }}>
+                    <span>{t('rentDetail.estimatedTotal')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(result.quote.estimatedTripTotal || result.quote.total)}</strong>
+                  </div>
+                )}
+                {Number(result.quote.depositAmountDue || result.deposit?.amountDue) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#6e49ff' }}>
+                    <span>{t('rentDetail.dueNow')}</span><strong>{fmtMoney(result.quote.depositAmountDue || result.deposit?.amountDue)}</strong>
+                  </div>
+                )}
+              </div>
+            )}
+            <div style={{ borderTop: '1px solid rgba(114,126,170,.12)', paddingTop: 14 }}>
+              <div style={{ fontSize: '0.82rem', color: '#6b7a9a', lineHeight: 1.5 }}>
+                {t('rentDetail.pickupLocation')}: {publicLocationLabel(result?.location)}
+              </div>
+              <div style={{ fontSize: '0.82rem', color: '#6b7a9a', marginTop: 4 }}>
+                {formatPublicDateTime(pickupAt)} → {formatPublicDateTime(returnAt)}
+              </div>
+            </div>
           </div>
           <div className={styles.detailCtaStack}>
             <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="ios-action-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>
               {t('rentDetail.reserveThisClass')}
-            </Link>
-            <Link href={`${withSiteBase(basePath, '/checkout')}?${checkoutQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
-              {t('rentDetail.openReservationFlow')}
             </Link>
             <Link href={`${withSiteBase(basePath, '/rent')}?${backQuery}`} className="button-subtle" style={{ textDecoration: 'none', textAlign: 'center' }}>
               {t('rentDetail.backToRentalResults')}
