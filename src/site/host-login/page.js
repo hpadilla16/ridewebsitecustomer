@@ -224,13 +224,6 @@ export default function HostLoginPage() {
                   <button type="submit" disabled={submitting}>
                     {submitting ? t('hostLogin.signingIn') : t('hostLogin.signInButton')}
                   </button>
-                  <Link
-                    href="/become-a-host"
-                    className="button-subtle"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {t('hostLogin.createAccount')}
-                  </Link>
                 </div>
 
                 <div
