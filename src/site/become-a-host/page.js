@@ -5,7 +5,12 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { api, TOKEN_KEY, USER_KEY } from '../../lib/client';
-import styles from '../sitePreviewPremium.module.css';
+const darkHeroStyle = {
+  position: 'relative', overflow: 'hidden', isolation: 'isolate',
+  background: 'linear-gradient(145deg, rgba(24,19,60,.97), rgba(48,36,128,.95) 44%, rgba(16,92,150,.92))',
+  color: '#f8fbff',
+  boxShadow: '0 34px 74px rgba(31,39,97,.24), inset 0 1px 0 rgba(255,255,255,.08)',
+};
 
 const MAX_INLINE_PDF_BYTES = 350 * 1024;
 
@@ -255,7 +260,7 @@ function LandingSection({ onStart, loading, t }) {
   return (
     <main style={{ minHeight: '100vh' }}>
       {/* Premium dark hero */}
-      <section className={styles.heroShell} style={{ padding: 'clamp(48px, 8vw, 80px) clamp(24px, 5vw, 60px)', borderRadius: 0, marginBottom: 0 }}>
+      <section style={{ ...darkHeroStyle, padding: 'clamp(48px, 8vw, 80px) clamp(24px, 5vw, 60px)' }}>
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)', gap: 48, alignItems: 'center' }}>
           <div style={{ display: 'grid', gap: 28 }}>
             <div>
@@ -385,7 +390,7 @@ function LandingSection({ onStart, loading, t }) {
       </section>
 
       {/* Final CTA — premium gradient banner */}
-      <section className={styles.heroShell} style={{ padding: 'clamp(40px, 6vw, 64px) clamp(24px, 5vw, 60px)', borderRadius: 0, marginBottom: 0, textAlign: 'center' }}>
+      <section style={{ ...darkHeroStyle, padding: 'clamp(40px, 6vw, 64px) clamp(24px, 5vw, 60px)', textAlign: 'center' }}>
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto' }}>
           <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#fff', marginBottom: 10 }}>
             {t('becomeAHost.readyToEarn')}
