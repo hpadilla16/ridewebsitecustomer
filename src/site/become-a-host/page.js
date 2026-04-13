@@ -244,92 +244,65 @@ const inputStyle = {
 
 // ─── Landing hero ─────────────────────────────────────────────────────────────
 function LandingSection({ onStart, loading, t }) {
-  const sectionCard = {
-    padding: '18px 20px', borderRadius: 18,
-    background: 'rgba(255,255,255,.9)', border: '1px solid rgba(135,82,254,.1)',
-    boxShadow: '0 6px 18px rgba(135,82,254,.07)',
+  const glassCard = {
+    padding: '22px 24px', borderRadius: 22,
+    background: 'linear-gradient(180deg, rgba(255,255,255,.82), rgba(247,243,255,.74))',
+    border: '1px solid rgba(255,255,255,.3)',
+    boxShadow: '0 20px 50px rgba(31,39,97,.08), inset 0 1px 0 rgba(255,255,255,.5)',
+    backdropFilter: 'blur(16px)',
   };
   return (
     <main style={{ minHeight: '100vh' }}>
-      {/* Hero */}
-      <section style={{
-        background: 'linear-gradient(145deg, #f5f0ff 0%, #faf7ff 40%, #f0fbf8 100%)',
-        borderBottom: '1px solid rgba(135,82,254,.1)',
-        padding: 'clamp(60px, 10vw, 120px) clamp(20px, 5vw, 80px)',
-        display: 'grid',
-        gap: 0,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Decorative blobs */}
-        <div style={{
-          position: 'absolute', top: -80, right: -100, width: 560, height: 560, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(135,82,254,.13) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: -60, left: -80, width: 400, height: 400, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(31,199,170,.09) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
-        <div style={{ position: 'relative', maxWidth: 1100, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,520px)', gap: 48, alignItems: 'center' }}>
+      {/* Premium dark hero */}
+      <section className={styles.heroShell} style={{ padding: 'clamp(48px, 8vw, 80px) clamp(24px, 5vw, 60px)', borderRadius: 0, marginBottom: 0 }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)', gap: 48, alignItems: 'center' }}>
           <div style={{ display: 'grid', gap: 28 }}>
             <div>
-              <span style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 999, background: 'rgba(135,82,254,.1)', border: '1px solid rgba(135,82,254,.2)', color: '#6d3df2', fontSize: 12, fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 18 }}>
+              <span style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 999, background: 'rgba(255,255,255,.1)', border: '1px solid rgba(255,255,255,.18)', color: 'rgba(200,210,255,.9)', fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 18 }}>
                 Ride Car Sharing
               </span>
-              <h1 style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', fontWeight: 900, lineHeight: 1.04, letterSpacing: '-.03em', color: '#1a1230', marginBottom: 20 }}>
+              <h1 style={{ fontSize: 'clamp(2.4rem, 5vw, 3.8rem)', fontWeight: 900, lineHeight: 1.02, letterSpacing: '-.035em', color: '#fff', marginBottom: 20 }}>
                 {t('becomeAHost.heroTitle')}
               </h1>
-              <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.18rem)', color: '#5f567e', lineHeight: 1.72, maxWidth: 480 }}>
+              <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.15rem)', color: 'rgba(220,225,255,.85)', lineHeight: 1.72, maxWidth: 480 }}>
                 {t('becomeAHost.heroSubtitle')}
               </p>
             </div>
 
-            {/* Earnings highlight */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 16, padding: '16px 22px',
-              borderRadius: 18, background: 'rgba(255,255,255,.86)',
-              border: '1px solid rgba(135,82,254,.16)',
-              boxShadow: '0 8px 28px rgba(135,82,254,.1)',
-              maxWidth: 420,
-            }}>
-              <div style={{ fontSize: '2rem', lineHeight: 1 }}>💵</div>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: '1.22rem', color: '#1a1230' }}>{t('becomeAHost.earningsRange')}</div>
-                <div style={{ fontSize: 13, color: '#6f668f', marginTop: 2 }}>{t('becomeAHost.typicalEarnings')}</div>
+            {/* Earnings stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, maxWidth: 400 }}>
+              <div style={{ padding: '16px 18px', borderRadius: 16, background: 'rgba(255,255,255,.1)', border: '1px solid rgba(255,255,255,.15)', backdropFilter: 'blur(10px)', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff' }}>{t('becomeAHost.earningsRange')}</div>
+                <div style={{ fontSize: '0.76rem', color: 'rgba(200,210,255,.7)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', marginTop: 4 }}>{t('becomeAHost.typicalEarnings')}</div>
+              </div>
+              <div style={{ padding: '16px 18px', borderRadius: 16, background: 'rgba(255,255,255,.1)', border: '1px solid rgba(255,255,255,.15)', backdropFilter: 'blur(10px)', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff' }}>~90%</div>
+                <div style={{ fontSize: '0.76rem', color: 'rgba(200,210,255,.7)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', marginTop: 4 }}>You keep per booking</div>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-              <button
-                onClick={onStart}
-                disabled={loading}
-                style={{ ...primaryBtn, padding: '16px 36px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}
-              >
+              <button onClick={onStart} disabled={loading} style={{ padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', background: '#fff', color: '#6e49ff', fontWeight: 900, fontSize: '1.02rem', boxShadow: '0 14px 30px rgba(0,0,0,.2)', opacity: loading ? 0.7 : 1 }}>
                 {loading ? t('common.loading') : t('becomeAHost.listYourCar')}
               </button>
-              <Link href="/host-login" style={{ ...ghostBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Link href="/host-login" style={{ padding: '14px 20px', borderRadius: 14, border: '1.5px solid rgba(255,255,255,.25)', color: '#fff', fontWeight: 700, fontSize: '0.94rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                 {t('becomeAHost.alreadyAHost')}
               </Link>
             </div>
           </div>
 
-          {/* Feature cards — right column */}
+          {/* Feature cards — right column with glass effect */}
           <div style={{ display: 'grid', gap: 14 }}>
             {[
               { icon: '🛡️', title: t('becomeAHost.featureProtectionTitle'), body: t('becomeAHost.featureProtectionBody') },
               { icon: '💲', title: t('becomeAHost.featureScheduleTitle'), body: t('becomeAHost.featureScheduleBody') },
               { icon: '⚡', title: t('becomeAHost.featureApprovalTitle'), body: t('becomeAHost.featureApprovalBody') },
             ].map(({ icon, title, body }) => (
-              <div key={title} style={{
-                display: 'flex', gap: 16, alignItems: 'flex-start', ...sectionCard,
-              }}>
+              <div key={title} style={{ display: 'flex', gap: 16, alignItems: 'flex-start', padding: '20px 22px', borderRadius: 20, background: 'rgba(255,255,255,.1)', border: '1px solid rgba(255,255,255,.15)', backdropFilter: 'blur(12px)' }}>
                 <span style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{icon}</span>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#1a1230', marginBottom: 4 }}>{title}</div>
-                  <div style={{ fontSize: '0.88rem', color: '#6f668f', lineHeight: 1.6 }}>{body}</div>
+                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#fff', marginBottom: 4 }}>{title}</div>
+                  <div style={{ fontSize: '0.86rem', color: 'rgba(220,225,255,.78)', lineHeight: 1.6 }}>{body}</div>
                 </div>
               </div>
             ))}
@@ -337,79 +310,92 @@ function LandingSection({ onStart, loading, t }) {
         </div>
       </section>
 
-      {/* How it works */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 5vw, 80px)' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 40 }}>
-          {t('becomeAHost.howItWorksTitle')}
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24 }}>
+      {/* How it works — numbered steps */}
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(48px, 7vw, 80px) clamp(20px, 5vw, 80px)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 44 }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: '#6e49ff' }}>How It Works</span>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginTop: 8 }}>
+            {t('becomeAHost.howItWorksTitle')}
+          </h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
           {[
             { step: '01', title: t('becomeAHost.howStep1Title'), body: t('becomeAHost.howStep1Body') },
             { step: '02', title: t('becomeAHost.howStep2Title'), body: t('becomeAHost.howStep2Body') },
             { step: '03', title: t('becomeAHost.howStep3Title'), body: t('becomeAHost.howStep3Body') },
             { step: '04', title: t('becomeAHost.howStep4Title'), body: t('becomeAHost.howStep4Body') },
           ].map(({ step, title, body }) => (
-            <div key={step} style={{ display: 'grid', gap: 12, padding: '24px 20px', borderRadius: 20, background: 'rgba(255,255,255,.88)', border: '1px solid rgba(135,82,254,.1)', boxShadow: '0 4px 14px rgba(135,82,254,.06)' }}>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#8752FE' }}>{step}</div>
-              <div style={{ fontWeight: 800, fontSize: '1rem', color: '#1a1230' }}>{title}</div>
-              <div style={{ fontSize: '0.88rem', color: '#6f668f', lineHeight: 1.65 }}>{body}</div>
+            <div key={step} style={{ ...glassCard, display: 'grid', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #6e49ff, #8f74ff)', display: 'grid', placeItems: 'center', color: '#fff', fontSize: '0.82rem', fontWeight: 900, letterSpacing: '.06em', boxShadow: '0 8px 20px rgba(110,73,255,.25)' }}>{step}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.02rem', color: '#1a1230' }}>{title}</div>
+              <div style={{ fontSize: '0.88rem', color: '#5f567e', lineHeight: 1.65 }}>{body}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* What hosts love */}
-      <section style={{ background: 'rgba(135,82,254,.03)', borderTop: '1px solid rgba(135,82,254,.08)', borderBottom: '1px solid rgba(135,82,254,.08)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 5vw, 80px)' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 40 }}>
-            {t('becomeAHost.whatHostsLoveTitle')}
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
+      {/* What hosts love — premium cards */}
+      <section style={{ background: 'linear-gradient(180deg, rgba(247,243,255,.6), rgba(240,251,248,.4))', borderTop: '1px solid rgba(135,82,254,.06)', borderBottom: '1px solid rgba(135,82,254,.06)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(48px, 7vw, 80px) clamp(20px, 5vw, 80px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: '#6e49ff' }}>Benefits</span>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginTop: 8 }}>
+              {t('becomeAHost.whatHostsLoveTitle')}
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18 }}>
             {[
               { icon: '📅', title: t('becomeAHost.loveFlexTitle'), body: t('becomeAHost.loveFlexBody') },
               { icon: '🧩', title: t('becomeAHost.loveAddonsTitle'), body: t('becomeAHost.loveAddonsBody') },
               { icon: '🔒', title: t('becomeAHost.loveDepositTitle'), body: t('becomeAHost.loveDepositBody') },
               { icon: '✅', title: t('becomeAHost.loveCancelTitle'), body: t('becomeAHost.loveCancelBody') },
             ].map(({ icon, title, body }) => (
-              <div key={title} style={{ ...sectionCard, display: 'grid', gap: 8 }}>
-                <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>{icon}</span>
-                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#1a1230' }}>{title}</div>
-                <div style={{ fontSize: '0.88rem', color: '#6f668f', lineHeight: 1.6 }}>{body}</div>
+              <div key={title} style={{ ...glassCard, display: 'grid', gap: 10, transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}>
+                <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(110,73,255,.08)', display: 'grid', placeItems: 'center', fontSize: '1.3rem' }}>{icon}</div>
+                <div style={{ fontWeight: 800, fontSize: '1rem', color: '#1a1230' }}>{title}</div>
+                <div style={{ fontSize: '0.88rem', color: '#5f567e', lineHeight: 1.6 }}>{body}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Host requirements */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 64px) clamp(20px, 5vw, 80px)' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 32 }}>
-          {t('becomeAHost.hostRequirementsTitle')}
-        </h2>
-        <div style={{ maxWidth: 600, margin: '0 auto', ...sectionCard, padding: '28px 32px' }}>
-          <ul style={{ margin: 0, padding: '0 0 0 20px', display: 'grid', gap: 12, color: '#1a1230', fontSize: '0.95rem', lineHeight: 1.6 }}>
-            <li>{t('becomeAHost.hostReq1')}</li>
-            <li>{t('becomeAHost.hostReq2')}</li>
-            <li>{t('becomeAHost.hostReq3')}</li>
-            <li>{t('becomeAHost.hostReq4')}</li>
-          </ul>
-          <p style={{ marginTop: 16, marginBottom: 0, fontSize: '0.86rem', color: '#6f668f', lineHeight: 1.6 }}>
+      {/* Host requirements — clean list */}
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(20px, 5vw, 80px)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: '#6e49ff' }}>Requirements</span>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginTop: 8 }}>
+            {t('becomeAHost.hostRequirementsTitle')}
+          </h2>
+        </div>
+        <div style={{ maxWidth: 640, margin: '0 auto', ...glassCard, padding: '32px 36px' }}>
+          <div style={{ display: 'grid', gap: 16 }}>
+            {[t('becomeAHost.hostReq1'), t('becomeAHost.hostReq2'), t('becomeAHost.hostReq3'), t('becomeAHost.hostReq4')].map((req, i) => (
+              <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                <div style={{ width: 28, height: 28, minWidth: 28, borderRadius: 8, background: 'rgba(110,73,255,.08)', display: 'grid', placeItems: 'center', color: '#6e49ff', fontWeight: 800, fontSize: '0.78rem', marginTop: 1 }}>✓</div>
+                <span style={{ color: '#1a1230', fontSize: '0.95rem', lineHeight: 1.6 }}>{req}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ marginTop: 20, marginBottom: 0, fontSize: '0.84rem', color: '#6f668f', lineHeight: 1.6, borderTop: '1px solid rgba(135,82,254,.08)', paddingTop: 16 }}>
             {t('becomeAHost.hostReqNote')}
           </p>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(24px, 4vw, 48px) clamp(20px, 5vw, 80px) clamp(48px, 8vw, 96px)', textAlign: 'center' }}>
-        <h2 style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 8 }}>
-          {t('becomeAHost.readyToEarn')}
-        </h2>
-        <p style={{ fontSize: '0.95rem', color: '#6f668f', marginBottom: 28 }}>
-          {t('becomeAHost.readyToEarnSub')}
-        </p>
-        <button onClick={onStart} disabled={loading} style={{ ...primaryBtn, padding: '16px 44px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}>
-          {t('becomeAHost.getStarted')}
-        </button>
+      {/* Final CTA — premium gradient banner */}
+      <section className={styles.heroShell} style={{ padding: 'clamp(40px, 6vw, 64px) clamp(24px, 5vw, 60px)', borderRadius: 0, marginBottom: 0, textAlign: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#fff', marginBottom: 10 }}>
+            {t('becomeAHost.readyToEarn')}
+          </h2>
+          <p style={{ fontSize: '0.95rem', color: 'rgba(220,225,255,.85)', marginBottom: 28, lineHeight: 1.6 }}>
+            {t('becomeAHost.readyToEarnSub')}
+          </p>
+          <button onClick={onStart} disabled={loading} style={{ padding: '16px 44px', borderRadius: 14, border: 'none', cursor: 'pointer', background: '#fff', color: '#6e49ff', fontWeight: 900, fontSize: '1.02rem', boxShadow: '0 14px 30px rgba(0,0,0,.2)', opacity: loading ? 0.7 : 1 }}>
+            {t('becomeAHost.getStarted')}
+          </button>
+        </div>
       </section>
     </main>
   );
