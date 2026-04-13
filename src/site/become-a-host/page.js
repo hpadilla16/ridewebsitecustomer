@@ -244,6 +244,11 @@ const inputStyle = {
 
 // ─── Landing hero ─────────────────────────────────────────────────────────────
 function LandingSection({ onStart, loading, t }) {
+  const sectionCard = {
+    padding: '18px 20px', borderRadius: 18,
+    background: 'rgba(255,255,255,.9)', border: '1px solid rgba(135,82,254,.1)',
+    boxShadow: '0 6px 18px rgba(135,82,254,.07)',
+  };
   return (
     <main style={{ minHeight: '100vh' }}>
       {/* Hero */}
@@ -315,14 +320,11 @@ function LandingSection({ onStart, loading, t }) {
           <div style={{ display: 'grid', gap: 14 }}>
             {[
               { icon: '🛡️', title: t('becomeAHost.featureProtectionTitle'), body: t('becomeAHost.featureProtectionBody') },
-              { icon: '📅', title: t('becomeAHost.featureScheduleTitle'), body: t('becomeAHost.featureScheduleBody') },
+              { icon: '💲', title: t('becomeAHost.featureScheduleTitle'), body: t('becomeAHost.featureScheduleBody') },
               { icon: '⚡', title: t('becomeAHost.featureApprovalTitle'), body: t('becomeAHost.featureApprovalBody') },
             ].map(({ icon, title, body }) => (
               <div key={title} style={{
-                display: 'flex', gap: 16, alignItems: 'flex-start',
-                padding: '18px 20px', borderRadius: 18,
-                background: 'rgba(255,255,255,.9)', border: '1px solid rgba(135,82,254,.1)',
-                boxShadow: '0 6px 18px rgba(135,82,254,.07)',
+                display: 'flex', gap: 16, alignItems: 'flex-start', ...sectionCard,
               }}>
                 <span style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{icon}</span>
                 <div>
@@ -335,7 +337,7 @@ function LandingSection({ onStart, loading, t }) {
         </div>
       </section>
 
-      {/* How it works strip */}
+      {/* How it works */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 5vw, 80px)' }}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 40 }}>
           {t('becomeAHost.howItWorksTitle')}
@@ -354,12 +356,60 @@ function LandingSection({ onStart, loading, t }) {
             </div>
           ))}
         </div>
+      </section>
 
-        <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <button onClick={onStart} disabled={loading} style={{ ...primaryBtn, padding: '16px 44px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}>
-            {t('becomeAHost.getStarted')}
-          </button>
+      {/* What hosts love */}
+      <section style={{ background: 'rgba(135,82,254,.03)', borderTop: '1px solid rgba(135,82,254,.08)', borderBottom: '1px solid rgba(135,82,254,.08)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) clamp(20px, 5vw, 80px)' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 40 }}>
+            {t('becomeAHost.whatHostsLoveTitle')}
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
+            {[
+              { icon: '📅', title: t('becomeAHost.loveFlexTitle'), body: t('becomeAHost.loveFlexBody') },
+              { icon: '🧩', title: t('becomeAHost.loveAddonsTitle'), body: t('becomeAHost.loveAddonsBody') },
+              { icon: '🔒', title: t('becomeAHost.loveDepositTitle'), body: t('becomeAHost.loveDepositBody') },
+              { icon: '✅', title: t('becomeAHost.loveCancelTitle'), body: t('becomeAHost.loveCancelBody') },
+            ].map(({ icon, title, body }) => (
+              <div key={title} style={{ ...sectionCard, display: 'grid', gap: 8 }}>
+                <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>{icon}</span>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#1a1230' }}>{title}</div>
+                <div style={{ fontSize: '0.88rem', color: '#6f668f', lineHeight: 1.6 }}>{body}</div>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
+
+      {/* Host requirements */}
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 6vw, 64px) clamp(20px, 5vw, 80px)' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 850, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 32 }}>
+          {t('becomeAHost.hostRequirementsTitle')}
+        </h2>
+        <div style={{ maxWidth: 600, margin: '0 auto', ...sectionCard, padding: '28px 32px' }}>
+          <ul style={{ margin: 0, padding: '0 0 0 20px', display: 'grid', gap: 12, color: '#1a1230', fontSize: '0.95rem', lineHeight: 1.6 }}>
+            <li>{t('becomeAHost.hostReq1')}</li>
+            <li>{t('becomeAHost.hostReq2')}</li>
+            <li>{t('becomeAHost.hostReq3')}</li>
+            <li>{t('becomeAHost.hostReq4')}</li>
+          </ul>
+          <p style={{ marginTop: 16, marginBottom: 0, fontSize: '0.86rem', color: '#6f668f', lineHeight: 1.6 }}>
+            {t('becomeAHost.hostReqNote')}
+          </p>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(24px, 4vw, 48px) clamp(20px, 5vw, 80px) clamp(48px, 8vw, 96px)', textAlign: 'center' }}>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 2.8vw, 2rem)', fontWeight: 900, letterSpacing: '-.02em', color: '#1a1230', marginBottom: 8 }}>
+          {t('becomeAHost.readyToEarn')}
+        </h2>
+        <p style={{ fontSize: '0.95rem', color: '#6f668f', marginBottom: 28 }}>
+          {t('becomeAHost.readyToEarnSub')}
+        </p>
+        <button onClick={onStart} disabled={loading} style={{ ...primaryBtn, padding: '16px 44px', fontSize: '1.02rem', opacity: loading ? 0.7 : 1 }}>
+          {t('becomeAHost.getStarted')}
+        </button>
       </section>
     </main>
   );
