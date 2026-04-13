@@ -5,6 +5,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { api, TOKEN_KEY, USER_KEY } from '../../lib/client';
+import styles from '../sitePreviewPremium.module.css';
 
 const MAX_INLINE_PDF_BYTES = 350 * 1024;
 
