@@ -215,7 +215,7 @@ export default function SitePreviewHomePage() {
     }
     setBusy('rental');
     setError('');
-    const pickupOption = locationOptions.find((o) => o.id === rentalSearch.pickupLocationId);
+    const pickupOption = publicLocationOptions.find((o) => o.id === rentalSearch.pickupLocationId);
     setRecentSearches(saveSearch({ mode: 'RENTAL', locationId: rentalSearch.pickupLocationId, locationLabel: pickupOption?.label || '', pickupAt: rentalSearch.pickupAt, returnAt: rentalSearch.returnAt }));
     router.push(`${withSiteBase(basePath, '/rent')}?${searchParamsToString(rentalSearch)}`);
   };
@@ -226,7 +226,7 @@ export default function SitePreviewHomePage() {
     }
     setBusy('carsharing');
     setError('');
-    const locOption = locationOptions.find((o) => o.id === carSharingSearch.locationId);
+    const locOption = publicLocationOptions.find((o) => o.id === carSharingSearch.locationId);
     setRecentSearches(saveSearch({ mode: 'CAR_SHARING', locationId: carSharingSearch.locationId, locationLabel: locOption?.label || '', pickupAt: carSharingSearch.pickupAt, returnAt: carSharingSearch.returnAt }));
     router.push(`${withSiteBase(basePath, '/car-sharing')}?${searchParamsToString(carSharingSearch)}`);
   };
