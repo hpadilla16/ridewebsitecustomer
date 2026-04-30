@@ -189,9 +189,25 @@ function CheckoutInner() {
   // mandatory=true, isActive=true, displayOnline=true). Server-side
   // truth from /api/public/booking/website-fees so the customer sees
   // the same fees that will be applied at checkout.
+  //
+  // Tenant slug resolution: bootstrap.selectedTenant is null in the
+  // multi-tenant marketplace flow (no preselection). For RENTAL we
+  // resolve the tenant from selectedResult.location.tenantId by looking
+  // it up in bootstrap.tenants. For CAR_SHARING the scoped slug from
+  // the search params drives it.
+  const resultTenantId = selectedResult?.location?.tenantId || selectedResult?.tenantId || '';
+  const resolvedTenantSlug = useMemo(() => {
+    if (bootstrap?.selectedTenant?.slug) return bootstrap.selectedTenant.slug;
+    if (scopedTenantSlug) return scopedTenantSlug;
+    if (resultTenantId && Array.isArray(bootstrap?.tenants)) {
+      const match = bootstrap.tenants.find((t) => String(t.id) === String(resultTenantId));
+      if (match?.slug) return match.slug;
+    }
+    return '';
+  }, [bootstrap?.selectedTenant?.slug, bootstrap?.tenants, scopedTenantSlug, resultTenantId]);
   const [websiteFees, setWebsiteFees] = useState([]);
   useEffect(() => {
-    const slug = bootstrap?.selectedTenant?.slug || scopedTenantSlug || '';
+    const slug = resolvedTenantSlug;
     if (!slug) return;
     let cancelled = false;
     api(`/api/public/booking/website-fees?tenantSlug=${encodeURIComponent(slug)}`)
@@ -201,7 +217,14 @@ function CheckoutInner() {
         // Compute per-fee totals using the same logic as the backend's
         // computePublicFeeLine (FIXED / PER_DAY / PERCENTAGE).
         const days = Number(selectedResult?.quote?.tripDays || selectedResult?.quote?.days || 1);
-        const baseAmount = Number(selectedResult?.quote?.subtotal || selectedResult?.quote?.total || 0);
+        const baseAmount = Number(
+          selectedResult?.quote?.subtotal
+          || selectedResult?.quote?.baseSubtotal
+          || selectedResult?.quote?.baseTotal
+          || selectedResult?.quote?.estimatedTripTotal
+          || selectedResult?.quote?.total
+          || 0
+        );
         setWebsiteFees(fees.map((fee) => {
           const amount = Number(fee.amount || 0);
           const mode = String(fee.mode || 'FIXED').toUpperCase();
@@ -215,7 +238,7 @@ function CheckoutInner() {
       })
       .catch(() => { /* silent — website fees are optional, fall back to no-fees breakdown */ });
     return () => { cancelled = true; };
-  }, [bootstrap?.selectedTenant?.slug, scopedTenantSlug, selectedResult?.quote?.tripDays, selectedResult?.quote?.days, selectedResult?.quote?.subtotal, selectedResult?.quote?.total]);
+  }, [resolvedTenantSlug, selectedResult?.quote?.tripDays, selectedResult?.quote?.days, selectedResult?.quote?.subtotal, selectedResult?.quote?.baseSubtotal, selectedResult?.quote?.baseTotal, selectedResult?.quote?.estimatedTripTotal, selectedResult?.quote?.total]);
   const websiteFeesTotal = websiteFees.reduce((sum, fee) => sum + Number(fee.total || 0), 0);
 
   // For RENTAL, the quote already aggregates everything into
@@ -270,7 +293,7 @@ function CheckoutInner() {
       const payload = await api('/api/public/booking/checkout', {
         method: 'POST',
         body: JSON.stringify({
-          tenantSlug: bootstrap?.selectedTenant?.slug || scopedTenantSlug || '',
+          tenantSlug: resolvedTenantSlug,
           searchType: searchMode,
           pickupAt,
           returnAt,
