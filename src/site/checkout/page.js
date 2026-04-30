@@ -175,8 +175,57 @@ function CheckoutInner() {
   const chosenServices = useMemo(() => computeSelectedServices(selectedResult, selectedServices, searchMode), [searchMode, selectedResult, selectedServices]);
   const addOnsTotal = useMemo(() => chosenServices.reduce((sum, service) => sum + Number(service.total || 0), 0), [chosenServices]);
   const insuranceTotal = selectedInsurancePlans.reduce((sum, plan) => sum + Number(plan.total || 0), 0);
+
+  // We intentionally only surface tenant-configured pricing on top of
+  // one rolled-up "base trip" line. Host-level fees (cleaningFee,
+  // pickupFee/deliveryFee) and the platform service fee (guestTripFee)
+  // are folded into `quote.total` already and not broken out — the
+  // operator wants visible pricing to mirror what they configured in
+  // their admin, not internal cost components. Only `taxes` (always
+  // 0 for car-sharing today) is surfaced separately.
+  const tripTaxes = Number(selectedResult?.quote?.taxes || 0);
+
+  // Fetch website-mandatory fees (configured tenant-wide with
+  // mandatory=true, isActive=true, displayOnline=true). Server-side
+  // truth from /api/public/booking/website-fees so the customer sees
+  // the same fees that will be applied at checkout.
+  const [websiteFees, setWebsiteFees] = useState([]);
+  useEffect(() => {
+    const slug = bootstrap?.selectedTenant?.slug || scopedTenantSlug || '';
+    if (!slug) return;
+    let cancelled = false;
+    api(`/api/public/booking/website-fees?tenantSlug=${encodeURIComponent(slug)}`)
+      .then((res) => {
+        if (cancelled) return;
+        const fees = Array.isArray(res?.fees) ? res.fees : [];
+        // Compute per-fee totals using the same logic as the backend's
+        // computePublicFeeLine (FIXED / PER_DAY / PERCENTAGE).
+        const days = Number(selectedResult?.quote?.tripDays || selectedResult?.quote?.days || 1);
+        const baseAmount = Number(selectedResult?.quote?.subtotal || selectedResult?.quote?.total || 0);
+        setWebsiteFees(fees.map((fee) => {
+          const amount = Number(fee.amount || 0);
+          const mode = String(fee.mode || 'FIXED').toUpperCase();
+          const total = mode === 'PERCENTAGE'
+            ? Math.round(baseAmount * (amount / 100) * 100) / 100
+            : mode === 'PER_DAY'
+              ? Math.round(amount * Math.max(1, days) * 100) / 100
+              : Math.round(amount * 100) / 100;
+          return { feeId: fee.id, code: fee.code, name: fee.name, mode, total, taxable: !!fee.taxable };
+        }));
+      })
+      .catch(() => { /* silent — website fees are optional, fall back to no-fees breakdown */ });
+    return () => { cancelled = true; };
+  }, [bootstrap?.selectedTenant?.slug, scopedTenantSlug, selectedResult?.quote?.tripDays, selectedResult?.quote?.days, selectedResult?.quote?.subtotal, selectedResult?.quote?.total]);
+  const websiteFeesTotal = websiteFees.reduce((sum, fee) => sum + Number(fee.total || 0), 0);
+
+  // For RENTAL, the quote already aggregates everything into
+  // `estimatedTripTotal` (we keep the existing path). For CAR_SHARING,
+  // we now break it out: subtotal + fees + taxes + addOns + insurance
+  // + websiteFees.
   const baseTotal = Number(searchMode === 'RENTAL' ? selectedResult?.quote?.estimatedTripTotal || 0 : selectedResult?.quote?.total || 0);
-  const estimatedTotal = baseTotal + addOnsTotal + insuranceTotal;
+  const estimatedTotal = searchMode === 'RENTAL'
+    ? baseTotal + addOnsTotal + insuranceTotal + websiteFeesTotal
+    : baseTotal + addOnsTotal + insuranceTotal + websiteFeesTotal;
   const estimatedDueNow = (() => {
     const deposit = selectedResult?.deposit || selectedResult?.quote?.deposit;
     if (!deposit?.required) return 0;
@@ -285,9 +334,30 @@ function CheckoutInner() {
             </div>
           )}
           <div style={{ borderTop: '1px solid rgba(110,73,255,.1)', paddingTop: 14, display: 'grid', gap: 8 }}>
+            {/* "Base trip" is the trip cost INCLUDING host fees
+                (cleaningFee, pickupFee/deliveryFee) and the platform
+                service fee (guestTripFee). Those are intentionally
+                rolled in — operators (tenants) only want to surface
+                their own configured fees on top of one customer-
+                facing base price. So `baseTotal` = quote.total for
+                car-sharing or quote.estimatedTripTotal for rentals. */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
               <span>{t('checkout.baseTrip')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(baseTotal)}</strong>
             </div>
+            {/* Mandatory website fees configured by the operator in
+                their admin (Fee.mandatory + isActive + displayOnline).
+                Surfaced per-line by name so the customer sees exactly
+                what the tenant is charging on top of base. */}
+            {websiteFees.map((fee) => (
+              <div key={fee.feeId} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
+                <span>{fee.name}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(fee.total)}</strong>
+              </div>
+            ))}
+            {tripTaxes > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
+                <span>{t('checkout.taxes') || 'Taxes'}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(tripTaxes)}</strong>
+              </div>
+            )}
             {addOnsTotal > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#53607b' }}>
                 <span>{t('checkout.addOns')}</span><strong style={{ color: '#1e2847' }}>{fmtMoney(addOnsTotal)}</strong>
